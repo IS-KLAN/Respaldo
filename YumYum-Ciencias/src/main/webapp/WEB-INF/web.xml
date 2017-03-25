@@ -4,4 +4,12 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+   <servlet>
+        <servlet-name>servlet</servlet-name>
+        <servlet-class>com.klan.proyecto.Servlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>servlet</servlet-name>
+        <url-pattern>/foo</url-pattern>
+    </servlet-mapping>
 </web-app>
