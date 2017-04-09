@@ -3,6 +3,7 @@
 <html  xmlns="http://www.w3.org/1999/xhtml"
             xmlns:h="http://java.sun.com/jsf/html"
             xmlns:b="http://bootsfaces.net/ui"
+            xmlns:ui="http://java.sun.com/jsf/facelets"
             xmlns:f="http://java.sun.com/jsf/core"
             xmlns:p="http://primefaces.org/ui">
     <h:head>
@@ -27,60 +28,23 @@
                         </b:navbarLinks>
                 </b:navBar>
         </b:container>
-        <b:container>
-            <b:row>
-                <b:column>     
-                    <h3>Puesto:</h3>
-                    <b:image value="resources/puesto.jpg"/>
-                    <p><b:messages/></p>
-                    <p><h:outputLabel value="Usuario: "/><b:label text="#{contenidoPuesto.usuario}" severity="info"/></p>
-                    <p><h:outputLabel value="Puesto: "/><b:label text="#{contenidoPuesto.puesto}" severity="info"/></p>
-                </b:column>
-                <b:column>            
-        <!--
-                    <b:container id="content">
-                            <b:tabView pills="true" contentStyle="border: 1px solid #ddd;padding:10px">
-                                <b:tab title="Comida" update="**:*messages">
-                                    <div style="height: 10px" />
-                                </b:tab>
-                                <b:tab title="Comentarios" update="**:*messages">
-                                    <div style="height: 10px" />
-                                </b:tab>
-                            </b:tabView>
-                    </b:container>
-                </b:column>
-            </b:row>
-            <b:row>
-                <b:column>            
-                    <h3>Ubicacion:</h3>
-                    <div id="googleMap" style="width:350px;height:300px"></div>
-                    <script>
-                            function myMap() {
-                                    var myCenter = new google.maps.LatLng(19.324513, -99.179225);
-                                    var mapCanvas = document.getElementById("googleMap");
-                                    var mapOptions = {center: myCenter, zoom: 19};
-                                    var map = new google.maps.Map(mapCanvas, mapOptions);  
-                                    var myLatlng = new google.maps.LatLng(19.324518, -99.179408);}
-                    </script>
-                    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5DX4e8Cva-RCVWbNEd36FRuSnaZAGtiQ&callback=myMap"></script>
-                </b:column>
-                <b:column>            
-                    <h3>Comentar:</h3>
-                    <p:dialog widgetVar="dlg" showEffect="fade">
-                      <h:form prependId="false">
-                        <h:panelGrid columns="2">
-                          <h:outputLabel for="title" value="Comentario:" />
-                          <p:inputText id="title" value="{puestoBean.texto}" />
-                          <f:facet name="footer">
-                              <p:commandButton value="Guardar" actionListener="{puestoBean.comentar()}" update=":messages"/>
-                          </f:facet>
-                        </h:panelGrid>
-                      </h:form>
-                    </p:dialog>
-        -->
-                </b:column>
-            </b:row>
-        </b:container>
+        <b:row>
+            <b:column>
+                <h3>Puesto:</h3>
+                <b:image value="resources/puesto.jpg"/>
+            </b:column>
+            <b:column>
+                <p:dataTable value="#{contenido.comida}" var="c" resizableColumns="true" liveResize="true"
+                             scrollRows="20" scrollable="true" liveScroll="true" scrollHeight="200" scrollWidth="150">
+                    <p:column headerText="Nombre de la comida:" sortBy="#{c.comida.nombreComida}">
+                        <h:outputText value="#{c.comida.nombreComida}" />
+                    </p:column>
+                </p:dataTable>
+            </b:column>
+        </b:row>
+        <p><b:messages/></p>
+        <p><h:outputLabel value="Usuario: "/><b:label text="#{contenido.usuario.nombreUsuario}" severity="info"/></p>
+        <p><h:outputLabel value="Puesto: "/><b:label text="#{contenido.puesto.nombrePuesto}" severity="info"/></p>
         <footer> <p><br>© Company 2017</br></p> </footer>
     </h:body>
 </html>

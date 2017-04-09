@@ -6,36 +6,32 @@
 package com.klan.proyecto.modelo;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author patlani
  */
 @Entity
-@Table(name = "usuario", catalog = "yumyum_ciencias", schema = "", uniqueConstraints = {
+@Table(name = "pendiente", catalog = "yumyum_ciencias", schema = "", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"correo"})
     , @UniqueConstraint(columnNames = {"id_usuario"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u")
-    , @NamedQuery(name = "Usuario.findByIdUsuario", query = "SELECT u FROM Usuario u WHERE u.idUsuario = :idUsuario")
-    , @NamedQuery(name = "Usuario.findByNombreUsuario", query = "SELECT u FROM Usuario u WHERE u.nombreUsuario = :nombreUsuario")
-    , @NamedQuery(name = "Usuario.findByCorreo", query = "SELECT u FROM Usuario u WHERE u.correo = :correo")
-    , @NamedQuery(name = "Usuario.findByContrase\u00f1a", query = "SELECT u FROM Usuario u WHERE u.contrase\u00f1a = :contrase\u00f1a")})
-public class Usuario implements Serializable {
+    @NamedQuery(name = "Pendiente.findAll", query = "SELECT p FROM Pendiente p")
+    , @NamedQuery(name = "Pendiente.findByIdUsuario", query = "SELECT p FROM Pendiente p WHERE p.idUsuario = :idUsuario")
+    , @NamedQuery(name = "Pendiente.findByNombreUsuario", query = "SELECT p FROM Pendiente p WHERE p.nombreUsuario = :nombreUsuario")
+    , @NamedQuery(name = "Pendiente.findByCorreo", query = "SELECT p FROM Pendiente p WHERE p.correo = :correo")
+    , @NamedQuery(name = "Pendiente.findByContrase\u00f1a", query = "SELECT p FROM Pendiente p WHERE p.contrase\u00f1a = :contrase\u00f1a")})
+public class Pendiente implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Basic(optional = false)
@@ -51,17 +47,15 @@ public class Usuario implements Serializable {
     @Basic(optional = false)
     @Column(nullable = false, length = 32)
     private String contraseña;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
-    private List<Evaluacion> evaluacionList;
 
-    public Usuario() {
+    public Pendiente() {
     }
 
-    public Usuario(String nombreUsuario) {
+    public Pendiente(String nombreUsuario) {
         this.nombreUsuario = nombreUsuario;
     }
 
-    public Usuario(String nombreUsuario, long idUsuario, String correo, String contraseña) {
+    public Pendiente(String nombreUsuario, long idUsuario, String correo, String contraseña) {
         this.nombreUsuario = nombreUsuario;
         this.idUsuario = idUsuario;
         this.correo = correo;
@@ -100,15 +94,6 @@ public class Usuario implements Serializable {
         this.contraseña = contraseña;
     }
 
-    @XmlTransient
-    public List<Evaluacion> getEvaluacionList() {
-        return evaluacionList;
-    }
-
-    public void setEvaluacionList(List<Evaluacion> evaluacionList) {
-        this.evaluacionList = evaluacionList;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -119,10 +104,10 @@ public class Usuario implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Usuario)) {
+        if (!(object instanceof Pendiente)) {
             return false;
         }
-        Usuario other = (Usuario) object;
+        Pendiente other = (Pendiente) object;
         if ((this.nombreUsuario == null && other.nombreUsuario != null) || (this.nombreUsuario != null && !this.nombreUsuario.equals(other.nombreUsuario))) {
             return false;
         }
@@ -131,7 +116,7 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "com.klan.proyecto.modelo.Usuario[ nombreUsuario=" + nombreUsuario + " ]";
+        return "com.klan.proyecto.modelo.Pendiente[ nombreUsuario=" + nombreUsuario + " ]";
     }
     
 }

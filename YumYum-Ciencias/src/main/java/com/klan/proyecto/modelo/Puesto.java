@@ -11,10 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -28,9 +25,8 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author patlani
  */
 @Entity
-@Table(catalog = "yumyum_ciencias", schema = "", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"nombre_puesto"})
-    , @UniqueConstraint(columnNames = {"id_puesto"})
+@Table(name = "puesto", catalog = "yumyum_ciencias", schema = "", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"id_puesto"})
     , @UniqueConstraint(columnNames = {"latitud", "longitud"})})
 @XmlRootElement
 @NamedQueries({
@@ -44,11 +40,10 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Puesto implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_puesto", nullable = false)
-    private Long idPuesto;
+    private long idPuesto;
+    @Id
     @Basic(optional = false)
     @Column(name = "nombre_puesto", nullable = false, length = 64)
     private String nombrePuesto;
@@ -62,30 +57,30 @@ public class Puesto implements Serializable {
     private String longitud;
     @Column(length = 255)
     private String rutaImagen;
-    @ManyToMany(mappedBy = "puestoList")
-    private List<Comida> comidaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPuesto")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "puesto")
+    private List<ComidaPuesto> comidaPuestoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "puesto")
     private List<Evaluacion> evaluacionList;
 
     public Puesto() {
     }
 
-    public Puesto(Long idPuesto) {
-        this.idPuesto = idPuesto;
+    public Puesto(String nombrePuesto) {
+        this.nombrePuesto = nombrePuesto;
     }
 
-    public Puesto(Long idPuesto, String nombrePuesto, String latitud, String longitud) {
-        this.idPuesto = idPuesto;
+    public Puesto(String nombrePuesto, long idPuesto, String latitud, String longitud) {
         this.nombrePuesto = nombrePuesto;
+        this.idPuesto = idPuesto;
         this.latitud = latitud;
         this.longitud = longitud;
     }
 
-    public Long getIdPuesto() {
+    public long getIdPuesto() {
         return idPuesto;
     }
 
-    public void setIdPuesto(Long idPuesto) {
+    public void setIdPuesto(long idPuesto) {
         this.idPuesto = idPuesto;
     }
 
@@ -130,12 +125,12 @@ public class Puesto implements Serializable {
     }
 
     @XmlTransient
-    public List<Comida> getComidaList() {
-        return comidaList;
+    public List<ComidaPuesto> getComidaPuestoList() {
+        return comidaPuestoList;
     }
 
-    public void setComidaList(List<Comida> comidaList) {
-        this.comidaList = comidaList;
+    public void setComidaPuestoList(List<ComidaPuesto> comidaPuestoList) {
+        this.comidaPuestoList = comidaPuestoList;
     }
 
     @XmlTransient
@@ -150,7 +145,7 @@ public class Puesto implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idPuesto != null ? idPuesto.hashCode() : 0);
+        hash += (nombrePuesto != null ? nombrePuesto.hashCode() : 0);
         return hash;
     }
 
@@ -161,7 +156,7 @@ public class Puesto implements Serializable {
             return false;
         }
         Puesto other = (Puesto) object;
-        if ((this.idPuesto == null && other.idPuesto != null) || (this.idPuesto != null && !this.idPuesto.equals(other.idPuesto))) {
+        if ((this.nombrePuesto == null && other.nombrePuesto != null) || (this.nombrePuesto != null && !this.nombrePuesto.equals(other.nombrePuesto))) {
             return false;
         }
         return true;
@@ -169,7 +164,7 @@ public class Puesto implements Serializable {
 
     @Override
     public String toString() {
-        return "com.klan.proyecto.modelo.Puesto[ idPuesto=" + idPuesto + " ]";
+        return "com.klan.proyecto.modelo.Puesto[ nombrePuesto=" + nombrePuesto + " ]";
     }
     
 }

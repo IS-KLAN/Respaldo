@@ -5,10 +5,9 @@
     <class>com.klan.proyecto.modelo.Comida</class>
     <class>com.klan.proyecto.modelo.ComidaPuesto</class>
     <class>com.klan.proyecto.modelo.Evaluacion</class>
+    <class>com.klan.proyecto.modelo.Pendiente</class>
     <class>com.klan.proyecto.modelo.Puesto</class>
-    <class>com.klan.proyecto.modelo.RegistroTemporal</class>
     <class>com.klan.proyecto.modelo.Usuario</class>
-    <class>com.klan.proyecto.modelo.Persona</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/yumyum_ciencias?zeroDateTimeBehavior=convertToNull"/>

@@ -8,10 +8,8 @@ package com.klan.proyecto.modelo;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -25,51 +23,66 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author patlani
  */
 @Entity
-@Table(catalog = "yumyum_ciencias", schema = "", uniqueConstraints = {
+@Table(name = "evaluacion", catalog = "yumyum_ciencias", schema = "", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"id_evaluacion"})})
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Evaluacion.findAll", query = "SELECT e FROM Evaluacion e")
     , @NamedQuery(name = "Evaluacion.findByIdEvaluacion", query = "SELECT e FROM Evaluacion e WHERE e.idEvaluacion = :idEvaluacion")
     , @NamedQuery(name = "Evaluacion.findByComentario", query = "SELECT e FROM Evaluacion e WHERE e.comentario = :comentario")
-    , @NamedQuery(name = "Evaluacion.findByCalificacion", query = "SELECT e FROM Evaluacion e WHERE e.calificacion = :calificacion")})
+    , @NamedQuery(name = "Evaluacion.findByCalificacion", query = "SELECT e FROM Evaluacion e WHERE e.calificacion = :calificacion")
+    , @NamedQuery(name = "Evaluacion.findByNombrePuesto", query = "SELECT e FROM Evaluacion e WHERE e.evaluacionPK.nombrePuesto = :nombrePuesto")
+    , @NamedQuery(name = "Evaluacion.findByNombreUsuario", query = "SELECT e FROM Evaluacion e WHERE e.evaluacionPK.nombreUsuario = :nombreUsuario")})
 public class Evaluacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EmbeddedId
+    protected EvaluacionPK evaluacionPK;
     @Basic(optional = false)
     @Column(name = "id_evaluacion", nullable = false)
-    private Long idEvaluacion;
+    private long idEvaluacion;
     @Column(length = 255)
     private String comentario;
     @Basic(optional = false)
     @Column(nullable = false)
     private int calificacion;
-    @JoinColumn(name = "id_puesto", referencedColumnName = "id_puesto", nullable = false)
+    @JoinColumn(name = "nombre_puesto", referencedColumnName = "nombre_puesto", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private Puesto idPuesto;
-    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario", nullable = false)
+    private Puesto puesto;
+    @JoinColumn(name = "nombre_usuario", referencedColumnName = "nombre_usuario", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private Usuario idUsuario;
+    private Usuario usuario;
 
     public Evaluacion() {
     }
 
-    public Evaluacion(Long idEvaluacion) {
-        this.idEvaluacion = idEvaluacion;
+    public Evaluacion(EvaluacionPK evaluacionPK) {
+        this.evaluacionPK = evaluacionPK;
     }
 
-    public Evaluacion(Long idEvaluacion, int calificacion) {
+    public Evaluacion(EvaluacionPK evaluacionPK, long idEvaluacion, int calificacion) {
+        this.evaluacionPK = evaluacionPK;
         this.idEvaluacion = idEvaluacion;
         this.calificacion = calificacion;
     }
 
-    public Long getIdEvaluacion() {
+    public Evaluacion(String nombrePuesto, String nombreUsuario) {
+        this.evaluacionPK = new EvaluacionPK(nombrePuesto, nombreUsuario);
+    }
+
+    public EvaluacionPK getEvaluacionPK() {
+        return evaluacionPK;
+    }
+
+    public void setEvaluacionPK(EvaluacionPK evaluacionPK) {
+        this.evaluacionPK = evaluacionPK;
+    }
+
+    public long getIdEvaluacion() {
         return idEvaluacion;
     }
 
-    public void setIdEvaluacion(Long idEvaluacion) {
+    public void setIdEvaluacion(long idEvaluacion) {
         this.idEvaluacion = idEvaluacion;
     }
 
@@ -89,26 +102,26 @@ public class Evaluacion implements Serializable {
         this.calificacion = calificacion;
     }
 
-    public Puesto getIdPuesto() {
-        return idPuesto;
+    public Puesto getPuesto() {
+        return puesto;
     }
 
-    public void setIdPuesto(Puesto idPuesto) {
-        this.idPuesto = idPuesto;
+    public void setPuesto(Puesto puesto) {
+        this.puesto = puesto;
     }
 
-    public Usuario getIdUsuario() {
-        return idUsuario;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setIdUsuario(Usuario idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idEvaluacion != null ? idEvaluacion.hashCode() : 0);
+        hash += (evaluacionPK != null ? evaluacionPK.hashCode() : 0);
         return hash;
     }
 
@@ -119,7 +132,7 @@ public class Evaluacion implements Serializable {
             return false;
         }
         Evaluacion other = (Evaluacion) object;
-        if ((this.idEvaluacion == null && other.idEvaluacion != null) || (this.idEvaluacion != null && !this.idEvaluacion.equals(other.idEvaluacion))) {
+        if ((this.evaluacionPK == null && other.evaluacionPK != null) || (this.evaluacionPK != null && !this.evaluacionPK.equals(other.evaluacionPK))) {
             return false;
         }
         return true;
@@ -127,7 +140,7 @@ public class Evaluacion implements Serializable {
 
     @Override
     public String toString() {
-        return "com.klan.proyecto.modelo.Evaluacion[ idEvaluacion=" + idEvaluacion + " ]";
+        return "com.klan.proyecto.modelo.Evaluacion[ evaluacionPK=" + evaluacionPK + " ]";
     }
     
 }

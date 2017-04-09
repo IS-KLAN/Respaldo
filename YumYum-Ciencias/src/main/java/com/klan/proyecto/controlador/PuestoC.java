@@ -7,12 +7,13 @@ package com.klan.proyecto.controlador;
 
 import com.klan.proyecto.controlador.exceptions.IllegalOrphanException;
 import com.klan.proyecto.controlador.exceptions.NonexistentEntityException;
+import com.klan.proyecto.controlador.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import com.klan.proyecto.modelo.Comida;
+import com.klan.proyecto.modelo.ComidaPuesto;
 import java.util.ArrayList;
 import java.util.List;
 import com.klan.proyecto.modelo.Evaluacion;
@@ -35,9 +36,9 @@ public class PuestoC implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Puesto puesto) {
-        if (puesto.getComidaList() == null) {
-            puesto.setComidaList(new ArrayList<Comida>());
+    public void create(Puesto puesto) throws PreexistingEntityException, Exception {
+        if (puesto.getComidaPuestoList() == null) {
+            puesto.setComidaPuestoList(new ArrayList<ComidaPuesto>());
         }
         if (puesto.getEvaluacionList() == null) {
             puesto.setEvaluacionList(new ArrayList<Evaluacion>());
@@ -46,33 +47,43 @@ public class PuestoC implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<Comida> attachedComidaList = new ArrayList<Comida>();
-            for (Comida comidaListComidaToAttach : puesto.getComidaList()) {
-                comidaListComidaToAttach = em.getReference(comidaListComidaToAttach.getClass(), comidaListComidaToAttach.getIdComida());
-                attachedComidaList.add(comidaListComidaToAttach);
+            List<ComidaPuesto> attachedComidaPuestoList = new ArrayList<ComidaPuesto>();
+            for (ComidaPuesto comidaPuestoListComidaPuestoToAttach : puesto.getComidaPuestoList()) {
+                comidaPuestoListComidaPuestoToAttach = em.getReference(comidaPuestoListComidaPuestoToAttach.getClass(), comidaPuestoListComidaPuestoToAttach.getComidaPuestoPK());
+                attachedComidaPuestoList.add(comidaPuestoListComidaPuestoToAttach);
             }
-            puesto.setComidaList(attachedComidaList);
+            puesto.setComidaPuestoList(attachedComidaPuestoList);
             List<Evaluacion> attachedEvaluacionList = new ArrayList<Evaluacion>();
             for (Evaluacion evaluacionListEvaluacionToAttach : puesto.getEvaluacionList()) {
-                evaluacionListEvaluacionToAttach = em.getReference(evaluacionListEvaluacionToAttach.getClass(), evaluacionListEvaluacionToAttach.getIdEvaluacion());
+                evaluacionListEvaluacionToAttach = em.getReference(evaluacionListEvaluacionToAttach.getClass(), evaluacionListEvaluacionToAttach.getEvaluacionPK());
                 attachedEvaluacionList.add(evaluacionListEvaluacionToAttach);
             }
             puesto.setEvaluacionList(attachedEvaluacionList);
             em.persist(puesto);
-            for (Comida comidaListComida : puesto.getComidaList()) {
-                comidaListComida.getPuestoList().add(puesto);
-                comidaListComida = em.merge(comidaListComida);
+            for (ComidaPuesto comidaPuestoListComidaPuesto : puesto.getComidaPuestoList()) {
+                Puesto oldPuestoOfComidaPuestoListComidaPuesto = comidaPuestoListComidaPuesto.getPuesto();
+                comidaPuestoListComidaPuesto.setPuesto(puesto);
+                comidaPuestoListComidaPuesto = em.merge(comidaPuestoListComidaPuesto);
+                if (oldPuestoOfComidaPuestoListComidaPuesto != null) {
+                    oldPuestoOfComidaPuestoListComidaPuesto.getComidaPuestoList().remove(comidaPuestoListComidaPuesto);
+                    oldPuestoOfComidaPuestoListComidaPuesto = em.merge(oldPuestoOfComidaPuestoListComidaPuesto);
+                }
             }
             for (Evaluacion evaluacionListEvaluacion : puesto.getEvaluacionList()) {
-                Puesto oldIdPuestoOfEvaluacionListEvaluacion = evaluacionListEvaluacion.getIdPuesto();
-                evaluacionListEvaluacion.setIdPuesto(puesto);
+                Puesto oldPuestoOfEvaluacionListEvaluacion = evaluacionListEvaluacion.getPuesto();
+                evaluacionListEvaluacion.setPuesto(puesto);
                 evaluacionListEvaluacion = em.merge(evaluacionListEvaluacion);
-                if (oldIdPuestoOfEvaluacionListEvaluacion != null) {
-                    oldIdPuestoOfEvaluacionListEvaluacion.getEvaluacionList().remove(evaluacionListEvaluacion);
-                    oldIdPuestoOfEvaluacionListEvaluacion = em.merge(oldIdPuestoOfEvaluacionListEvaluacion);
+                if (oldPuestoOfEvaluacionListEvaluacion != null) {
+                    oldPuestoOfEvaluacionListEvaluacion.getEvaluacionList().remove(evaluacionListEvaluacion);
+                    oldPuestoOfEvaluacionListEvaluacion = em.merge(oldPuestoOfEvaluacionListEvaluacion);
                 }
             }
             em.getTransaction().commit();
+        } catch (Exception ex) {
+            if (findPuesto(puesto.getNombrePuesto()) != null) {
+                throw new PreexistingEntityException("Puesto " + puesto + " already exists.", ex);
+            }
+            throw ex;
         } finally {
             if (em != null) {
                 em.close();
@@ -85,58 +96,65 @@ public class PuestoC implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Puesto persistentPuesto = em.find(Puesto.class, puesto.getIdPuesto());
-            List<Comida> comidaListOld = persistentPuesto.getComidaList();
-            List<Comida> comidaListNew = puesto.getComidaList();
+            Puesto persistentPuesto = em.find(Puesto.class, puesto.getNombrePuesto());
+            List<ComidaPuesto> comidaPuestoListOld = persistentPuesto.getComidaPuestoList();
+            List<ComidaPuesto> comidaPuestoListNew = puesto.getComidaPuestoList();
             List<Evaluacion> evaluacionListOld = persistentPuesto.getEvaluacionList();
             List<Evaluacion> evaluacionListNew = puesto.getEvaluacionList();
             List<String> illegalOrphanMessages = null;
+            for (ComidaPuesto comidaPuestoListOldComidaPuesto : comidaPuestoListOld) {
+                if (!comidaPuestoListNew.contains(comidaPuestoListOldComidaPuesto)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain ComidaPuesto " + comidaPuestoListOldComidaPuesto + " since its puesto field is not nullable.");
+                }
+            }
             for (Evaluacion evaluacionListOldEvaluacion : evaluacionListOld) {
                 if (!evaluacionListNew.contains(evaluacionListOldEvaluacion)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Evaluacion " + evaluacionListOldEvaluacion + " since its idPuesto field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Evaluacion " + evaluacionListOldEvaluacion + " since its puesto field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<Comida> attachedComidaListNew = new ArrayList<Comida>();
-            for (Comida comidaListNewComidaToAttach : comidaListNew) {
-                comidaListNewComidaToAttach = em.getReference(comidaListNewComidaToAttach.getClass(), comidaListNewComidaToAttach.getIdComida());
-                attachedComidaListNew.add(comidaListNewComidaToAttach);
+            List<ComidaPuesto> attachedComidaPuestoListNew = new ArrayList<ComidaPuesto>();
+            for (ComidaPuesto comidaPuestoListNewComidaPuestoToAttach : comidaPuestoListNew) {
+                comidaPuestoListNewComidaPuestoToAttach = em.getReference(comidaPuestoListNewComidaPuestoToAttach.getClass(), comidaPuestoListNewComidaPuestoToAttach.getComidaPuestoPK());
+                attachedComidaPuestoListNew.add(comidaPuestoListNewComidaPuestoToAttach);
             }
-            comidaListNew = attachedComidaListNew;
-            puesto.setComidaList(comidaListNew);
+            comidaPuestoListNew = attachedComidaPuestoListNew;
+            puesto.setComidaPuestoList(comidaPuestoListNew);
             List<Evaluacion> attachedEvaluacionListNew = new ArrayList<Evaluacion>();
             for (Evaluacion evaluacionListNewEvaluacionToAttach : evaluacionListNew) {
-                evaluacionListNewEvaluacionToAttach = em.getReference(evaluacionListNewEvaluacionToAttach.getClass(), evaluacionListNewEvaluacionToAttach.getIdEvaluacion());
+                evaluacionListNewEvaluacionToAttach = em.getReference(evaluacionListNewEvaluacionToAttach.getClass(), evaluacionListNewEvaluacionToAttach.getEvaluacionPK());
                 attachedEvaluacionListNew.add(evaluacionListNewEvaluacionToAttach);
             }
             evaluacionListNew = attachedEvaluacionListNew;
             puesto.setEvaluacionList(evaluacionListNew);
             puesto = em.merge(puesto);
-            for (Comida comidaListOldComida : comidaListOld) {
-                if (!comidaListNew.contains(comidaListOldComida)) {
-                    comidaListOldComida.getPuestoList().remove(puesto);
-                    comidaListOldComida = em.merge(comidaListOldComida);
-                }
-            }
-            for (Comida comidaListNewComida : comidaListNew) {
-                if (!comidaListOld.contains(comidaListNewComida)) {
-                    comidaListNewComida.getPuestoList().add(puesto);
-                    comidaListNewComida = em.merge(comidaListNewComida);
+            for (ComidaPuesto comidaPuestoListNewComidaPuesto : comidaPuestoListNew) {
+                if (!comidaPuestoListOld.contains(comidaPuestoListNewComidaPuesto)) {
+                    Puesto oldPuestoOfComidaPuestoListNewComidaPuesto = comidaPuestoListNewComidaPuesto.getPuesto();
+                    comidaPuestoListNewComidaPuesto.setPuesto(puesto);
+                    comidaPuestoListNewComidaPuesto = em.merge(comidaPuestoListNewComidaPuesto);
+                    if (oldPuestoOfComidaPuestoListNewComidaPuesto != null && !oldPuestoOfComidaPuestoListNewComidaPuesto.equals(puesto)) {
+                        oldPuestoOfComidaPuestoListNewComidaPuesto.getComidaPuestoList().remove(comidaPuestoListNewComidaPuesto);
+                        oldPuestoOfComidaPuestoListNewComidaPuesto = em.merge(oldPuestoOfComidaPuestoListNewComidaPuesto);
+                    }
                 }
             }
             for (Evaluacion evaluacionListNewEvaluacion : evaluacionListNew) {
                 if (!evaluacionListOld.contains(evaluacionListNewEvaluacion)) {
-                    Puesto oldIdPuestoOfEvaluacionListNewEvaluacion = evaluacionListNewEvaluacion.getIdPuesto();
-                    evaluacionListNewEvaluacion.setIdPuesto(puesto);
+                    Puesto oldPuestoOfEvaluacionListNewEvaluacion = evaluacionListNewEvaluacion.getPuesto();
+                    evaluacionListNewEvaluacion.setPuesto(puesto);
                     evaluacionListNewEvaluacion = em.merge(evaluacionListNewEvaluacion);
-                    if (oldIdPuestoOfEvaluacionListNewEvaluacion != null && !oldIdPuestoOfEvaluacionListNewEvaluacion.equals(puesto)) {
-                        oldIdPuestoOfEvaluacionListNewEvaluacion.getEvaluacionList().remove(evaluacionListNewEvaluacion);
-                        oldIdPuestoOfEvaluacionListNewEvaluacion = em.merge(oldIdPuestoOfEvaluacionListNewEvaluacion);
+                    if (oldPuestoOfEvaluacionListNewEvaluacion != null && !oldPuestoOfEvaluacionListNewEvaluacion.equals(puesto)) {
+                        oldPuestoOfEvaluacionListNewEvaluacion.getEvaluacionList().remove(evaluacionListNewEvaluacion);
+                        oldPuestoOfEvaluacionListNewEvaluacion = em.merge(oldPuestoOfEvaluacionListNewEvaluacion);
                     }
                 }
             }
@@ -144,7 +162,7 @@ public class PuestoC implements Serializable {
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Long id = puesto.getIdPuesto();
+                String id = puesto.getNombrePuesto();
                 if (findPuesto(id) == null) {
                     throw new NonexistentEntityException("The puesto with id " + id + " no longer exists.");
                 }
@@ -157,7 +175,7 @@ public class PuestoC implements Serializable {
         }
     }
 
-    public void destroy(Long id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -165,25 +183,27 @@ public class PuestoC implements Serializable {
             Puesto puesto;
             try {
                 puesto = em.getReference(Puesto.class, id);
-                puesto.getIdPuesto();
+                puesto.getNombrePuesto();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The puesto with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
+            List<ComidaPuesto> comidaPuestoListOrphanCheck = puesto.getComidaPuestoList();
+            for (ComidaPuesto comidaPuestoListOrphanCheckComidaPuesto : comidaPuestoListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Puesto (" + puesto + ") cannot be destroyed since the ComidaPuesto " + comidaPuestoListOrphanCheckComidaPuesto + " in its comidaPuestoList field has a non-nullable puesto field.");
+            }
             List<Evaluacion> evaluacionListOrphanCheck = puesto.getEvaluacionList();
             for (Evaluacion evaluacionListOrphanCheckEvaluacion : evaluacionListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Puesto (" + puesto + ") cannot be destroyed since the Evaluacion " + evaluacionListOrphanCheckEvaluacion + " in its evaluacionList field has a non-nullable idPuesto field.");
+                illegalOrphanMessages.add("This Puesto (" + puesto + ") cannot be destroyed since the Evaluacion " + evaluacionListOrphanCheckEvaluacion + " in its evaluacionList field has a non-nullable puesto field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            List<Comida> comidaList = puesto.getComidaList();
-            for (Comida comidaListComida : comidaList) {
-                comidaListComida.getPuestoList().remove(puesto);
-                comidaListComida = em.merge(comidaListComida);
             }
             em.remove(puesto);
             em.getTransaction().commit();
@@ -218,7 +238,7 @@ public class PuestoC implements Serializable {
         }
     }
 
-    public Puesto findPuesto(Long id) {
+    public Puesto findPuesto(String id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Puesto.class, id);

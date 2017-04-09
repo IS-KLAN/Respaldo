@@ -20,8 +20,7 @@
                                 <b:navLink value="Principal" iconAwesome="home" href="index.xhtml"></b:navLink>
                                 <b:navLink value="Ver Mapa" icon="cross" href="mapa.xhtml"></b:navLink>
                                 <b:navLink value="Ver Puesto" href="perfilPuesto.xhtml"></b:navLink>
-                                <b:navLink value="Iniciar Sesion" href="ingresoUsuario.xhtml"></b:navLink>
-                                <b:navLink value="Registrarse" href="registro.xhtml"></b:navLink>
+                                <b:navLink value="Cerrar Sesion" href="index.xhtml"></b:navLink>
                         </b:navbarLinks>
                 </b:navBar>
         </b:container>
@@ -30,7 +29,7 @@
               <b:container>
                 <h2>Inicio</h2>
                 <p><b:messages/></p>
-                <p><h:outputLabel value="Ingreso con el usuario: "/><b:label text="#{logout.usuario}" severity="info"/></p>
+                <p><h:outputLabel value="Ingreso con el usuario: "/><b:label text="#{contenido.usuario.nombreUsuario}" severity="info"/></p>
                 <h:form>
                   <section class="seccionBotones">
                     <b:commandButton value="cerrar session" action="#{logout.cerrarSession()}"/>

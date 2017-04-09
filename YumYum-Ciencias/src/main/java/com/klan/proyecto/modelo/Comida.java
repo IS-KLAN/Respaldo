@@ -8,16 +8,13 @@ package com.klan.proyecto.modelo;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -28,66 +25,67 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author patlani
  */
 @Entity
-@Table(catalog = "yumyum_ciencias", schema = "", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"nombre_alimento"})
-    , @UniqueConstraint(columnNames = {"id_comida"})})
+@Table(name = "comida", catalog = "yumyum_ciencias", schema = "", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"id_comida"})})
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Comida.findAll", query = "SELECT c FROM Comida c")
     , @NamedQuery(name = "Comida.findByIdComida", query = "SELECT c FROM Comida c WHERE c.idComida = :idComida")
-    , @NamedQuery(name = "Comida.findByNombreAlimento", query = "SELECT c FROM Comida c WHERE c.nombreAlimento = :nombreAlimento")})
+    , @NamedQuery(name = "Comida.findByNombreComida", query = "SELECT c FROM Comida c WHERE c.nombreComida = :nombreComida")})
 public class Comida implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_comida", nullable = false)
-    private Long idComida;
-    @Column(name = "nombre_alimento", length = 64)
-    private String nombreAlimento;
-    @JoinTable(name = "comida_puesto", joinColumns = {
-        @JoinColumn(name = "id_comida", referencedColumnName = "id_comida", nullable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "id_puesto", referencedColumnName = "id_puesto", nullable = false)})
-    @ManyToMany
-    private List<Puesto> puestoList;
+    private long idComida;
+    @Id
+    @Basic(optional = false)
+    @Column(name = "nombre_comida", nullable = false, length = 64)
+    private String nombreComida;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "comida")
+    private List<ComidaPuesto> comidaPuestoList;
 
     public Comida() {
     }
 
-    public Comida(Long idComida) {
+    public Comida(String nombreComida) {
+        this.nombreComida = nombreComida;
+    }
+
+    public Comida(String nombreComida, long idComida) {
+        this.nombreComida = nombreComida;
         this.idComida = idComida;
     }
 
-    public Long getIdComida() {
+    public long getIdComida() {
         return idComida;
     }
 
-    public void setIdComida(Long idComida) {
+    public void setIdComida(long idComida) {
         this.idComida = idComida;
     }
 
-    public String getNombreAlimento() {
-        return nombreAlimento;
+    public String getNombreComida() {
+        return nombreComida;
     }
 
-    public void setNombreAlimento(String nombreAlimento) {
-        this.nombreAlimento = nombreAlimento;
+    public void setNombreComida(String nombreComida) {
+        this.nombreComida = nombreComida;
     }
 
     @XmlTransient
-    public List<Puesto> getPuestoList() {
-        return puestoList;
+    public List<ComidaPuesto> getComidaPuestoList() {
+        return comidaPuestoList;
     }
 
-    public void setPuestoList(List<Puesto> puestoList) {
-        this.puestoList = puestoList;
+    public void setComidaPuestoList(List<ComidaPuesto> comidaPuestoList) {
+        this.comidaPuestoList = comidaPuestoList;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idComida != null ? idComida.hashCode() : 0);
+        hash += (nombreComida != null ? nombreComida.hashCode() : 0);
         return hash;
     }
 
@@ -98,7 +96,7 @@ public class Comida implements Serializable {
             return false;
         }
         Comida other = (Comida) object;
-        if ((this.idComida == null && other.idComida != null) || (this.idComida != null && !this.idComida.equals(other.idComida))) {
+        if ((this.nombreComida == null && other.nombreComida != null) || (this.nombreComida != null && !this.nombreComida.equals(other.nombreComida))) {
             return false;
         }
         return true;
@@ -106,7 +104,7 @@ public class Comida implements Serializable {
 
     @Override
     public String toString() {
-        return "com.klan.proyecto.modelo.Comida[ idComida=" + idComida + " ]";
+        return "com.klan.proyecto.modelo.Comida[ nombreComida=" + nombreComida + " ]";
     }
     
 }

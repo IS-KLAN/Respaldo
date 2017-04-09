@@ -6,7 +6,9 @@
 package com.klan.proyecto.controlador;
 
 import com.klan.proyecto.controlador.exceptions.NonexistentEntityException;
+import com.klan.proyecto.controlador.exceptions.PreexistingEntityException;
 import com.klan.proyecto.modelo.Evaluacion;
+import com.klan.proyecto.modelo.EvaluacionPK;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -33,31 +35,41 @@ public class EvaluacionC implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Evaluacion evaluacion) {
+    public void create(Evaluacion evaluacion) throws PreexistingEntityException, Exception {
+        if (evaluacion.getEvaluacionPK() == null) {
+            evaluacion.setEvaluacionPK(new EvaluacionPK());
+        }
+        evaluacion.getEvaluacionPK().setNombreUsuario(evaluacion.getUsuario().getNombreUsuario());
+        evaluacion.getEvaluacionPK().setNombrePuesto(evaluacion.getPuesto().getNombrePuesto());
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Puesto idPuesto = evaluacion.getIdPuesto();
-            if (idPuesto != null) {
-                idPuesto = em.getReference(idPuesto.getClass(), idPuesto.getIdPuesto());
-                evaluacion.setIdPuesto(idPuesto);
+            Puesto puesto = evaluacion.getPuesto();
+            if (puesto != null) {
+                puesto = em.getReference(puesto.getClass(), puesto.getNombrePuesto());
+                evaluacion.setPuesto(puesto);
             }
-            Usuario idUsuario = evaluacion.getIdUsuario();
-            if (idUsuario != null) {
-                idUsuario = em.getReference(idUsuario.getClass(), idUsuario.getIdUsuario());
-                evaluacion.setIdUsuario(idUsuario);
+            Usuario usuario = evaluacion.getUsuario();
+            if (usuario != null) {
+                usuario = em.getReference(usuario.getClass(), usuario.getNombreUsuario());
+                evaluacion.setUsuario(usuario);
             }
             em.persist(evaluacion);
-            if (idPuesto != null) {
-                idPuesto.getEvaluacionList().add(evaluacion);
-                idPuesto = em.merge(idPuesto);
+            if (puesto != null) {
+                puesto.getEvaluacionList().add(evaluacion);
+                puesto = em.merge(puesto);
             }
-            if (idUsuario != null) {
-                idUsuario.getEvaluacionList().add(evaluacion);
-                idUsuario = em.merge(idUsuario);
+            if (usuario != null) {
+                usuario.getEvaluacionList().add(evaluacion);
+                usuario = em.merge(usuario);
             }
             em.getTransaction().commit();
+        } catch (Exception ex) {
+            if (findEvaluacion(evaluacion.getEvaluacionPK()) != null) {
+                throw new PreexistingEntityException("Evaluacion " + evaluacion + " already exists.", ex);
+            }
+            throw ex;
         } finally {
             if (em != null) {
                 em.close();
@@ -66,45 +78,47 @@ public class EvaluacionC implements Serializable {
     }
 
     public void edit(Evaluacion evaluacion) throws NonexistentEntityException, Exception {
+        evaluacion.getEvaluacionPK().setNombreUsuario(evaluacion.getUsuario().getNombreUsuario());
+        evaluacion.getEvaluacionPK().setNombrePuesto(evaluacion.getPuesto().getNombrePuesto());
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Evaluacion persistentEvaluacion = em.find(Evaluacion.class, evaluacion.getIdEvaluacion());
-            Puesto idPuestoOld = persistentEvaluacion.getIdPuesto();
-            Puesto idPuestoNew = evaluacion.getIdPuesto();
-            Usuario idUsuarioOld = persistentEvaluacion.getIdUsuario();
-            Usuario idUsuarioNew = evaluacion.getIdUsuario();
-            if (idPuestoNew != null) {
-                idPuestoNew = em.getReference(idPuestoNew.getClass(), idPuestoNew.getIdPuesto());
-                evaluacion.setIdPuesto(idPuestoNew);
+            Evaluacion persistentEvaluacion = em.find(Evaluacion.class, evaluacion.getEvaluacionPK());
+            Puesto puestoOld = persistentEvaluacion.getPuesto();
+            Puesto puestoNew = evaluacion.getPuesto();
+            Usuario usuarioOld = persistentEvaluacion.getUsuario();
+            Usuario usuarioNew = evaluacion.getUsuario();
+            if (puestoNew != null) {
+                puestoNew = em.getReference(puestoNew.getClass(), puestoNew.getNombrePuesto());
+                evaluacion.setPuesto(puestoNew);
             }
-            if (idUsuarioNew != null) {
-                idUsuarioNew = em.getReference(idUsuarioNew.getClass(), idUsuarioNew.getIdUsuario());
-                evaluacion.setIdUsuario(idUsuarioNew);
+            if (usuarioNew != null) {
+                usuarioNew = em.getReference(usuarioNew.getClass(), usuarioNew.getNombreUsuario());
+                evaluacion.setUsuario(usuarioNew);
             }
             evaluacion = em.merge(evaluacion);
-            if (idPuestoOld != null && !idPuestoOld.equals(idPuestoNew)) {
-                idPuestoOld.getEvaluacionList().remove(evaluacion);
-                idPuestoOld = em.merge(idPuestoOld);
+            if (puestoOld != null && !puestoOld.equals(puestoNew)) {
+                puestoOld.getEvaluacionList().remove(evaluacion);
+                puestoOld = em.merge(puestoOld);
             }
-            if (idPuestoNew != null && !idPuestoNew.equals(idPuestoOld)) {
-                idPuestoNew.getEvaluacionList().add(evaluacion);
-                idPuestoNew = em.merge(idPuestoNew);
+            if (puestoNew != null && !puestoNew.equals(puestoOld)) {
+                puestoNew.getEvaluacionList().add(evaluacion);
+                puestoNew = em.merge(puestoNew);
             }
-            if (idUsuarioOld != null && !idUsuarioOld.equals(idUsuarioNew)) {
-                idUsuarioOld.getEvaluacionList().remove(evaluacion);
-                idUsuarioOld = em.merge(idUsuarioOld);
+            if (usuarioOld != null && !usuarioOld.equals(usuarioNew)) {
+                usuarioOld.getEvaluacionList().remove(evaluacion);
+                usuarioOld = em.merge(usuarioOld);
             }
-            if (idUsuarioNew != null && !idUsuarioNew.equals(idUsuarioOld)) {
-                idUsuarioNew.getEvaluacionList().add(evaluacion);
-                idUsuarioNew = em.merge(idUsuarioNew);
+            if (usuarioNew != null && !usuarioNew.equals(usuarioOld)) {
+                usuarioNew.getEvaluacionList().add(evaluacion);
+                usuarioNew = em.merge(usuarioNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Long id = evaluacion.getIdEvaluacion();
+                EvaluacionPK id = evaluacion.getEvaluacionPK();
                 if (findEvaluacion(id) == null) {
                     throw new NonexistentEntityException("The evaluacion with id " + id + " no longer exists.");
                 }
@@ -117,7 +131,7 @@ public class EvaluacionC implements Serializable {
         }
     }
 
-    public void destroy(Long id) throws NonexistentEntityException {
+    public void destroy(EvaluacionPK id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -125,19 +139,19 @@ public class EvaluacionC implements Serializable {
             Evaluacion evaluacion;
             try {
                 evaluacion = em.getReference(Evaluacion.class, id);
-                evaluacion.getIdEvaluacion();
+                evaluacion.getEvaluacionPK();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The evaluacion with id " + id + " no longer exists.", enfe);
             }
-            Puesto idPuesto = evaluacion.getIdPuesto();
-            if (idPuesto != null) {
-                idPuesto.getEvaluacionList().remove(evaluacion);
-                idPuesto = em.merge(idPuesto);
+            Puesto puesto = evaluacion.getPuesto();
+            if (puesto != null) {
+                puesto.getEvaluacionList().remove(evaluacion);
+                puesto = em.merge(puesto);
             }
-            Usuario idUsuario = evaluacion.getIdUsuario();
-            if (idUsuario != null) {
-                idUsuario.getEvaluacionList().remove(evaluacion);
-                idUsuario = em.merge(idUsuario);
+            Usuario usuario = evaluacion.getUsuario();
+            if (usuario != null) {
+                usuario.getEvaluacionList().remove(evaluacion);
+                usuario = em.merge(usuario);
             }
             em.remove(evaluacion);
             em.getTransaction().commit();
@@ -172,7 +186,7 @@ public class EvaluacionC implements Serializable {
         }
     }
 
-    public Evaluacion findEvaluacion(Long id) {
+    public Evaluacion findEvaluacion(EvaluacionPK id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Evaluacion.class, id);
@@ -193,5 +207,14 @@ public class EvaluacionC implements Serializable {
             em.close();
         }
     }
-    
+
+    public List<Evaluacion> findByNombrePuesto(String nombrePuesto) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.createNamedQuery("Evaluacion.findByNombrePuesto")
+                    .setParameter("nombrePuesto", nombrePuesto).getResultList();
+        } finally {
+            em.close();
+        }
+    }
 }

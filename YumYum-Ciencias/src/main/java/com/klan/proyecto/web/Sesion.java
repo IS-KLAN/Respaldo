@@ -5,10 +5,17 @@
  */
 package com.klan.proyecto.web;
 
+import com.klan.proyecto.controlador.PuestoC;
+import com.klan.proyecto.controlador.UsuarioC;
+import com.klan.proyecto.modelo.Puesto;
+import com.klan.proyecto.modelo.Usuario;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -22,9 +29,9 @@ import javax.servlet.http.HttpServletRequest;
 @RequestScoped // Sólo está disponible a partir de peticiones al bean
 public class Sesion {
 
-    private String usuario;
-    private String puesto;
-    private final HttpServletRequest httpServletRequest; // Obtiene información de todas las peticiones de usuario.
+    private String nombreUsuario;
+    private String nombrePuesto;
+    private final HttpServletRequest httpServletRequest; // Obtiene información de todas las peticiones de nombreUsuario.
     private final FacesContext faceContext; // Obtiene información de la aplicación
     private FacesMessage message;
 
@@ -38,48 +45,51 @@ public class Sesion {
     }
 
     /**
-     * Obtiene el nombre de usuario.
+     * Obtiene el nombre de nombreUsuario.
      *
-     * @return El nombre de usuario.
+     * @return El nombre de nombreUsuario.
      */
-    public String getUsuario() {
-        return usuario;
+    public String getNombreUsuario() {
+        return nombreUsuario;
     }
 
     /**
-     * Establece el nombre de usuario.
+     * Establece el nombre de nombreUsuario.
      *
-     * @param usuario El nombre de usuario a establecer.
+     * @param nombreUsuario El nombre de nombreUsuario a establecer.
      */
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
     }
 
     /**
-     * Regresa la contraseña del usuario.
+     * Regresa el nombrePuesto elegido.
      *
-     * @return La contraseña del usuario.
+     * @return El nombrePuesto elegido.
      */
-    public String getPuesto() {
-        return puesto;
+    public String getNombrePuesto() {
+        return nombrePuesto;
     }
 
     /**
-     * Establece la contraseña del usuario.
+     * Establece el nombrePuesto elegido.
      *
-     * @param contrasena La contraseña del usuario a establecer.
+     * @param nombrePuesto El nombrePuesto elegido por el nombreUsuario.
      */
-    public void setPuesto(String puesto) {
-        this.puesto = puesto;
+    public void setNombrePuesto(String nombrePuesto) {
+        this.nombrePuesto = nombrePuesto;
     }
 
     /**
-     * Método encargado de validar el inicio de sesión.
-     *
+     * Método encargado de capturar los datos ingresados.
      * @return El nombre de la vista que va a responder.
      */
     public String capturar() {
-        httpServletRequest.getSession().setAttribute("idusuario", usuario);
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
+        Usuario u = new UsuarioC(emf).findUsuario(nombreUsuario);
+        Puesto p = new PuestoC(emf).findPuesto(nombrePuesto);
+        httpServletRequest.getSession().setAttribute("usuario", u);
+        httpServletRequest.getSession().setAttribute("puesto", p);
         message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Acceso Correcto", null);
         faceContext.addMessage(null, message);
         return "perfilPuesto";

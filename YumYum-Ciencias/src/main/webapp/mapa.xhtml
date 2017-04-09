@@ -1,21 +1,20 @@
-<?xml version='1.0' encoding='UTF-8' ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:b="http://bootsfaces.net/ui"
-      xmlns:p="http://primefaces.org/ui">
-  <h:head>
-    <title>YumYum Ciencias - Mapa</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
-    <meta name="author" content="KLAN"></meta>
-    <meta charset="utf-8"/>
-    <script src="http://maps.google.com/maps/api/js?key=AIzaSyBlEYhBfp104jOYDy-TOhTYkSd8YBtkLFI" type="text/javascript"></script>
-    <style>
-        .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
-        { background-color: #ddd !important; }
-    </style>
-  </h:head>
+<html  xmlns="http://www.w3.org/1999/xhtml"
+            xmlns:h="http://java.sun.com/jsf/html"
+            xmlns:p="http://primefaces.org/ui"
+            xmlns:f="http://java.sun.com/jsf/core"
+            xmlns:b="http://bootsfaces.net/ui">
+    <h:head>
+        <title>YumYum CIencias</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="author" content="KLAN"></meta>
+        <script src="http://maps.google.com/maps/api/js?key=AIzaSyBlEYhBfp104jOYDy-TOhTYkSd8YBtkLFI" type="text/javascript"></script>
+        <style>
+            .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
+            { background-color: #ddd !important; }
+        </style>
+    </h:head>
     <h:body style="padding-top:75px">
         <!-- Barra de navegación. -->
         <b:container id="menu">
@@ -24,7 +23,7 @@
                                 <b:navLink value="Principal" iconAwesome="home" href="index.xhtml"></b:navLink>
                                 <b:navLink value="Ver Mapa" icon="cross" href="mapa.xhtml"></b:navLink>
                                 <b:navLink value="Ver Puesto" href="perfilPuesto.xhtml"></b:navLink>
-                                <b:navLink value="Iniciar Sesion" href="#"></b:navLink>
+                                <b:navLink value="Iniciar Sesion" href="ingresoUsuario.xhtml"></b:navLink>
                                 <b:navLink value="Registrarse" href="registro.xhtml"></b:navLink>
                         </b:navbarLinks>
                 </b:navBar>
