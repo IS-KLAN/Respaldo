@@ -60,9 +60,9 @@ public class Evaluacion implements Serializable {
         this.evaluacionPK = evaluacionPK;
     }
 
-    public Evaluacion(EvaluacionPK evaluacionPK, long idEvaluacion, int calificacion) {
+    public Evaluacion(EvaluacionPK evaluacionPK, String comentario, int calificacion) {
         this.evaluacionPK = evaluacionPK;
-        this.idEvaluacion = idEvaluacion;
+        this.comentario = comentario;
         this.calificacion = calificacion;
     }
 

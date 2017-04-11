@@ -207,14 +207,4 @@ public class ComidaPuestoC implements Serializable {
             em.close();
         }
     }
-
-    public List<ComidaPuesto> findByNombrePuesto(String nombrePuesto) {
-        EntityManager em = getEntityManager();
-        try {
-            return em.createNamedQuery("ComidaPuesto.findByNombrePuesto")
-                    .setParameter("nombrePuesto", nombrePuesto).getResultList();
-        } finally {
-            em.close();
-        }
-    }
 }

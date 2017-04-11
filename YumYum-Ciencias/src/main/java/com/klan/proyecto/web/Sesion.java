@@ -17,6 +17,7 @@ import javax.faces.context.FacesContext;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
 
 /**
  *
@@ -27,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @ManagedBean // LEER LA DOCUMENTACIÖN DE ESTA ANOTACIÓN: Permite dar de alta al bean en la aplicación
 @RequestScoped // Sólo está disponible a partir de peticiones al bean
-public class Sesion {
+public class Sesion implements Serializable{
 
     private String nombreUsuario;
     private String nombrePuesto;
