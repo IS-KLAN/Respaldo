@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml"
+            xmlns:ui="http://java.sun.com/jsf/facelets"
+            xmlns:h="http://java.sun.com/jsf/html"
+            xmlns:b="http://bootsfaces.net/ui">
+    <b:carousel id="puestos" style="width:77%" interval="3000">
+        <b:carouselItem>
+            <b:image value="resources/#{carrusel.primero.rutaImagen}" alt="YumYum-CIencias" style="width: 100%; height: 550px" />
+            <b:carouselCaption style="text-shadow: black 0.2em 0.2em 0.2em">
+                    <b:row><h:outputText value="Puesto #{carrusel.primero.nombrePuesto}" style="font-size: larger"/></b:row>
+                    <h:outputText value="#{carrusel.primero.descripcion}" style="font-size: medium"/>
+                </b:carouselCaption>
+        </b:carouselItem>
+        <ui:repeat var="p" value="#{carrusel.puestos}">
+            <b:carouselItem >
+                <b:image value="resources/#{p.rutaImagen}" alt="YumYum-CIencias" style="width: 100%; height: 550px" />
+                <b:carouselCaption style="text-shadow: black 0.2em 0.2em 0.2em">
+                    <b:row><h:outputText value="Puesto #{p.nombrePuesto}" style="font-size: larger"/></b:row>
+                    <h:outputText value="#{p.descripcion}" style="font-size: medium"/>
+                </b:carouselCaption>
+           </b:carouselItem>
+        </ui:repeat>
+     </b:carousel>
+</html>

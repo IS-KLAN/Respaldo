@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html  xmlns="http://www.w3.org/1999/xhtml"
+            xmlns:ui="http://java.sun.com/jsf/facelets"
             xmlns:h="http://java.sun.com/jsf/html"
             xmlns:b="http://bootsfaces.net/ui"
-            xmlns:ui="http://java.sun.com/jsf/facelets"
-            xmlns:f="http://java.sun.com/jsf/core"
             xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>YumYum Ciencias - Detalles de puesto</title>
@@ -15,36 +14,37 @@
             { background-color: #ddd !important; }
         </style>
     </h:head>
-    <h:body style="padding-top:75px">
+    <h:body style="padding-top:60px">
         <!-- Barra de navegación. -->
         <b:container id="menu">
-                <b:navBar brand="YumYum Ciencias" inverse="true" brandHref="#" fixed="top">
+                <b:navBar brand="YumYum Ciencias" inverse="true" brandHref="index.xhtml" fixed="top">
                         <b:navbarLinks>
                                 <b:navLink value="Principal" iconAwesome="home" href="index.xhtml"></b:navLink>
                                 <b:navLink value="Ver Mapa" icon="cross" href="mapa.xhtml"></b:navLink>
                                 <b:navLink value="Ver Puesto" href="perfilPuesto.xhtml"></b:navLink>
-                                <b:navLink value="Iniciar Sesion" href="ingresoUsuario.xhtml"></b:navLink>
-                                <b:navLink value="Registrarse" href="registro.xhtml"></b:navLink>
+                                <b:navLink value="Salir (#{contenido.usuario.nombreUsuario})" href="ingresoUsuario.xhtml"></b:navLink>
                         </b:navbarLinks>
                 </b:navBar>
         </b:container>
-        <b:row>
-            <b:column>
-                <h3>Puesto:</h3>
-                <b:image value="resources/puesto.jpg"/>
-            </b:column>
-            <b:column>
-                <p:dataTable value="#{contenido.comida}" var="c" resizableColumns="true" liveResize="true"
-                             scrollRows="20" scrollable="true" liveScroll="true" scrollHeight="200" scrollWidth="150">
-                    <p:column headerText="Nombre de la comida:" sortBy="#{c.comida.nombreComida}">
-                        <h:outputText value="#{c.comida.nombreComida}" />
-                    </p:column>
-                </p:dataTable>
-            </b:column>
-        </b:row>
         <p><b:messages/></p>
-        <p><h:outputLabel value="Usuario: "/><b:label text="#{contenido.usuario.nombreUsuario}" severity="info"/></p>
-        <p><h:outputLabel value="Puesto: "/><b:label text="#{contenido.puesto.nombrePuesto}" severity="info"/></p>
+        <b:container>
+            <h:outputLabel value="Puesto #{contenido.puesto.nombrePuesto}" style="font-size: large">
+                <h:form>
+                    <p:rating value="#{contenido.calificacionGlobal}" readonly="true" />
+                </h:form>
+            </h:outputLabel>
+            <b:tabView>
+                <b:tab title="Descripción">
+                    <ui:include src="perfilPuesto/descripcion.xhtml" />
+                </b:tab>
+                <b:tab title="Comida">
+                    <ui:include src="perfilPuesto/comida.xhtml" />
+                </b:tab>
+                <b:tab title="Comentarios">
+                    <ui:include src="perfilPuesto/evaluaciones.xhtml" />
+                </b:tab>
+            </b:tabView>
+        </b:container>
         <footer> <p><br>© Company 2017</br></p> </footer>
     </h:body>
 </html>

@@ -1,0 +1,11 @@
+<html  xmlns="http://www.w3.org/1999/xhtml"
+            xmlns:h="http://java.sun.com/jsf/html"
+            xmlns:p="http://primefaces.org/ui">
+    <h:form>
+        <p:panel id="datos">
+            <h:dataTable value="#{contenido.puesto.comidaPuestoList}" var="c">
+                <h:column> #{c.comida.nombreComida} />
+            </h:dataTable>
+        </p:panel>
+    </h:form>
+</html>
