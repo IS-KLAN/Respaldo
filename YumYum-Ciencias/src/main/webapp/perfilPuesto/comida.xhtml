@@ -1,0 +1,15 @@
+<html  xmlns="http://www.w3.org/1999/xhtml"
+            xmlns:h="http://java.sun.com/jsf/html"
+            xmlns:b="http://bootsfaces.net/ui"
+            xmlns:p="http://primefaces.org/ui">
+    <h:form>
+        <b:panelGrid columns="1">
+            <p:dataTable value="#{contenido.puesto.comidaPuestoList}" var="c"
+                         scrollRows="20" scrollable="true" liveScroll="true" scrollHeight="250">
+                <p:column>
+                    <b:label severity="primary" text="#{c.comida.nombreComida}" tiny-screen="one-fourth" style="font-size: small"/>
+                </p:column>
+            </p:dataTable>
+        </b:panelGrid>
+    </h:form>
+</html>
