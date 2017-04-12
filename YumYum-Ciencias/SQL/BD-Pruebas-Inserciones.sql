@@ -12,15 +12,14 @@ INSERT INTO usuario (nombre_usuario, correo, contraseña) VALUES('miguel', 'migu
 
 -- Se insertan puestos de prueba.
 INSERT INTO puesto (nombre_puesto, descripcion, latitud, longitud, rutaImagen)
-VALUES('N1', 'Es un puesto del estacionamiento', '-1121.0', '432.53', 'N1.jpg');
+VALUES('Cafesin','Este es un puesto ideal para encontrar todo tipo de comida', '19.324927', '-99.182147','N1.jpg');
 INSERT INTO puesto (nombre_puesto, descripcion, latitud, longitud, rutaImagen)
-VALUES('N2', 'Es un puesto del estacionamiento', '1212.0', '-292.20', 'N2.jpg');
+VALUES('N2','Es un puesto del estacionamiento', '19.323543', '-99.178098','N2.jpg');
 INSERT INTO puesto (nombre_puesto, descripcion, latitud, longitud, rutaImagen)
-VALUES('N3', 'Es un puesto del estacionamiento', '3221.0', '121.52', 'N3.jpg');
+VALUES('N3','Es un puesto del estacionamiento', '19.323485', '-99.180744','N3.jpg');
 INSERT INTO puesto (nombre_puesto, descripcion, latitud, longitud, rutaImagen)
-VALUES('N4', 'Es un puesto del estacionamiento', '-1121.0', '992.21', 'N4.jpg');
-INSERT INTO puesto (nombre_puesto, descripcion, latitud, longitud, rutaImagen)
-VALUES('Harry', 'Este es un puesto ideal para encontrar todo tipo de comida', '31921.0', '121.52', 'Harry.jpg');
+VALUES('Harry', 'Este es un puesto ideal para encontrar todo tipo de comida', '19.324332', ' -99.179154', 'Harry.jpg');
+
 
 -- Se insertan comidas de prueba.
 INSERT INTO comida (nombre_comida) VALUES('bollos');
@@ -66,21 +65,21 @@ INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Harry', 'jugo')
 INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Harry', 'refresco');
 INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Harry', 'licuado');
 INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Harry', 'café');
--- Se insertan comida a N1.
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N1', 'burritos');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N1', 'enchiladas');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N1', 'gorditas');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N1', 'huaraches');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N1', 'pambazos');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N1', 'sincronizadas');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N1', 'tostadas');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N1', 'tacos');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N1', 'hot-dogs');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N1', 'agua de sabor');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N1', 'café');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N1', 'jugo');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N1', 'licuado');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N1', 'refresco');
+-- Se insertan comida a Cafesin.
+INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Cafesin', 'burritos');
+INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Cafesin', 'enchiladas');
+INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Cafesin', 'gorditas');
+INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Cafesin', 'huaraches');
+INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Cafesin', 'pambazos');
+INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Cafesin', 'sincronizadas');
+INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Cafesin', 'tostadas');
+INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Cafesin', 'tacos');
+INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Cafesin', 'hot-dogs');
+INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Cafesin', 'agua de sabor');
+INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Cafesin', 'café');
+INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Cafesin', 'jugo');
+INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Cafesin', 'licuado');
+INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Cafesin', 'refresco');
 -- Se insertan comida a N2.
 INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N2', 'bollos');
 INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N2', 'burritos');
@@ -109,16 +108,16 @@ INSERT INTO evaluacion (comentario, calificacion, nombre_puesto, nombre_usuario)
 VALUES('Sólo he ido a comprar una vez y nunca volví.', 1, 'Harry', 'karla');
 INSERT INTO evaluacion (comentario, calificacion, nombre_puesto, nombre_usuario)
 VALUES('Es más la mala fama que tiene, porque me gusta su comida.', 1, 'Harry', 'hanna');
--- Se insertan comentarios a N1.
+-- Se insertan comentarios a Cafesin.
 INSERT INTO evaluacion (comentario, calificacion, nombre_puesto, nombre_usuario)
-VALUES('Tienen comida muy variada.', 4, 'N1', 'karla');
+VALUES('Tienen comida muy variada.', 4, 'Cafesin', 'karla');
 INSERT INTO evaluacion (comentario, calificacion, nombre_puesto, nombre_usuario)
-VALUES('Venden mi comida favorita.', 5, 'N1', 'nancy');
+VALUES('Venden mi comida favorita.', 5, 'Cafesin', 'nancy');
 INSERT INTO evaluacion (comentario, calificacion, nombre_puesto, nombre_usuario)
-VALUES('La comida es muy buena y barata.', 4, 'N1', 'hanna');
+VALUES('La comida es muy buena y barata.', 4, 'Cafesin', 'hanna');
 INSERT INTO evaluacion (comentario, calificacion, nombre_puesto, nombre_usuario)
-VALUES('No siempre tienen lo que dicen vender.', 3, 'N1', 'miguel');
+VALUES('No siempre tienen lo que dicen vender.', 3, 'Cafesin', 'miguel');
 INSERT INTO evaluacion (comentario, calificacion, nombre_puesto, nombre_usuario)
-VALUES('A veces tardan mucho en atender.', 2, 'N1', 'isael');
+VALUES('A veces tardan mucho en atender.', 2, 'Cafesin', 'isael');
 INSERT INTO evaluacion (comentario, calificacion, nombre_puesto, nombre_usuario)
-VALUES('Es el mejor de los puestos del estacionamiento.', 5, 'N1', 'anahí');
+VALUES('Es el mejor de los puestos del estacionamiento.', 5, 'Cafesin', 'anahí');
