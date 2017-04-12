@@ -1,0 +1,19 @@
+<html  xmlns="http://www.w3.org/1999/xhtml"
+            xmlns:ui="http://java.sun.com/jsf/facelets"
+            xmlns:h="http://java.sun.com/jsf/html"
+            xmlns:p="http://primefaces.org/ui"
+            xmlns:b="http://bootsfaces.net/ui">
+    <h:form>
+        <h:panelGrid id="datos">
+            <ui:include src="#{contenido.evaluacionesDisponibles()}.xhtml"></ui:include>
+        </h:panelGrid>
+        <h:panelGrid id="campo">
+            <p:rating id="calificacion" value="#{contenido.calificacion}" stars="5" cancel="false" onRate="#{contenido.setCalificacion(value)}"/>
+            <b:inputText style="margin: 5px" id="comentario" placeholder="Escribe tu comentario ..." value="#{contenido.comentario}"/>
+        </h:panelGrid>
+        <b:commandButton look="sucess" size="sm" value="Guardar" icon="ok"
+        update="datos" process="@all" actionListener="#{contenido.comentar()}"/>
+        <b:commandButton look="danger" size="sm" value="Cancelar" icon="remove"
+        update="campo" process="@this" action-listener="#{contenido.cancelar()}"/>
+    </h:form>
+</html>
