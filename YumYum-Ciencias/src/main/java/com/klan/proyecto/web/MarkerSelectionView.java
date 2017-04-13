@@ -40,9 +40,9 @@ public class MarkerSelectionView implements Serializable {
     private MapModel simpleModel;
     private Marker marker;
     
-    private Puesto puesto;
     private final HttpServletRequest httpServletRequest; // Obtiene información de todas las peticiones de usuario.
     private final FacesContext faceContext; // Obtiene información de la aplicación
+    private ExternalContext ec;
     
     public MarkerSelectionView() {
         faceContext = FacesContext.getCurrentInstance();
@@ -62,22 +62,40 @@ public class MarkerSelectionView implements Serializable {
             simpleModel.addOverlay(new Marker(new LatLng(lat, lon), nombre)); 
         }       
     }
+
       
+    public void onMarkerSelect(OverlaySelectEvent event) throws IOException {
+        marker = (Marker) event.getOverlay();
+        System.out.println(marker.getLatlng());
+        System.out.println(buscaPuesto(marker));
+        
+        httpServletRequest.getSession().setAttribute("puesto", buscaPuesto(marker));
+        
+        ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect("perfilPuesto.xhtml");
+    }
+    
+    public Puesto buscaPuesto(Marker marker){
+        double lat= marker.getLatlng().getLat();
+        double lon= marker.getLatlng().getLng();
+        
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
+        List<Puesto> puestos = new PuestoC(emf).findPuestoEntities();
+        for(Puesto uno: puestos){
+            double lt= Double.parseDouble(uno.getLatitud());
+            double ln= Double.parseDouble(uno.getLongitud());
+            
+            if(lt==lat && ln==lon){
+               return uno;
+            }
+        } return null;
+    }
+          
     public MapModel getSimpleModel() {
         return simpleModel;
     }
       
-    public void onMarkerSelect(OverlaySelectEvent event) throws IOException {
-        marker = (Marker) event.getOverlay();
-        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-        ec.redirect("perfilPuesto.xhtml");
-    }
-      
     public Marker getMarker() {
         return marker;
-    }
-    
-    public Puesto getPuesto() {
-        return puesto;
     }
 }
