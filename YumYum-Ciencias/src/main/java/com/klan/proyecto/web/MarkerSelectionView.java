@@ -68,9 +68,7 @@ public class MarkerSelectionView implements Serializable {
         marker = (Marker) event.getOverlay();
         System.out.println(marker.getLatlng());
         System.out.println(buscaPuesto(marker));
-        
         httpServletRequest.getSession().setAttribute("puesto", buscaPuesto(marker));
-        
         ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.redirect("perfilPuesto.xhtml");
     }
