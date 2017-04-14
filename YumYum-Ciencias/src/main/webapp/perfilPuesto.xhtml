@@ -24,17 +24,19 @@
                     <p:rating value="#{contenido.calificacionGlobal}" readonly="true" />
                 </h:outputLabel>
             </h:form>
-            <b:tabView>
-                <b:tab title="Descripción">
-                    <ui:include src="perfilPuesto/descripcion.xhtml" />
-                </b:tab>
-                <b:tab title="Comida">
-                    <ui:include src="perfilPuesto/#{contenido.comidaDisponible()}.xhtml" />
-                </b:tab>
-                <b:tab title="Comentarios">
-                    <ui:include src="perfilPuesto/#{contenido.comentarioDisponible()}.xhtml" />
-                </b:tab>
-            </b:tabView>
+            <h:form>
+                <b:tabView>
+                    <b:tab title="Descripción">
+                        <ui:include src="perfilPuesto/descripcion.xhtml" />
+                    </b:tab>
+                    <b:tab title="Comida">
+                        <ui:include src="perfilPuesto/#{contenido.comidaDisponible()}.xhtml" />
+                    </b:tab>
+                    <b:tab title="Comentarios">
+                        <ui:include src="perfilPuesto/#{contenido.comentarioDisponible()}.xhtml" />
+                    </b:tab>
+                </b:tabView>
+            </h:form>
         </b:container>
         <footer> <p><br>© Company 2017</br></p> </footer>
     </h:body>

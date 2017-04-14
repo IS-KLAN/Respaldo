@@ -1,12 +1,14 @@
 <html  xmlns="http://www.w3.org/1999/xhtml"
+            xmlns:ui="http://java.sun.com/jsf/facelets"
             xmlns:h="http://java.sun.com/jsf/html"
-            xmlns:b="http://bootsfaces.net/ui">
+            xmlns:b="http://bootsfaces.net/ui"
+            xmlns:p="http://primefaces.org/ui">
     <h:panelGrid style="margin: 6px" >
         <h:outputText value="#{contenido.puesto.descripcion}"  style="text-align: justify; font-size: larger"/>
     </h:panelGrid>
     <b:panelGrid columns="2" size="xs">
-        <b:image value="resources/#{contenido.puesto.rutaImagen}" width="100%"/>
+        <p:graphicImage value="resources/#{contenido.puesto.rutaImagen}" height="320px" width="100%"/>
         <b:label text="Ubicación:" style="font-size: large">
-        <b:image value="resources/mapa-fake.jpg" width="100%"/></b:label>
+            <ui:include src="mapa.xhtml"/></b:label>
     </b:panelGrid>
 </html>
