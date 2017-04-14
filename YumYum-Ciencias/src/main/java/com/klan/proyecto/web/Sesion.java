@@ -5,26 +5,24 @@
  */
 package com.klan.proyecto.web;
 
-import com.klan.proyecto.controlador.PuestoC;
-import com.klan.proyecto.controlador.UsuarioC;
-import com.klan.proyecto.modelo.Puesto;
-import com.klan.proyecto.modelo.Usuario;
+import com.klan.proyecto.controlador.UsuarioC; // Para consultar usuarios de la BD.
+import com.klan.proyecto.controlador.PuestoC; // Para consultar puestos de la BD.
+import com.klan.proyecto.modelo.Puesto; // Para construir un puesto.
+import com.klan.proyecto.modelo.Usuario; // Para construir un usuario.
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.servlet.http.HttpServletRequest;
-import java.io.Serializable;
+import javax.faces.application.FacesMessage; // Para mostrar y obtener mensajes de avisos.
+import javax.faces.bean.ManagedBean; // Para inyectar código dentro de un JSF.
+import javax.faces.bean.RequestScoped; // Para que la instancia se conserve activa durante un request.
+import javax.faces.context.FacesContext; // Para conocer el contexto de ejecución.
+import javax.persistence.EntityManagerFactory; // Para conectarse a la BD.
+import javax.persistence.Persistence; // Para definir los parámetros de conexión a la BD.
+import javax.servlet.http.HttpServletRequest; // Para manejar datos guardados.
+import java.io.Serializable; // Para conservar la persistencia de objetos que se guarden.
 
 /**
  *
- * Bean manejado qué se utiliza para el manejo de inicio de Sesión en
- * la aplicación web.
- *
- * @author miguel
+ * Bean utilizado para pruebas al perfil de un puesto.
+ * @author patlani
  */
 @ManagedBean // LEER LA DOCUMENTACIÖN DE ESTA ANOTACIÓN: Permite dar de alta al bean en la aplicación
 @RequestScoped // Sólo está disponible a partir de peticiones al bean

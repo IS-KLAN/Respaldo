@@ -7,30 +7,30 @@ package com.klan.proyecto.web;
 
 import java.util.List;
 
-import com.klan.proyecto.controlador.PuestoC;
-import com.klan.proyecto.modelo.Puesto;
+import com.klan.proyecto.controlador.PuestoC; // Para consultar la lista de puestos.
+import com.klan.proyecto.modelo.Puesto; // Para definir puestos.
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import java.io.Serializable;
-import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean; // Para inyectar código dentro de un JSF.
+import javax.faces.context.FacesContext; // Para conocer el contexto de ejecución.
+import javax.servlet.http.HttpServletRequest; // Para manejar datos guardados.
+import javax.persistence.EntityManagerFactory; // Para conectarse a la BD.
+import javax.persistence.Persistence; // Para definir los parámetros de conexión a la BD.
+import java.io.Serializable; // Para conservar la persistencia de objetos que se guarden.
+import javax.annotation.PostConstruct; // Para realizar tareas una vez que se crea la instancia.
+import javax.faces.bean.RequestScoped; // Para que la instancia se conserve activa durante un request.
 
 /**
- *
+ * Clase que implemenenta la vista en carrusel de los puestos en la página principal.
  * @author patlani
  */
 @ManagedBean
 @RequestScoped
 public class Carrusel implements Serializable{
     
-    private Puesto primero;
-    private List<Puesto> puestos;
-    private final HttpServletRequest httpServletRequest; // Obtiene información de todas las peticiones de nombreUsuario.
-    private final FacesContext faceContext; // Obtiene información de la aplicación
+    private Puesto primero; // Primer elemento de la lista de puestos en la BD.
+    private List<Puesto> puestos; // Resto de la lista de puestos en la BD.
+    private final HttpServletRequest httpServletRequest; // Obtiene información de todas las peticiones.
+    private final FacesContext faceContext; // Obtiene información de la aplicación.
 
     /**
      * Constructor que inicializa las instancias de FaceContext y HttpServerRequest, así como
@@ -43,11 +43,16 @@ public class Carrusel implements Serializable{
 
     @PostConstruct
     public void init() {
+        // Se realiza la conexión a la BD.
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
+        // Se realiza la consulta de todos los puestos en la BD con un JPA de Puesto y una conexión EMF.
         puestos = new PuestoC(emf).findPuestoEntities();
+        // Se separa la lista para la correcta visualización del carrusel.
         if (puestos.size() < 1) {
+            // Si no se tienen puestos disponibles se inicializa el primero por defecto.
             primero = new Puesto();
             primero.setRutaImagen("default.jpg");
+            // En otro caso, se toma el primer elemento de la lista.
         } else primero = puestos.remove(0);
     }
     
@@ -82,11 +87,11 @@ public class Carrusel implements Serializable{
     public void setPuestos(List<Puesto> puestos) {
         this.puestos = puestos;
     }    
-    
-    public String seleccion(Puesto p) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
-        System.out.println("Nombre de puesto buscado: " + p.getNombrePuesto());
-        httpServletRequest.getSession().setAttribute("puesto", p);
-        return "perfilPuesto";
+
+    /**
+     * Método que guarda el primer puesto como seleccionado para redirigir al un perfil de prueba.
+     */
+    public void perfilDemo() {
+        httpServletRequest.getSession().setAttribute("puesto", primero);
     }
 }
