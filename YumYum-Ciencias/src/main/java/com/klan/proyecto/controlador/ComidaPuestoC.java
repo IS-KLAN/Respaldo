@@ -186,6 +186,11 @@ public class ComidaPuestoC implements Serializable {
         }
     }
 
+    /**
+     * Método que busca una relación entra una comida y un puesto, a partir de su llave primaria.
+     * @param id Es la llave primaria de la relación buscada.
+     * @return Devuelve la entidad encontrada en la BD, o NULL en caso de encontrarla.
+     */
     public ComidaPuesto findComidaPuesto(ComidaPuestoPK id) {
         EntityManager em = getEntityManager();
         try {
