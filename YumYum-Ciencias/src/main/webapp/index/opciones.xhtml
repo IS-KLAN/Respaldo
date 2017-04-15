@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml"
+            xmlns:b="http://bootsfaces.net/ui">
+        <!-- Si se tiene una sesión iniciada se muestran las opciones de usuario. -->
+        <b:container rendered="#{sesion.iniciada()}">
+                <b:navBar brand="YumYum Ciencias" inverse="true" brandHref="index.xhtml" fixed="top">
+                        <b:navbarLinks>
+                            <b:navLink value="Principal" iconAwesome="home" href="index.xhtml"/>
+                            <b:navLink value="Ver Mapa" icon="cross" href="mapa.xhtml"/>
+                            <!-- Opción para cerrar sesión con redirección. -->
+                            <b:navCommandLink value="Salir (#{sesion.usuarioActivo()})"
+                            action="index?faces-redirect=true" actionListener="#{sesion.cerrar()}"/>
+                        </b:navbarLinks>
+                </b:navBar>
+        </b:container>
+        <!-- Si se tiene una sesión iniciada se muestran las opciones de invitado. -->
+        <b:container rendered="#{!sesion.iniciada()}">
+                <b:navBar brand="YumYum Ciencias" inverse="true" brandHref="index.xhtml" fixed="top">
+                        <b:navbarLinks>
+                            <b:navLink value="Principal" iconAwesome="home" href="index.xhtml"/>
+                            <b:navLink value="Ver Mapa" href="mapa.xhtml"/>
+                            <b:navLink value="Iniciar Sesion" href="ingresoUsuario.xhtml"/>
+                            <b:navLink value="Registrarse" href="registro.xhtml"/>
+                        </b:navbarLinks>
+                </b:navBar>
+        </b:container>
+</html>
