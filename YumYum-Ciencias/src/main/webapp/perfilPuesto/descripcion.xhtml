@@ -6,9 +6,8 @@
     <h:panelGrid style="margin: 6px" >
         <h:outputText value="#{contenido.puesto.descripcion}"  style="text-align: justify; font-size: larger"/>
     </h:panelGrid>
-    <b:panelGrid columns="2" size="xs">
+    <b:panelGrid columns="2">
         <p:graphicImage value="resources/#{contenido.puesto.rutaImagen}" height="320px" width="100%"/>
-        <b:label text="Ubicación:" style="font-size: large">
-            <ui:include src="mapa.xhtml"/></b:label>
+        <b:label text="Ubicación:" style="font-size: large"><ui:include src="mapa.xhtml"/></b:label>
     </b:panelGrid>
 </html>

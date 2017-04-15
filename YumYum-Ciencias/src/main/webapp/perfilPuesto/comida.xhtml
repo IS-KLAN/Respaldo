@@ -2,14 +2,16 @@
             xmlns:h="http://java.sun.com/jsf/html"
             xmlns:b="http://bootsfaces.net/ui"
             xmlns:p="http://primefaces.org/ui">
-    <h:form>
-        <b:panelGrid columns="1">
-            <p:dataTable value="#{contenido.puesto.comidaPuestoList}" var="c"
-                         scrollRows="20" scrollable="true" liveScroll="true" scrollHeight="250">
-                <p:column>
-                    <b:label severity="primary" text="#{c.comida.nombreComida}" tiny-screen="one-fourth" style="font-size: small"/>
-                </p:column>
-            </p:dataTable>
-        </b:panelGrid>
+    <!-- Si hay comida se despliega la tabla de evaluaciones. -->
+    <h:form rendered="#{contenido.comidaDisponible()}">
+        <p:dataScroller value="#{contenido.puesto.comidaPuestoList}" var="c" chunkSize="15" mode="inline" scrollHeight="350">
+            <b:panelGrid columns="1" style="margin-top: 10px">
+                    <b:label severity="primary" tiny-screen="one-fourth" text="#{c.comida.nombreComida}" style="font-size: larger; width: 100%"/>
+            </b:panelGrid>
+        </p:dataScroller>
+    </h:form>
+    <!-- Si no hay comida se avisa que no hay contenido disponible -->
+    <h:form rendered="#{!contenido.comidaDisponible()}">
+        <h:outputLabel value="No hay contenido disponible. :(" style="margin: 12px"/>
     </h:form>
 </html>
