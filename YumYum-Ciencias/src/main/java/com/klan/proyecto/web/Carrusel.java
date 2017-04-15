@@ -57,21 +57,29 @@ public class Carrusel implements Serializable{
     }
     
     /**
-     * Acceso al primer elemento de la lista de puestos.
-     * @return Devuelve el primer puesto en la tabla.
+     * Acceso al nombre del primer elemento de la lista de puestos.
+     * @return Devuelve el nombre del primer puesto en la tabla.
      */
-    public Puesto getPrimero() {
-        return primero;
-    }
-
-    /**
-     * Establece el primer puesto de la lista.
-     * @param primero Es el primer puesto que se va a mostrar.
-     */
-    public void setPrimero(Puesto primero) {
-        this.primero = primero;
+    public String primerNombre() {
+        return primero.getNombrePuesto();
     }
     
+    /**
+     * Acceso a la imagen del primer elemento de la lista de puestos.
+     * @return Devuelve la ruta de la imagen del primer puesto en la tabla.
+     */
+    public String primerImagen() {
+        return primero.getRutaImagen();
+    }
+    
+    /**
+     * Acceso a la desxripción del primer elemento de la lista de puestos.
+     * @return Devuelve la descripción del primer puesto en la tabla.
+     */
+    public String primerDescripcion() {
+        return primero.getDescripcion();
+    }
+
     /**
      * Acceso a la lista de puestos a mostrar.
      * @return Devuelve la lista de puestos guardados.
@@ -81,17 +89,25 @@ public class Carrusel implements Serializable{
     }
 
     /**
-     * Establece una lista de puestos.
-     * @param puestos  Es la lista que se establece.
+     * Método que guarda el primer puesto como seleccionado para redirigir al un selecciona del primer puesto.
+     * @return Devuelve la página del selecciona del puesto a la que se redirigie.
      */
-    public void setPuestos(List<Puesto> puestos) {
-        this.puestos = puestos;
-    }    
+    public String primerSeleccion() {
+        // Se guarda el primer puesto para ser mostrado en perfilPuesto.
+        httpServletRequest.getSession().setAttribute("puesto", primero);
+        // Se redirige al perfilPuesto con redirect=true para actualizar la url.
+        return "perfilPuesto?faces-redirect=true";
+    }
 
     /**
-     * Método que guarda el primer puesto como seleccionado para redirigir al un perfil de prueba.
+     * Método que guarda un puesto como seleccionado.
+     * @param p Puesto que se guarda para mostrar su contenido.
+     * @return Devuelve la página del selecciona del puesto a la que se redirigie.
      */
-    public void perfilDemo() {
-        httpServletRequest.getSession().setAttribute("puesto", primero);
+    public String selecciona(Puesto p) {
+        // Se guarda el puesto p para ser mostrado en perfilPuesto.
+        httpServletRequest.getSession().setAttribute("puesto", p);
+        // Se redirige al perfilPuesto con redirect=true para actualizar la url.
+        return "perfilPuesto?faces-redirect=true";
     }
 }

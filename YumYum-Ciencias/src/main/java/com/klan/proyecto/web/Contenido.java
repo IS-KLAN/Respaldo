@@ -6,7 +6,6 @@
 package com.klan.proyecto.web;
 
 import com.klan.proyecto.controlador.PuestoC; // Para consultar puestos de la BD.
-import com.klan.proyecto.controlador.UsuarioC; // Para consultar usuarios de la BD.
 import com.klan.proyecto.controlador.EvaluacionC; // Para actualizar y consultar evaluaciones en la BD.
 import com.klan.proyecto.modelo.Puesto; // Para construir un puesto.
 import com.klan.proyecto.modelo.Usuario; // Para construir un usuario.
@@ -32,7 +31,7 @@ import java.io.Serializable; // Para conservar la persistencia de objetos que se
 @RequestScoped
 public class Contenido implements Serializable{
 
-    private final Usuario usuario; // Usario que va a comentar.
+    private Usuario usuario; // Usario que va a comentar.
     private Puesto puesto; // Puesto del que se muestra el contenido.
     private String comentario = ""; // Texto del comentario a guardar.
     private int calificacion = 0; // Calificación que dará el usuario.
@@ -47,24 +46,21 @@ public class Contenido implements Serializable{
     public Contenido() {
         faceContext = FacesContext.getCurrentInstance();
         httpServletRequest = (HttpServletRequest) faceContext.getExternalContext().getRequest();
-        // Se realiza una conexión a la BD para definir al usuario actual.
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
-        Usuario u; // Se obtienen los datos guardados del usuario.
-        if ((u = (Usuario)httpServletRequest.getSession().getAttribute("usuario")) != null) {
-            // Se obtiene la versión más actual del usuario en la BD.
-            usuario = new UsuarioC(emf).findUsuario(u.getNombreUsuario());
-        } else usuario = new Usuario(); // Se inicializa por defecto.        
+        // Se obtienen los datos guardados del usuario.
+        if ((usuario = (Usuario)httpServletRequest.getSession().getAttribute("usuario")) == null) {
+            usuario = new Usuario(); // Se inicializa por defecto.
+        } // System.out.println("Nombre de usuario que ingresó: " + usuario.getNombreUsuario());
     }
     
     @PostConstruct
     public void init() {
         // Se realiza una conexión a la BD.
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
-        Puesto p; // Se obtienen los datos guardados del puesto.
-        if ((p = (Puesto)httpServletRequest.getSession().getAttribute("puesto")) != null) {
-            //System.out.println("Nombre de puesto cargado: " + p.getNombrePuesto());
+        // Se obtienen los datos guardados del puesto.
+        if ((puesto = (Puesto)httpServletRequest.getSession().getAttribute("puesto")) != null) {
             // Se obtiene la versión más actual del puesto en la BD.
-            puesto = new PuestoC(emf).findPuesto(p.getNombrePuesto());
+            puesto = new PuestoC(emf).findPuesto(puesto.getNombrePuesto());
+            //System.out.println("Nombre de puesto cargado: " + p.getNombrePuesto());
         } else puesto = new Puesto(); // Se inicializa por defecto.
         // Se construye la llave primaria del usuario encontrado.
         EvaluacionPK id = new EvaluacionPK(puesto.getNombrePuesto(), usuario.getNombreUsuario());
@@ -187,38 +183,18 @@ public class Contenido implements Serializable{
     }
 
     /**
-     * Metodo que decide la comida que se muestra según el contenido disponible para un puesto.
-     * @return Devuelve el nombre de la página correspondiente al contenido del puesto.
+     * Metodo que indica si hay comida disponible.
+     * @return Devuelve true si hay comida en el puesto, falso en otro caso.
      */
-    public String comidaDisponible() {
-        if (puesto.getComidaPuestoList().size() > 0) return "comida";
-        return "noHayContenidoDisponible";
+    public boolean comidaDisponible() {
+        return (puesto.getComidaPuestoList().size() > 0);
     }
 
     /**
      * Metodo que decide las evaluaciones que se muestran según el contenido disponible para un puesto.
      * @return Devuelve el nombre de la página correspondiente al contenido del puesto.
      */
-    public String evaluacionesDisponibles() {
-        if(puesto.getEvaluacionList().size() > 0) return "evaluaciones";
-        return "noHayContenidoDisponible";
-    }
-
-    /**
-     * Metodo que decide la comida que se muestra según el contenido disponible para un puesto.
-     * @return Devuelve el nombre de la página correspondiente al contenido del puesto.
-     */
-    public String comentarioDisponible() {
-        if(httpServletRequest.getSession().getAttribute("usuario") != null) return "comentarioDisponible";
-        return "comentarioNulo";
-    }
-    
-    /**
-     * Metodo que decide la comida que se muestra según el contenido disponible para un puesto.
-     * @return Devuelve el nombre de la página correspondiente al contenido del puesto.
-     */
-    public String contenidoDisponible() {
-        if(httpServletRequest.getSession().getAttribute("puesto") != null) return "perfilPuesto";
-        return "noHayContenidoDisponible";
+    public boolean evaluacionesDisponibles() {
+        return (puesto.getEvaluacionList().size() > 0);
     }
 }
