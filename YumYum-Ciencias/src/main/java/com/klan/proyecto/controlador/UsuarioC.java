@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NamedQueries;
 
 /**
  *
@@ -206,4 +207,13 @@ public class UsuarioC implements Serializable {
         }
     }
     
+    public Usuario findByCorreo(String correo) {
+        try{
+            EntityManager em = getEntityManager();
+            return (Usuario)(em.createNamedQuery("Usuario.findByCorreo")
+                    .setParameter("correo", correo).getSingleResult());
+        }catch(Exception ex){
+            System.err.println(ex.getMessage() + "\nError al buscar el usuario con correo: " + correo);
+        } return null;
+    }    
 }
