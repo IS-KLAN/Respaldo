@@ -17,9 +17,9 @@
     </h:head>
     <h:body style="padding-top:75px">
         <!-- Barra de navegación. -->
-        <b:container id="menu">
-            <ui:include src="index/#{sesion.opcionesDisponibles()}.xhtml" />
-        </b:container>
+        <h:form>
+            <ui:include src="index/opciones.xhtml"/>
+        </h:form>
         <b:container>
           <h2>Mapa</h2>
             <h:form>
@@ -32,6 +32,6 @@
               </p:gmap>
             </h:form>
           </b:container>
-        <footer> <p><br>© Company 2017</br></p> </footer>
+        <footer> <p><br>© KLAN 2017</br></p> </footer>
   </h:body>
 </html>

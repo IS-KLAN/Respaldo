@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html  xmlns="http://www.w3.org/1999/xhtml"
             xmlns:h="http://java.sun.com/jsf/html"
-            xmlns:ui="http://java.sun.com/jsf/facelets"            
+            xmlns:ui="http://java.sun.com/jsf/facelets"
             xmlns:b="http://bootsfaces.net/ui">
     <h:head>
         <title>YumYum CIencias</title>
@@ -14,11 +14,12 @@
         </style>
     </h:head>
     <h:body style="padding-top:75px">
-        <!-- Barra de navegación. -->
-        <ui:include src="index/#{sesion.opcionesDisponibles()}.xhtml"/>
-        <b:container>
-            <ui:include src="index/carrousel.xhtml" />
-        </b:container>
-        <footer> <p><br>© Company 2017</br></p> </footer>
+        <h:form>
+            <!-- Barra de navegación, mensajes de información y carrusel de puestos. -->
+            <ui:include src="index/opciones.xhtml"/>
+            <b:messages/>
+            <ui:include src="index/carrousel.xhtml"/>
+        </h:form>
+        <footer> <p><br>© KLAN 2017</br></p> </footer>
   </h:body>
 </html>
