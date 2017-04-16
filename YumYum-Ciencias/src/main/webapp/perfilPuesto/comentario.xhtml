@@ -4,9 +4,17 @@
             xmlns:p="http://primefaces.org/ui"
             xmlns:b="http://bootsfaces.net/ui"
             xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <style type="text/css">
+        .ui-growl {
+        right: 10%;
+        top: 10%;
+        }
+    </style>
     <!-- Se muestran las evaluaciones  y la opción de comentar si está disponible. -->
     <h:form rendered="#{ingresoUsuario.accedido()}">
         <h:panelGrid id="datos">
+            <p:growl id="growl" showDetail="true" showSummary="true"
+            sticky="true" style="margin-top: 100px"/>
             <ui:include src="evaluaciones.xhtml"></ui:include>
         </h:panelGrid>
         <h:panelGrid id="campo" style="margin: 4px;">
