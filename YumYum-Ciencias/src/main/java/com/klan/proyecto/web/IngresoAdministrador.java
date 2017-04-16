@@ -81,15 +81,19 @@ public class IngresoAdministrador implements Serializable{
             httpServletRequest.getSession().setAttribute("administrador", administrador);
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Acceso Correcto", null);
             faceContext.addMessage(null, message);
-            return "index/opcionesAdministrador";
+            return "index";
         }
         message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nombre de administrador o contraseña incorrecto", null);
         faceContext.addMessage(null, message);
-        return "ingresoAdministradorIH";
+        return "ingresoAdministrador";
     }
 
-    public String opcionesDisponibles() {
-        if (httpServletRequest.getSession().getAttribute("administrador") != null) return "opcionesAdministrador";
-        return "opcionesInvitado";
+    /**
+     * Método que indica si se tiene una sesión activa.
+     * @return Devuelve true si hay una sesión seHaIngresado, o falso en otro caso.
+     */
+    public boolean accedido() {
+        return httpServletRequest.getSession().getAttribute("administrador") != null;
     }
+    
 }
