@@ -20,11 +20,11 @@ import java.io.Serializable; // Para conservar la persistencia de objetos que se
 /**
  *
  * Bean utilizado para pruebas al perfil de un puesto.
- * @author patlani
+ * @author anahiqj
  */
 @ManagedBean // LEER LA DOCUMENTACIÖN DE ESTA ANOTACIÓN: Permite dar de alta al bean en la aplicación
 @RequestScoped // Sólo está disponible a partir de peticiones al bean
-public class Sesion implements Serializable{
+public class IngresoUsuario implements Serializable{
 
     private String correo;
     private String contraseña;
@@ -36,7 +36,7 @@ public class Sesion implements Serializable{
      * Constructor para inicializar los valores de faceContext y
      * httpServletRequest.
      */
-    public Sesion() {
+    public IngresoUsuario() {
         faceContext = FacesContext.getCurrentInstance();
         httpServletRequest = (HttpServletRequest) faceContext.getExternalContext().getRequest();
     }
@@ -78,10 +78,10 @@ public class Sesion implements Serializable{
     }
 
     /**
-     * Método encargado de iniciar los datos ingresados.
+     * Método encargado de ingresar los datos ingresados.
      * @return El nombre de la vista que va a responder.
      */
-    public String iniciar() {
+    public String ingresar() {
         // Se realiza la conexión a la BD.
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
         // Se busca al usuario por correo.
@@ -100,18 +100,6 @@ public class Sesion implements Serializable{
     }
 
     /**
-     * Método encargado de cerrar la sesión.
-     */
-    public void cerrar() {
-            //System.out.println("Cerrando la sesión.");
-            httpServletRequest.getSession().removeAttribute("usuario"); // Se borra al usuario.
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Salida satisfactoria.", null);
-            faceContext.addMessage(null, message); // Se agrega el mensaje.
-            // Se asegura que el mensaje se muestre después de la redirección.
-            faceContext.getExternalContext().getFlash().setKeepMessages(true);
-    }
-
-    /**
      * Método que define las opciones disponibles de la barra de navegación.
      * @return Devuelve el xhtml que contiene las opciones correspondientes.
      */
@@ -122,9 +110,9 @@ public class Sesion implements Serializable{
 
     /**
      * Método que indica si se tiene una sesión activa.
-     * @return Devuelve true si hay una sesión iniciada, o falso en otro caso.
+     * @return Devuelve true si hay una sesión seHaIngresado, o falso en otro caso.
      */
-    public boolean iniciada() {
+    public boolean accedido() {
         return httpServletRequest.getSession().getAttribute("usuario") != null;
     }
 

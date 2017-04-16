@@ -28,13 +28,13 @@ import java.io.Serializable;
 
 @ManagedBean
 @ViewScoped
-public class Marcador implements Serializable {
+public class MapaPuesto implements Serializable {
     private MapModel simpleModel;
     private Puesto uno;
     private final HttpServletRequest httpServletRequest; // Obtiene información de todas las peticiones de usuario.
     private final FacesContext faceContext;
     
-    public Marcador() {
+    public MapaPuesto() {
         faceContext = FacesContext.getCurrentInstance();
         httpServletRequest = (HttpServletRequest) faceContext.getExternalContext().getRequest();
     }

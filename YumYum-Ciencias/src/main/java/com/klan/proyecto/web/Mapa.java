@@ -35,7 +35,7 @@ import java.util.List;
 
 @ManagedBean
 @ViewScoped
-public class MarkerSelectionView implements Serializable {
+public class Mapa implements Serializable {
      
     private MapModel simpleModel;
     private Marker marker;
