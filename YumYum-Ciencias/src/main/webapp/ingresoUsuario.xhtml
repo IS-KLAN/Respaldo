@@ -24,19 +24,19 @@
                 <h3 class="form-signin-heading">Ingresar datos:</h3>
                 <b:messages/>
                 <h:panelGrid columns="2" width="90%">
-                    <b:inputText id="correo" placeholder="Correo" value="#{sesion.correo}">
+                    <b:inputText id="correo" placeholder="Correo" value="#{ingresoUsuario.correo}">
                         <f:facet name="prepend">
                             <b:iconAwesome name="user"/>
                         </f:facet>
                     </b:inputText>
                     <h:outputLabel value="@ciencias.unam.mx" style="margin-left: 4%; font-size: medium"/>
-                    <b:inputText id="password" placeholder="Contraseña" type="password" value="#{sesion.contraseña}">
+                    <b:inputText id="password" placeholder="Contraseña" type="password" value="#{ingresoUsuario.contraseña}">
                         <f:facet name="prepend">
                             <b:iconAwesome name="key"/>
                         </f:facet>
                     </b:inputText>
                     <h:panelGrid style="margin-left: 4%"><b:selectBooleanCheckbox value="true" caption="Recordar correo"/></h:panelGrid>
-                    <b:commandButton look="primary btn-block" value="Capturar datos" icon="log-in" size="lg" action="#{sesion.iniciar()}"/>
+                    <b:commandButton look="primary btn-block" value="Capturar datos" icon="log-in" size="lg" action="#{ingresoUsuario.ingresar()}"/>
                 </h:panelGrid>
             </h:form>
         </b:container>

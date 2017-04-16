@@ -27,19 +27,19 @@
               <table>
                 <tr>
                   <td>Nombre de usuario</td>
-                  <td><p:inputText value="#{registerController.user.usuario}" required="true" id="Username" size="10"/></td>
+                  <td><p:inputText value="#{registro.usuario.nombreUsuario}" required="true" id="Username" size="10"/></td>
                 </tr>
                 <tr>
                   <td>Contraseña</td>
-                  <td><p:password value="#{registerController.user.contraseña}" required="true" feedback="true" id="Password"/></td>
+                  <td><p:password value="#{registro.usuario.contraseña}" required="true" feedback="true" id="Password"/></td>
                 </tr>
                 <tr>
                   <td>Confirmar Contraseña</td>
-                  <td><p:password value="#{registerController.user. confirmacionContraseña}" required="true" feedback="true" id="ConfirmPassword"/></td>
+                  <td><p:password value="#{registro.contraseña2}" required="true" feedback="true" id="ConfirmPassword"/></td>
                 </tr>
                 <tr>
                   <td colspan="2" align="center">
-                    <p:commandButton action="#{registerController.addUser}" value="Registrar"/>
+                    <p:commandButton action="#{registro.registrar()}" value="Registrar"/>
                     <p:commandButton value="Reset" update="myForm" process="@this"  >
                       <p:resetInput target="myForm" />
                     </p:commandButton>
