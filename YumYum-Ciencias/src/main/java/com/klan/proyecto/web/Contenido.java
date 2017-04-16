@@ -82,12 +82,4 @@ public class Contenido implements Serializable{
     public boolean evaluacionesDisponibles() {
         return getPuesto().getEvaluacionList().size() > 0;
     }
-
-    /**
-     * Método que actualiza el contenido.
-     * @return Indica que se ha actualizado.
-     */
-    public boolean actualiza() {
-        init(); return puesto != null;
-    }
 }
