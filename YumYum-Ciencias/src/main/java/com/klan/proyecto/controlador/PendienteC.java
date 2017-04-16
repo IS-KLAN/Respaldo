@@ -21,9 +21,9 @@ import javax.persistence.criteria.Root;
  *
  * @author patlani
  */
-public class PendientesC implements Serializable {
+public class PendienteC implements Serializable {
 
-    public PendientesC(EntityManagerFactory emf) {
+    public PendienteC(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
