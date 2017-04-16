@@ -13,8 +13,7 @@
     <!-- Se muestran las evaluaciones  y la opción de comentar si está disponible. -->
     <h:form rendered="#{ingresoUsuario.accedido()}">
         <h:panelGrid id="datos">
-            <p:growl id="growl" showDetail="true" showSummary="true"
-            sticky="true" style="margin-top: 100px"/>
+            <p:growl id="growl" showDetail="true" showSummary="true" sticky="true"/>
             <ui:include src="evaluaciones.xhtml"></ui:include>
         </h:panelGrid>
         <h:panelGrid id="campo" style="margin: 4px;">
