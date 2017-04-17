@@ -26,6 +26,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.io.Serializable;
 import java.util.List;
+import javax.faces.application.FacesMessage;
 
 
 /**
@@ -36,6 +37,12 @@ import java.util.List;
 @ManagedBean
 @ViewScoped
 public class Mapa implements Serializable {
+    
+    private String title;
+      
+    private double lat;
+      
+    private double lng;
      
     private MapModel simpleModel;
     private Marker marker;
@@ -89,4 +96,45 @@ public class Mapa implements Serializable {
     public Marker getMarker() {
         return marker;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
+
+    public ExternalContext getEc() {
+        return ec;
+    }
+
+    public void setEc(ExternalContext ec) {
+        this.ec = ec;
+    }
+    
+    public void addMarker() {
+        Marker marker = new Marker(new LatLng(lat, lng), title);
+        simpleModel.addOverlay(marker);
+          
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Marker Added", "Lat:" + lat + ", Lng:" + lng));
+    }
+    
+    
 }

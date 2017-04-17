@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml"
+            xmlns:b="http://bootsfaces.net/ui">
+        <!-- Si se tiene una sesión iniciada se muestran las opciones de usuario. -->
+        <b:container rendered="#{ingresoUsuario.accedido()}">
+                <b:navBar brand="YumYum Ciencias" inverse="true" brandHref="index.xhtml" fixed="top">
+                        <b:navbarLinks>
+                            <b:navLink value="Principal" iconAwesome="home" href="index.xhtml"/>
+                            <b:navLink value="Ver Mapa" icon="cross" href="mapa.xhtml"/>
+                            <b:navLink value="Agrega Puesto" href="agregaPuesto.xhtml"/>
+                            <!-- Opción para cerrar sesión con redirección. -->
+                            <b:navCommandLink value="Salir (#{ingresoUsuario.usuarioActivo()})"
+                            action="index?faces-redirect=true" actionListener="#{salidaUsuario.cerrar()}"/>
+                        </b:navbarLinks>
+                </b:navBar>
+        </b:container>
+        <!-- Si no se tiene una sesión iniciada se muestran las opciones de invitado. -->
+        <b:container rendered="#{!ingresoUsuario.accedido()}">
+                <b:navBar brand="YumYum Ciencias" inverse="true" brandHref="index.xhtml" fixed="top">
+                        <b:navbarLinks>
+                            <b:navLink value="Principal" iconAwesome="home" href="index.xhtml"/>
+                            <b:navLink value="Ver Mapa" href="mapa.xhtml"/>
+                            <b:navLink value="Iniciar Sesion" href="ingresoUsuario.xhtml"/>
+                            <b:navLink value="Registrarse" href="registro.xhtml"/>
+                        </b:navbarLinks>
+                </b:navBar>
+        </b:container>
+                <!-- Si se tiene una sesión iniciada como administrador, se muestran las opciones correspondientes. -->
+        <b:container rendered="#{ingresoAdministrador.accedido()}">
+                <b:navBar brand="YumYum Ciencias" inverse="true" brandHref="index.xhtml" fixed="top">
+                        <b:navbarLinks>
+                            <b:navLink value="Principal" iconAwesome="home" href="index.xhtml"></b:navLink>
+                            <b:navLink value="Ver Mapa" icon="cross" href="mapa.xhtml"></b:navLink>
+                            <b:navLink value="Crear puesto" icon= "glyphicon-cutlery" href="formularioPuesto.xhtml"></b:navLink>
+                            <b:navCommandLink value="Salir" 
+                            action="index?faces-redirect=true" actionListener="#{salidaAdministrador.cerrar()}"/>
+                        </b:navbarLinks>
+                </b:navBar>
+        </b:container>
+</html>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml"
+            xmlns:ui="http://java.sun.com/jsf/facelets"
+            xmlns:h="http://java.sun.com/jsf/html"
+            xmlns:b="http://bootsfaces.net/ui"
+            xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>YumYum Ciencias - Detalles de puesto</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="author" content="KLAN"></meta>
+        <style>
+            .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
+            { background-color: #ddd !important; }
+        </style>
+    </h:head>
+    <h:body style="padding-top:60px">
+        <!-- Barra de navegación. -->
+        <h:form>
+            <ui:include src="index/opciones.xhtml"/>
+        </h:form>
+        <b:messages/>
+        <b:container>
+                <h:outputLabel value="Puesto #{contenido.puesto.nombrePuesto}" style="font-size: 28px">
+                    <h:form> <p:rating value="#{contenido.calificacionGlobal}" readonly="true" /> </h:form>
+                </h:outputLabel>
+            <h:form>
+                <!-- Pestañas que muestran el contenido del puesto. -->
+                <b:tabView>
+                    <b:tab title="Descripción" style="font-size: medium">
+                        <ui:include src="perfilPuesto/descripcion.xhtml" />
+                    </b:tab>
+                    <b:tab title="Comida" style="font-size: medium">
+                        <ui:include src="perfilPuesto/comida.xhtml" />
+                    </b:tab>
+                    <b:tab title="Comentarios" style="font-size: medium">
+                        <ui:include src="perfilPuesto/comentario.xhtml" />
+                    </b:tab>
+                </b:tabView>
+            </h:form>
+        </b:container>
+        <footer> <p><br>© KLAN 2017</br></p> </footer>
+    </h:body>
+</html>

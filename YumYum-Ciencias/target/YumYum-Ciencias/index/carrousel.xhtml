@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml"
+            xmlns:ui="http://java.sun.com/jsf/facelets"            
+            xmlns:h="http://java.sun.com/jsf/html"
+            xmlns:b="http://bootsfaces.net/ui"
+            xmlns:p="http://primefaces.org/ui">
+    <b:carousel id="puestos" style= "margin: 35px; width:86%; height: 450px; margin-top: 15px" interval="3000">
+        <b:carouselItem> <!-- Se inserta el primer puesto de forma manual para su correcta visualización. -->
+            <!-- Se define el destino del primer puesto con un click. -->
+            <h:commandLink action="#{carrusel.primerSeleccion()}">
+                <!-- Se muestran la imagen del primer puesto de manera responsiva. -->
+                <p:graphicImage  value="resources/#{carrusel.primerImagen()}" style="width: 100%; height: 450px"/></h:commandLink>
+            <b:carouselCaption style="text-shadow: black 0.2em 0.2em 0.2em"> <!-- Se agrega sombra para resaltar letra. -->
+                <b:row><h:outputText value="Puesto #{carrusel.primerNombre()}" style="font-size: larger"/></b:row>
+                <h:outputText value="#{carrusel.primerDescripcion()}" style="font-size: medium"/>
+            </b:carouselCaption>
+        </b:carouselItem>
+        <!-- Se repite código de carrusel para cada puesto en la lista. -->
+        <ui:repeat value="#{carrusel.puestos}" var="p">
+            <b:carouselItem>
+                <!-- Se define el destino del puesto p con un click. -->
+                <h:commandLink action="#{carrusel.selecciona(p)}">
+                <!-- Se muestran la imagen del primer puesto de manera responsiva. -->
+                <p:graphicImage value="resources/#{p.rutaImagen}" alt="YumYum-CIencias" style="width: 100%; height: 450px" /></h:commandLink>
+                <b:carouselCaption style="text-shadow: black 0.2em 0.2em 0.2em"> <!-- Se agrega sombra para resaltar letra. -->
+                    <b:row><h:outputText value="Puesto #{p.nombrePuesto}" style="font-size: larger"/></b:row>
+                    <h:outputText value="#{p.descripcion}" style="font-size: medium"/>
+                </b:carouselCaption>
+           </b:carouselItem>
+        </ui:repeat>
+     </b:carousel>
+</html>

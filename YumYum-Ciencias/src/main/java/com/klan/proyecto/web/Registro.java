@@ -26,82 +26,110 @@ import java.io.Serializable; // Para conservar la persistencia de objetos que se
 @RequestScoped // Sólo está disponible a partir de peticiones al bean
 public class Registro implements Serializable{
 
-    private Pendiente usuario;
-    private String contraseña2;
-    private final HttpServletRequest httpServletRequest; // Obtiene información de todas las peticiones de correo.
+    private int id_usuario;
+    private String nombre_usuario;
+    private String correo;
+    private String contraseña;
+    private String confirmaContraseña;
+    private final HttpServletRequest httpServletRequest; // Obtiene información de todas las peticiones de usuario.
     private final FacesContext faceContext; // Obtiene información de la aplicación
-    private FacesMessage message;
-
+    
     /**
-     * Constructor para inicializar los valores de faceContext y
-     * httpServletRequest.
+     * Constructor que inicializa las instancias de FaceContext y HttpServerRequest, así como
+     * las variables necesarias para las consultas.
      */
     public Registro() {
         faceContext = FacesContext.getCurrentInstance();
-        httpServletRequest = (HttpServletRequest) faceContext.getExternalContext().getRequest();
+        httpServletRequest = (HttpServletRequest) faceContext.getExternalContext().getRequest();  
+        if (httpServletRequest.getSession().getAttribute("registro") != null) {
+            Pendiente usuario = ((Pendiente)httpServletRequest.getSession().getAttribute("registro"));
+            id_usuario = (int) usuario.getIdUsuario();
+            nombre_usuario = usuario.getNombreUsuario();
+            correo = usuario.getCorreo();
+            contraseña = usuario.getContraseña();
+        }
+    }
+
+    public String getConfirmaContraseña() {
+        return confirmaContraseña;
+    }
+
+    public void setConfirmaContraseña(String confirmaContraseña) {
+        this.confirmaContraseña = confirmaContraseña;
     }
 
     /**
-     * Acceso al usuario que se va a registrar.
-     * @return Devuelve el usuario pendiente que se construye.
+     * @return the id_usuario
      */
-    public Pendiente getUsuario() {
-        return usuario;
+    public int getId_usuario() {
+        return id_usuario;
     }
 
     /**
-     * Acceso a la segunda contraseña ingresada.
-     * @return Devuelve la segunda contraseña ingresada.
+     * @param id_usuario the id_usuario to set
      */
-    public String getContraseña2() {
-        return contraseña2;
+    public void setId_usuario(int id_usuario) {
+        this.id_usuario = id_usuario;
     }
 
     /**
-     * Establece la segunda contraseña.
-     * @param contraseña2 Es la segunda contraseña establecida.
+     * @return the nombre_usuario
      */
-    public void setContraseña2(String contraseña2) {
-        this.contraseña2 = contraseña2;
+    public String getNombre_usuario() {
+        return nombre_usuario;
     }
 
+    /**
+     * @param nombre_usuario the nombre_usuario to set
+     */
+    public void setNombre_usuario(String nombre_usuario) {
+        this.nombre_usuario = nombre_usuario;
+    }
+
+    /**
+     * @return the correo
+     */
+    public String getCorreo() {
+        return correo;
+    }
+
+    /**
+     * @param correo the correo to set
+     */
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    /**
+     * @return the contraseña
+     */
+    public String getContraseña() {
+        return contraseña;
+    }
+
+    /**
+     * @param contraseña the contraseña to set
+     */
+    public void setContraseña(String contraseña) {
+        this.contraseña = contraseña;
+    }
     
     /**
-     * Método encargado de ingresar los datos ingresados.
-     * @return El nombre de la vista que va a responder.
+     * Método para registrar un nuevo usuario en la tabla Pendientes
      */
-    public String registrar() {
-        // Se realiza la conexión a la BD.
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
-        if (contraseñaVerificada() && existenciaVerificada(emf)) {
-            try{
-                new PendienteC(emf).create(usuario);
-            }catch(Exception ex){
-                System.err.println(ex.getMessage());
-                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al registrar, intente de nuevo", null);
-                faceContext.addMessage(null, message);
-                return "registro";
-            }
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Se ha enviado la confirmación del correo.", null);
-            faceContext.addMessage(null, message);
-            return "index";
-        } // Se informa el error si ha ocurrido algún error.
-        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Datos no válidos", null);
-        faceContext.addMessage(null, message);
-        return "registro";
+    public String registrar(){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");  //Realiza la conexión a la BD 
+        id_usuario = new PendienteC(emf).getPendienteCount() + 1;
+        correo = correo + "@ciencias.unam.mx";
+        PendienteC controlador = new PendienteC(emf);
+        Pendiente usuario = new Pendiente(nombre_usuario, id_usuario, correo, contraseña);
+        try{
+            controlador.create(usuario);
+        }catch(Exception e){
+            System.out.println("Error al Registrar");
+            
+        }
+        return "mensajeCorreo";
     }
     
-    public void enviarConfirmacion() {
-        // Código para enviar el correo de confirmación.
-    }
-    
-    public boolean contraseñaVerificada() {
-        // Código para verificar que las 2 contraseñas coincidan.
-        return false;
-    }
-    
-    public boolean existenciaVerificada(EntityManagerFactory emf) {
-        // Código para verificar que el usuario no ha sido registrado.
-        return false;
-    }
 }

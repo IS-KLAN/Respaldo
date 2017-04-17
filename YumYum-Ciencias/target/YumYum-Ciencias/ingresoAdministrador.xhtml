@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml"
+            xmlns:ui="http://java.sun.com/jsf/facelets"            
+            xmlns:h="http://java.sun.com/jsf/html"
+            xmlns:f="http://java.sun.com/jsf/core"
+            xmlns:b="http://bootsfaces.net/ui">
+    <h:head>
+        <title>YumYum Ciencias - Iniciar Sesión Administrador</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="author" content="KLAN"></meta>
+        <style>
+            .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
+            { background-color: #ddd !important; }
+        </style>
+    </h:head>
+    <h:body style="padding-top:75px">
+        <!-- Barra de navegación. -->
+        <b:container>
+            <h:form styleClass="form-signin" prependId="false">
+                <h3 class="form-signin-heading" align="center">Ingresar datos:</h3>
+                <b:messages/>
+                <b:inputText id="administrador" placeholder="Administrador" value="#{ingresoAdministrador.administrador}">
+                    <f:facet name="prepend">
+                        <b:icon name="user" />
+                    </f:facet>
+                </b:inputText>
+                <b:inputText id="contrasena" placeholder="Contraseña" type="password" value="#{ingresoAdministrador.contrasena}">
+                    <f:facet name="prepend">
+                        <b:iconAwesome name="key"/>
+                    </f:facet>
+                </b:inputText>
+                <b:commandButton look="primary btn-block" value="Capturar datos" icon="log-in" size="lg" action="#{ingresoAdministrador.ingresar()}"/>
+            </h:form>
+        </b:container>
+        <footer> <p><br>© Company 2017</br></p> </footer>
+    </h:body>
+</html>
