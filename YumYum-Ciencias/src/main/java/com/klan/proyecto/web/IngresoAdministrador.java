@@ -81,7 +81,9 @@ public class IngresoAdministrador implements Serializable{
             httpServletRequest.getSession().setAttribute("administrador", administrador);
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Acceso Correcto", null);
             faceContext.addMessage(null, message);
-            return "index";
+            // Se asegura que el mensaje se muestre después de la redirección.
+            faceContext.getExternalContext().getFlash().setKeepMessages(true);
+            return "index?faces-redirect=true";
         }
         message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nombre de administrador o contraseña incorrecto", null);
         faceContext.addMessage(null, message);
