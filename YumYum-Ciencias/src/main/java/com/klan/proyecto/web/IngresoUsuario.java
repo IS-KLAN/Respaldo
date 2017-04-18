@@ -92,7 +92,9 @@ public class IngresoUsuario implements Serializable{
             httpServletRequest.getSession().setAttribute("usuario", usuario); // Se guarda al usuario.
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Acceso Correcto", null);
             faceContext.addMessage(null, message);
-            return "index";
+            // Se asegura que el mensaje se muestre después de la redirección.
+            faceContext.getExternalContext().getFlash().setKeepMessages(true);
+            return "index?faces-redirect=true";
         } // Se informa el error si ha ocurrido algún error.
         message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuario o contraseña incorrecto", null);
         faceContext.addMessage(null, message);
