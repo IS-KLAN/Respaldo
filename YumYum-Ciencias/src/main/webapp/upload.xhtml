@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:ui="http://java.sun.com/jsf/facelets"
+       xmlns:h="http://java.sun.com/jsf/html"
+       xmlns:b="http://bootsfaces.net/ui"
+       xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Agregar Puesto</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="author" content="KLAN"></meta>
+        <!-- Se define la posición de la notificación y el estilo de la barra de navegación. -->
+        <style> .ui-growl { right: 10%; top: 10%; } </style>
+    </h:head>
+    <h:body style="padding-top:50px">
+        <b:container>
+            <p:growl id="growl" showDetail="true" showSummary="true" sticky="true"/>
+            <h:form id="formulario" enctype="multipart/form-data">
+                <!-- Barra de navegación. -->
+                <ui:include src="index/opciones.xhtml"/>
+                <h3>Agregar Puesto</h3>
+                <h:panelGrid columns="2" cellpadding="6">
+                    <h:outputLabel for="nombre" value="Nombre del puesto:" style="font-size: larger"/>
+                    <p:inplace id="nombre" emptyLabel="Escriba el nombre del puesto." editor="true">
+                        <p:inputText value="#{upload.nombre}" required="true" label="text" style="font-size: larger"/>
+                    </p:inplace>
+                    <h:outputLabel value="Imagen del Puesto: "/>
+                    <p:fileUpload value="#{upload.archivo}" mode="simple" skinSimple="true"/>
+                </h:panelGrid>
+                <h:panelGrid columns="2" cellpadding="5" style="margin-top: 5px">
+                    <p:commandButton value="Continuar" ajax="false" actionListener="#{upload.guardar()}"/>
+                </h:panelGrid>
+            </h:form>
+        </b:container>
+        <footer> <p><br>© KLAN 2017</br></p> </footer>
+    </h:body>
+</html>
