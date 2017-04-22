@@ -6,20 +6,17 @@ and open the template in the editor.
 -->
 <!DOCTYPE html>
 <html  xmlns="http://www.w3.org/1999/xhtml"
-            xmlns:h="http://java.sun.com/jsf/html"
+            xmlns:h="http://xmlns.jcp.org/jsf/html"
+            xmlns:b="http://bootsfaces.net/ui"
             xmlns:p="http://primefaces.org/ui">
-            
     <h:head>
-        <title>Confirma tu Registro</title>
+        <title>Confirmación</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </h:head>
     <h:body>
         <h:form>
-       <p>Te hemos enviado un mensaje a tu correo electronico, para concluir tu 
-           registro por favor confirma tu correo electrónico</p>
-        <td colspan="5" align="center">
-            <p:commandButton action="ingresoUsuario" value="Entendido"/>
-          </td>
+        <h4>¡Gracias por registrarte en <strong>YumYum-Ciencias</strong>!</h4>
+         <p:commandButton action="#{registro.registraUsuario()}" value="IniciarSesión"/>
         </h:form>
     </h:body>
 </html>
