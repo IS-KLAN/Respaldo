@@ -93,28 +93,45 @@ public class AgregarPuesto {
         this.archivo = archivo;
     }
      
-    public void upload() {
-        if(archivo != null) {
+    
+    
+   /**
+     * Método para registrar un nuevo Puesto
+     *
+     * @return
+     */
+    public String agregar() {
+        Puesto p = new Puesto();
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");  //Realiza la conexión a la BD 
+        //onMarkerSelected 
+        marker = (Marker) event.getOverlay();
+        System.out.println(marker.getTitle());
+        
+        Marker marker = new Marker(new LatLng(lat, lng), nombre);
+        if (archivo != null) {
             FacesMessage mensaje = new FacesMessage("Éxito", archivo.getFileName() + " al subir la imagen");
             FacesContext.getCurrentInstance().addMessage(null, mensaje);
+            imagen = archivo.getFileName();
+            p.setRutaImagen(imagen);
         }
-    }
+
+        p.setNombrePuesto(nombre);
+        p.setDescripcion(descripcion);
+        p.setLatitud(Double.toString(lat));
+        p.setLongitud(Double.toString(lng));
+        System.out.println(p.getNombrePuesto());
+        System.out.println(p.getDescripcion());
+        System.out.println(p.getRutaImagen());
     
-    /**
-     * Método para registrar un nuevo usuario en la tabla Pendientes
-     */
-    public String agregar(){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");  //Realiza la conexión a la BD 
-        id_puesto = new PuestoC(emf).getPuestoCount() + 1;
-        PuestoC controlador = new PuestoC(emf);
-        Puesto puesto = new Puesto(nombre_puesto, id_puesto, descripcion, descripcion);
         try{
-            controlador.create(puesto);
+            puestoC.create(p);
         }catch(Exception e){
-            System.out.println("Error al Agregar Puesto");
-            
+            System.out.println("Error al Agregar Puesto");   
         }
+        advancedModel.addOverlay(marker);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Marker Added", "Lat:" + lat + ", Lng:" + lng));
         return "Exito!!!";
     }
+
     
 }
