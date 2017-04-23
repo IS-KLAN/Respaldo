@@ -141,4 +141,14 @@ public class PendienteC implements Serializable {
         }
     }
     
+    public Pendiente findByCorreo(String correo) {
+        EntityManager em = getEntityManager();
+        try{
+            return (Pendiente)(em.createNamedQuery("Pendiente.findByCorreo")
+                    .setParameter("correo", correo).getSingleResult());
+        }catch(Exception ex){
+            System.err.println(ex.getMessage() + "\nError al buscar el usuario con correo: " + correo);
+        } return null;
+    }  
+    
 }
