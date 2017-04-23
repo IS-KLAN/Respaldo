@@ -45,7 +45,10 @@
                 </tr>
                 <tr>
                   <td>Correo</td>
-                  <td><p:inputText value="#{registro.correo}" p:placeholder="Correo" required="true" id="correo" size="10"/></td>
+                  <td><p:inputText value="#{registro.correo}" p:placeholder="Correo" required="true" id="correo" size="10">
+                      <p:keyFilter regEx="/[a-z0-9_\.\-@]/i"/>
+                      </p:inputText>
+                  </td>
                   <td>@ciencias.unam.mx</td>
                 </tr>
                 <tr>
