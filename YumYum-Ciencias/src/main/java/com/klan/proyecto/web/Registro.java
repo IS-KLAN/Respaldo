@@ -51,7 +51,7 @@ public class Registro implements Serializable{
     private final String claveKLAN = "klanpassword"; // Contraseña de la cuenta que envía el correo.
     //private String correo = "patlaniunam@ciencias.unam.mx"; // Correo del usuario que se va a registrar.
     //private String contraseña = "passwordl"; // Contraseña del usuario que se va a registrar en YumYum Ciencias.
-   private String enlace = "http://localhost:8080/YumYum-Ciencias/Confirmacion.xhtml?code=";
+   private String enlace = "http://localhost:8080/YumYum-Ciencias/ingresoUsuario.xhtml?code=";
     //private String idPendiente = "ejemplo"; // Código que se concatena al enlace enviado.
     //private String nombreUsuario = "luis"; // Código que se concatena al enlace enviado.
 
