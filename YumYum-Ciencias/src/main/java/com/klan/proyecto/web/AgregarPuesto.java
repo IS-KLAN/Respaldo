@@ -93,28 +93,41 @@ public class AgregarPuesto {
         this.archivo = archivo;
     }
      
-    
-    
-   /**
+    /**
      * Método para registrar un nuevo Puesto
      *
-     * @return
      */
-    public String agregar() {
+    public void agregar() {
         Puesto p = new Puesto();
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");  //Realiza la conexión a la BD 
-        //onMarkerSelected 
-        marker = (Marker) event.getOverlay();
-        System.out.println(marker.getTitle());
+        final String dir = System.getProperty("user.dir").replace("\\", "/"); // Directorio de ejecución actual.
+        final String sub = "/src/main/webapp/resources"; // Directorio especificado para guardar imagenes.
+        final String ext = ".jpg"; // Se define la extensión del archivo.
         
-        Marker marker = new Marker(new LatLng(lat, lng), nombre);
+        //Cargar la imagen en la BD
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");  //Realiza la conexión a la BD 
         if (archivo != null) {
             FacesMessage mensaje = new FacesMessage("Éxito", archivo.getFileName() + " al subir la imagen");
             FacesContext.getCurrentInstance().addMessage(null, mensaje);
             imagen = archivo.getFileName();
             p.setRutaImagen(imagen);
+            try { // EL proceso de escritura en archivos puede lanzar excepciones.
+                File f = new File(dir + sub, nombre + ext); // Se define el Directorio y Nombre con extensión del file.
+                FileOutputStream output = new FileOutputStream(f); // Flujo de escritura para guardar la imagen.
+                InputStream input = archivo.getInputstream(); // Flujo de lectura para cargar el archivo subido.
+                int read = 0; // Bandera para saber si se sigue leyendo bytes del archivo subido.
+                byte[] bytes = new byte[1024]; // Buffer para cargar bloques de 1024 bytes (1 MegaByte).
+                while ((read = input.read(bytes)) != -1) output.write(bytes, 0, read); // Se escribe el archivo con lo que se lee.
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+                FacesMessage.SEVERITY_INFO, "Imagen guardada con éxito!!!", "Checa la carpeta .../resources"));
+            }catch (Exception ex) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+                FacesMessage.SEVERITY_ERROR, "Error al guardar la imagen", ex.getMessage()));
+            }
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+            FacesMessage.SEVERITY_ERROR, "Error al cargar la imagen", null));
         }
-
+        
         p.setNombrePuesto(nombre);
         p.setDescripcion(descripcion);
         p.setLatitud(Double.toString(lat));
@@ -122,16 +135,18 @@ public class AgregarPuesto {
         System.out.println(p.getNombrePuesto());
         System.out.println(p.getDescripcion());
         System.out.println(p.getRutaImagen());
+        System.out.println(p.getLatitud());
+        System.out.println(p.getLongitud());
     
         try{
             puestoC.create(p);
         }catch(Exception e){
             System.out.println("Error al Agregar Puesto");   
         }
-        advancedModel.addOverlay(marker);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Marker Added", "Lat:" + lat + ", Lng:" + lng));
-        return "Exito!!!";
     }
+
+    
+   
 
     
 }
