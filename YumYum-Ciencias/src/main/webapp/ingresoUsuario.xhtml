@@ -6,7 +6,7 @@
             xmlns:f="http://java.sun.com/jsf/core"
             xmlns:b="http://bootsfaces.net/ui">
     <h:head>
-        <title>YumYum CIencias - Iniciar Sesión</title>
+        <title>YumYum Ciencias - Iniciar Sesión</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta name="author" content="KLAN"></meta>
         <style>
@@ -23,8 +23,8 @@
             <h:form styleClass="form-signin" prependId="false">
                 <h3 class="form-signin-heading">Ingresar datos:</h3>
                 <b:messages/>
-                <h:panelGrid columns="2" width="90%">
-                    <b:inputText id="correo" placeholder="Correo" value="#{ingresoUsuario.correo}">
+                <h:panelGrid columns="2" width="60%">
+                    <b:inputText id="correo" placeholder="Correo" class="form-control" value="#{ingresoUsuario.correo}">
                         <f:facet name="prepend">
                             <b:iconAwesome name="user"/>
                         </f:facet>

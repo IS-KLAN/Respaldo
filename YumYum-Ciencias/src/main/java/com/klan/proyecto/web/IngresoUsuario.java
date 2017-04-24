@@ -94,16 +94,17 @@ public class IngresoUsuario implements Serializable{
         if(usuario == null){
             usuario = new UsuarioC(emf).creaUsuarioPendiente(correo
                     +"@ciencias.unam.mx");
-        }
-        //Si ya es un usuario y su contraseña coincide, se le da acceso.
-        if (usuario != null && usuario.getContraseña().equals(contraseña)) {
-            // Se guarda al usuario que se encuentra activo.
-            httpServletRequest.getSession().setAttribute("usuario", usuario); 
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, 
-                    "Acceso Correcto", null);
-            faceContext.addMessage(null, message);
-            return "index";
-        } // Se informa el error si ha ocurrido algún error.
+        }else{
+        //Si se encuentra el usuario y su contraseña coincide, se le da acceso.
+            if (usuario.getContraseña().equals(contraseña)) {
+                // Se guarda al usuario que se encuentra activo.
+                httpServletRequest.getSession().setAttribute("usuario",usuario); 
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, 
+                        "Acceso Correcto", null);
+                faceContext.addMessage(null, message);
+                return "index";
+            }
+        }// Se informa el error si ha ocurrido algún error.
         message = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                 "Usuario o contraseña incorrecto", null);
         faceContext.addMessage(null, message);
