@@ -40,34 +40,7 @@
                         <p:growl id="imagen" showDetail="true" />
                         <p:fileUpload value="#{agregarPuesto.archivo}" mode="simple" skinSimple="true"/>
                  
-            </h:panelGrid>
-            
-            <div>
-            <h:outputLabel value="Ubicación: "/><br></br>
-            <p:growl id="messages" showDetail="true" />
-            <p:gmap id="gmap" center="19.324328359583355,-99.17934268712997" zoom="20"
-                    type="roadmap" model="#{agregarPuesto.advancedModel}"
-              style="width:25%;height:200px" onPointClick="handlePointClick(event);" widgetVar="map">
-                <p:ajax event="overlaySelect" listener="#{agregarPuesto.onMarkerSelect}"/>
-            </p:gmap>
-   
-            <p:dialog widgetVar="dlg" showEffect="fade">
-              <h:form prependId="false">
-                <h:panelGrid columns="2">
-                  <h:outputLabel for="titulo" value="Nombre:" />
-                  <p:inputText id="titulo" value="#{agregarPuesto.nombre}" />
-                  <f:facet name="footer">
-                      <p:commandButton value="Guardar" actionListener="#{agregarPuesto.addMarker()}" update=":messages" oncomplete="markerAddComplete()" />
-                    <p:commandButton value="Cancelar" onclick="return cancel()" />
-                  </f:facet>
-                </h:panelGrid>
-                  <h:inputHidden id="lat" value="#{agregarPuesto.lat}" />
-                  <h:inputHidden id="lng" value="#{agregarPuesto.lng}" />
-              </h:form>
-            </p:dialog>
-            </div>
-               
-            
+            </h:panelGrid>      
             
             <h:panelGrid columns="2">
                 <p:commandButton value="Agregar" ajax="false" action="#{agregarPuesto.agregar()}"/>
