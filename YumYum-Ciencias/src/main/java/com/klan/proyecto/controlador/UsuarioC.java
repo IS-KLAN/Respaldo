@@ -42,6 +42,7 @@ public class UsuarioC implements Serializable {
         }
         EntityManager em = null;
         try {
+            usuario.setIdUsuario(getUsuarioCount() + 1);
             em = getEntityManager();
             em.getTransaction().begin();
             List<Evaluacion> attachedEvaluacionList = new ArrayList<Evaluacion>();

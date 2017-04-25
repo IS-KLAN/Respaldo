@@ -35,6 +35,7 @@ public class PendienteC implements Serializable {
     public void create(Pendiente pendiente) throws PreexistingEntityException, Exception {
         EntityManager em = null;
         try {
+            pendiente.setIdUsuario(getPendienteCount() + 1);
             em = getEntityManager();
             em.getTransaction().begin();
             em.persist(pendiente);
@@ -127,6 +128,26 @@ public class PendienteC implements Serializable {
             em.close();
         }
     }
+    
+    public Pendiente findByCorreo(String correo) {
+        try{
+            EntityManager em = getEntityManager();
+            return (Pendiente)(em.createNamedQuery("Pendiente.findByCorreo")
+                    .setParameter("correo", correo).getSingleResult());
+        }catch(Exception ex){
+            System.err.println(ex.getMessage() + "\nError al buscar el usuario con correo: " + correo);
+        } return null;
+    }    
+    
+    public Pendiente findByIdUsuario(int idUsuario) {
+        try{
+            EntityManager em = getEntityManager();
+            return (Pendiente)(em.createNamedQuery("Pendiente.findByIdUsuario")
+                    .setParameter("idUsuario", idUsuario).getSingleResult());
+        }catch(Exception ex){
+            System.err.println(ex.getMessage() + "\nError al buscar el usuario con id: " + idUsuario);
+        } return null;
+    }    
 
     public int getPendienteCount() {
         EntityManager em = getEntityManager();
