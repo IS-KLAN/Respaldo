@@ -45,6 +45,7 @@ public class PuestoC implements Serializable {
         }
         EntityManager em = null;
         try {
+            puesto.setIdPuesto(getPuestoCount() + 1);
             em = getEntityManager();
             em.getTransaction().begin();
             List<ComidaPuesto> attachedComidaPuestoList = new ArrayList<ComidaPuesto>();
