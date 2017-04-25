@@ -172,8 +172,7 @@ public class AgregarPuesto {
         if (archivo != null) {
             FacesMessage mensaje = new FacesMessage("Éxito", archivo.getFileName() + " al subir la imagen");
             FacesContext.getCurrentInstance().addMessage(null, mensaje);
-            imagen = archivo.getFileName();
-            p.setRutaImagen(imagen);
+            p.setRutaImagen(nombre+ext);
             try { // EL proceso de escritura en archivos puede lanzar excepciones.
                 File f = new File(dir + sub, nombre + ext); // Se define el Directorio y Nombre con extensión del file.
                 FileOutputStream output = new FileOutputStream(f); // Flujo de escritura para guardar la imagen.
