@@ -5,7 +5,9 @@
  */
 package com.klan.proyecto.web;
 
+import com.klan.proyecto.controlador.PendienteC;
 import com.klan.proyecto.controlador.UsuarioC; // Para consultar usuarios de la BD.
+import com.klan.proyecto.modelo.Pendiente;
 import com.klan.proyecto.modelo.Usuario; // Para construir un usuario.
 
 import javax.faces.application.FacesMessage; // Para mostrar y obtener mensajes de avisos.
@@ -95,19 +97,14 @@ public class IngresoUsuario implements Serializable{
             // Se asegura que el mensaje se muestre después de la redirección.
             faceContext.getExternalContext().getFlash().setKeepMessages(true);
             return "index?faces-redirect=true";
-        } // Se informa el error si ha ocurrido algún error.
-        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuario o contraseña incorrecto", null);
-        faceContext.addMessage(null, message);
-        return "ingresoUsuario";
-    }
-
-    /**
-     * Método que define las opciones disponibles de la barra de navegación.
-     * @return Devuelve el xhtml que contiene las opciones correspondientes.
-     */
-    public String opcionesDisponibles() {
-        if (httpServletRequest.getSession().getAttribute("usuario") != null) return "opcionesUsuario";
-        return "opcionesInvitado";
+        } Pendiente posible = new PendienteC(emf).findByCorreo(correo);
+        if (posible != null) {
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Debe confirmar su registro desde su correo para ingresar", null);
+            faceContext.addMessage(null, message);                        
+        } else { // Se informa el error si ha ocurrido algún error.
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuario o contraseña incorrecto", null);
+            faceContext.addMessage(null, message);            
+        } return "ingresoUsuario";
     }
 
     /**

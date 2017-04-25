@@ -93,10 +93,12 @@ public class Carrusel implements Serializable{
      * @return Devuelve la página del selecciona del puesto a la que se redirigie.
      */
     public String primerSeleccion() {
-        // Se guarda el primer puesto para ser mostrado en perfilPuesto.
-        httpServletRequest.getSession().setAttribute("puesto", primero);
-        // Se redirige al perfilPuesto con redirect=true para actualizar la url.
-        return "perfilPuesto?faces-redirect=true";
+        if(primero.getNombrePuesto() != null){
+            // Se guarda el primer puesto para ser mostrado en perfilPuesto.
+            httpServletRequest.getSession().setAttribute("puesto", primero);
+            // Se redirige al perfilPuesto con redirect=true para actualizar la url.
+            return "perfilPuesto?faces-redirect=true";
+        } return "index"; // No se cargaron los puestos.
     }
 
     /**
