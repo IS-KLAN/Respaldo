@@ -62,6 +62,12 @@ public class Pendiente implements Serializable {
         this.contraseña = contraseña;
     }
 
+    public Pendiente(String nombreUsuario, String correo, String contraseña) {
+        this.nombreUsuario = nombreUsuario;
+        this.correo = correo;
+        this.contraseña = contraseña;
+    }
+
     public long getIdUsuario() {
         return idUsuario;
     }
@@ -103,7 +109,6 @@ public class Pendiente implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Pendiente)) {
             return false;
         }
@@ -117,6 +122,5 @@ public class Pendiente implements Serializable {
     @Override
     public String toString() {
         return "com.klan.proyecto.modelo.Pendiente[ nombreUsuario=" + nombreUsuario + " ]";
-    }
-    
+    }  
 }

@@ -53,6 +53,7 @@ public class Usuario implements Serializable {
     private String contraseña;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private List<Evaluacion> evaluacionList;
+    public static final String dominio = "@ciencias.unam.mx";
 
     public Usuario() {
     }
@@ -64,6 +65,12 @@ public class Usuario implements Serializable {
     public Usuario(String nombreUsuario, long idUsuario, String correo, String contraseña) {
         this.nombreUsuario = nombreUsuario;
         this.idUsuario = idUsuario;
+        this.correo = correo;
+        this.contraseña = contraseña;
+    }
+
+    public Usuario(String nombreUsuario, String correo, String contraseña) {
+        this.nombreUsuario = nombreUsuario;
         this.correo = correo;
         this.contraseña = contraseña;
     }
@@ -85,7 +92,7 @@ public class Usuario implements Serializable {
     }
 
     public String getCorreo() {
-        return correo;
+        return correo + dominio;
     }
 
     public void setCorreo(String correo) {
