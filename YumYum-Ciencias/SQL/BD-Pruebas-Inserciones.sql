@@ -2,13 +2,9 @@
 use yumyum_ciencias;
 
 -- Se insertan personas de prueba.
-INSERT INTO usuario (nombre_usuario, correo, contraseña) VALUES('karla', 'kaarla', 'passwordk');
-INSERT INTO usuario (nombre_usuario, correo, contraseña) VALUES('luis', 'patlaniunam', 'passwordl');
-INSERT INTO usuario (nombre_usuario, correo, contraseña) VALUES('anahí', 'anahíqj', 'passworda');
-INSERT INTO usuario (nombre_usuario, correo, contraseña) VALUES('nancy', 'nancy69', 'passwordn');
 INSERT INTO usuario (nombre_usuario, correo, contraseña) VALUES('hanna', 'hannao', 'passwordh');
-INSERT INTO usuario (nombre_usuario, correo, contraseña) VALUES('isael', 'isael1', 'passwordi');
-INSERT INTO usuario (nombre_usuario, correo, contraseña) VALUES('miguel', 'miguelpinia', 'passwordmp');
+INSERT INTO usuario (nombre_usuario, correo, contraseña) VALUES('isael', 'isael', 'passwordi');
+INSERT INTO usuario (nombre_usuario, correo, contraseña) VALUES('miguel', 'miguelp', 'passwordmp');
 
 -- Se insertan puestos de prueba.
 INSERT INTO puesto (nombre_puesto, descripcion, latitud, longitud, rutaImagen)
@@ -90,34 +86,14 @@ INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N2', 'tacos');
 INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N2', 'jugo');
 INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N2', 'refresco');
 INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N2', 'agua de sabor');
--- Se insertan comida a N3.
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N3', 'bollos');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N3', 'burritos');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N3', 'crepas');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N3', 'enchiladas');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N3', 'gorditas');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N3', 'tostadas');
-INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('N3', 'refresco');
 
 -- Se insertan comentarios a Harry.
 INSERT INTO evaluacion (comentario, calificacion, nombre_puesto, nombre_usuario)
-VALUES('No es el lugar más confiable.', 2, 'Harry', 'luis');
-INSERT INTO evaluacion (comentario, calificacion, nombre_puesto, nombre_usuario)
-VALUES('Venden de todo y no es caro.', 3, 'Harry', 'anahí');
-INSERT INTO evaluacion (comentario, calificacion, nombre_puesto, nombre_usuario)
-VALUES('Sólo he ido a comprar una vez y nunca volví.', 1, 'Harry', 'karla');
-INSERT INTO evaluacion (comentario, calificacion, nombre_puesto, nombre_usuario)
 VALUES('Es más la mala fama que tiene, porque me gusta su comida.', 1, 'Harry', 'hanna');
 -- Se insertan comentarios a Cafesin.
-INSERT INTO evaluacion (comentario, calificacion, nombre_puesto, nombre_usuario)
-VALUES('Tienen comida muy variada.', 4, 'Cafesin', 'karla');
-INSERT INTO evaluacion (comentario, calificacion, nombre_puesto, nombre_usuario)
-VALUES('Venden mi comida favorita.', 5, 'Cafesin', 'nancy');
 INSERT INTO evaluacion (comentario, calificacion, nombre_puesto, nombre_usuario)
 VALUES('La comida es muy buena y barata.', 4, 'Cafesin', 'hanna');
 INSERT INTO evaluacion (comentario, calificacion, nombre_puesto, nombre_usuario)
 VALUES('No siempre tienen lo que dicen vender.', 3, 'Cafesin', 'miguel');
 INSERT INTO evaluacion (comentario, calificacion, nombre_puesto, nombre_usuario)
 VALUES('A veces tardan mucho en atender.', 2, 'Cafesin', 'isael');
-INSERT INTO evaluacion (comentario, calificacion, nombre_puesto, nombre_usuario)
-VALUES('Es el mejor de los puestos del estacionamiento.', 5, 'Cafesin', 'anahí');
