@@ -35,8 +35,8 @@ create table if not exists puesto (
   id_puesto serial,
   nombre_puesto varchar(64) primary key,
   descripcion varchar(255),
-  latitud varchar(16) not null,
-  longitud varchar(16) not null,
+  latitud varchar(64) not null,
+  longitud varchar(64) not null,
   rutaImagen varchar(255),
   unique key (latitud, longitud)
 ) engine=InnoDB default charset=utf8;
