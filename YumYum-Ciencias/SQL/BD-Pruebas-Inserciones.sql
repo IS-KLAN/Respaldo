@@ -16,35 +16,6 @@ VALUES('N3','Es un puesto del estacionamiento', '19.323485', '-99.180744','N3.jp
 INSERT INTO puesto (nombre_puesto, descripcion, latitud, longitud, rutaImagen)
 VALUES('Harry', 'Este es un puesto ideal para encontrar todo tipo de comida', '19.324332', ' -99.179154', 'Harry.jpg');
 
-
--- Se insertan comidas de prueba.
-INSERT INTO comida (nombre_comida) VALUES('bollos');
-INSERT INTO comida (nombre_comida) VALUES('burritos');
-INSERT INTO comida (nombre_comida) VALUES('crepas');
-INSERT INTO comida (nombre_comida) VALUES('chilaquiles');
-INSERT INTO comida (nombre_comida) VALUES('enchiladas');
-INSERT INTO comida (nombre_comida) VALUES('flautas');
-INSERT INTO comida (nombre_comida) VALUES('gorditas');
-INSERT INTO comida (nombre_comida) VALUES('hamburguesas');
-INSERT INTO comida (nombre_comida) VALUES('hot-dogs');
-INSERT INTO comida (nombre_comida) VALUES('huaraches');
-INSERT INTO comida (nombre_comida) VALUES('molletes');
-INSERT INTO comida (nombre_comida) VALUES('nachos');
-INSERT INTO comida (nombre_comida) VALUES('pizza');
-INSERT INTO comida (nombre_comida) VALUES('pambazos');
-INSERT INTO comida (nombre_comida) VALUES('sincronizadas');
-INSERT INTO comida (nombre_comida) VALUES('quesadillas');
-INSERT INTO comida (nombre_comida) VALUES('sandwich');
-INSERT INTO comida (nombre_comida) VALUES('tacos');
-INSERT INTO comida (nombre_comida) VALUES('tortas');
-INSERT INTO comida (nombre_comida) VALUES('tostadas');
--- Bebidas a partir de id 20.
-INSERT INTO comida (nombre_comida) VALUES('agua de sabor');
-INSERT INTO comida (nombre_comida) VALUES('jugo');
-INSERT INTO comida (nombre_comida) VALUES('refresco');
-INSERT INTO comida (nombre_comida) VALUES('café');
-INSERT INTO comida (nombre_comida) VALUES('licuado');
-
 -- Se insertan comida a Harry.
 INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Harry', 'bollos');
 INSERT INTO comida_puesto (nombre_puesto, nombre_comida) VALUES('Harry', 'crepas');
