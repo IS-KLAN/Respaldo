@@ -1,65 +1,42 @@
-<?xml version='1.0' encoding='UTF-8' ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:p="http://primefaces.org/ui">
-
-  <h:head>
-    <title>YumYum Ciencias - Detalles de puesto</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="author" content="KLAN"></meta>
-    <meta charset="utf-8"/>
-    <script src="http://maps.google.com/maps/api/js?key=AIzaSyBlEYhBfp104jOYDy-TOhTYkSd8YBtkLFI" type="text/javascript"></script>  
-    <style>
-        .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
-        { background-color: #ddd !important; }
-    </style>
-  </h:head>
-    <h:body style="margin-top: 60px">
-        
-         <h1>Agrega un Puesto</h1> <br/>
-
-        <h:form id="agregaPuesto" enctype="multipart/form-data">
-            <ui:include src="index/opciones.xhtml"/>
-            <h:panelGrid columns="2" cellpadding="5">
-                  <h:outputLabel value="Nombre del Puesto: "/>
-                  <p:inputText value="#{agregarPuesto.nombre}" p:placeholder="Nombre del Puesto" required="true" id="puesto" size="15"/>
-                  
-                  <h:outputLabel for="multiple" value="Comida que vende: "/>
-                  <p:selectCheckboxMenu id="multiple" value="#{agregarPuesto.comida_seleccionada}" label="Comida"
-                              filter="true" filterMatchMode="startsWith" panelStyle="width:250px" >
-                      <f:selectItems value="#{agregarPuesto.encuentraComida()}"/>
-                  </p:selectCheckboxMenu>
-                 
-                  <h:outputLabel value="Descripción: "/>
-                  <p:inputTextarea value="#{agregarPuesto.descripcion}" rows="6" cols="33" />
-                
-                  <h:outputLabel value="Imagen del Puesto: "/>
-                    <p:growl id="imagen" showDetail="true" />
-                    <p:fileUpload value="#{agregarPuesto.archivo}" mode="simple" skinSimple="true"/>
-           </h:panelGrid> 
-            
-            <div>
-                <h4>Ubicación:</h4>
-                  
-                  <h:outputLabel value="Latitud: "/>
-                  <p:inputText value="#{agregarPuesto.lat}" p:placeholder="Latitud" required="true" size="15"/>
-                  
-                  <h:outputLabel value="Longitud: "/>
-                  <p:inputText value="#{agregarPuesto.lng}" p:placeholder="Longitud" required="true" size="15"/>
-            </div> 
-            
-            <h:panelGrid columns="2">
-                <p:commandButton value="Agregar" ajax="false" action="#{agregarPuesto.agregar()}"/>
-                <p:commandButton value="Limpiar" update="agregaPuesto" process="@this"  >
-                <p:resetInput target="agregaPuesto" />
-                </p:commandButton>
-            </h:panelGrid>
-            
-        </h:form>
-         
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:ui="http://java.sun.com/jsf/facelets"
+       xmlns:h="http://java.sun.com/jsf/html"
+       xmlns:b="http://bootsfaces.net/ui"
+       xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Agregar Puesto</title>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+        <meta name="author" content="KLAN"></meta>
+        <meta charset="utf-8"/>
+        <style>
+            .ui-growl { right: 10%; top: 10%; }
+            .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
+            { background-color: #ddd !important; }
+        </style>
+    </h:head>
+    <h:body style="padding-top:60px">
+        <!-- Barra de navegación. -->
+        <b:container>
+            <h:form><ui:include src="index/opciones.xhtml"/></h:form>
+            <p:growl id="messages" showDetail="true" autoUpdate="true"/>
+            <h1>Agregar Puesto</h1>
+            <h:form id="agregaPuesto" enctype="multipart/form-data">
+                <ui:include src="agregaPuesto/datos.xhtml"/>
+            </h:form>
+            <ui:include src="agregaPuesto/mapa.xhtml"/>
+            <h:form enctype="multipart/form-data">
+                <h:outputLabel value="Imagen del Puesto: "/>
+                <p:fileUpload value="#{agregaPuesto.archivo}" mode="simple" skinSimple="true" />
+                <h:panelGrid columns="2" cellpadding="5">
+                    <p:commandButton value="Continuar" ajax="false" process="@all" action="#{agregaPuesto.agregar()}"/>
+                    <p:commandButton value="Limpiar" update="agregaPuesto" process="@all"  >
+                    <p:resetInput target="agregaPuesto" />
+                    </p:commandButton>
+                </h:panelGrid>
+            </h:form>
+        </b:container>
+        <footer> <p><br>© KLAN 2017</br></p> </footer>
     </h:body>
 </html>
-      
