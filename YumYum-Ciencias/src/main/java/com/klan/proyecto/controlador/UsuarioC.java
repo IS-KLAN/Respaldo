@@ -5,9 +5,6 @@
  */
 package com.klan.proyecto.controlador;
 
-import com.klan.proyecto.modelo.Pendiente;
-import com.klan.proyecto.controlador.PendienteC;
-
 import com.klan.proyecto.controlador.exceptions.IllegalOrphanException;
 import com.klan.proyecto.controlador.exceptions.NonexistentEntityException;
 import com.klan.proyecto.controlador.exceptions.PreexistingEntityException;
@@ -210,55 +207,13 @@ public class UsuarioC implements Serializable {
         }
     }
     
-    /** 
-     * Método encargado de buscar un Usuario en la BD con ayuda de su correo.
-     * @param correo - correo del usuario a encontrar.
-     * @return Usuario al que le pertenece el correo.
-     */
-    public Usuario encuentraCorreo(String correo) {
+    public Usuario findByCorreo(String correo) {
         try{
-            // Realiza la conexión a la base de datos.
             EntityManager em = getEntityManager();
-            // Regresa la entidad a la que le pertence dicho correo.
             return (Usuario)(em.createNamedQuery("Usuario.findByCorreo")
                     .setParameter("correo", correo).getSingleResult());
         }catch(Exception ex){
             System.err.println(ex.getMessage() + "\nError al buscar el usuario con correo: " + correo);
         } return null;
     }    
-    
-    /**
-     * Método encargado de crear un Usuario que se encontraba en espera de 
-     * confirmar su correo.
-     * @param correo
-     * @return Usuario creado.
-     */
-    
-    public Usuario creaUsuarioPendiente(String correo) {
-       try{
-           //Realiza la conexión a la Base de Datos.
-            EntityManager em = getEntityManager();
-            //comienza una transicción para realizar un insert.
-            em.getTransaction().begin();
-            //Crea un objeto Pendiente que es encontrado a través de su correo.
-            Pendiente p = (Pendiente)(em.createNamedQuery("Pendiente.findByCorreo")
-                    .setParameter("correo", correo).getSingleResult());
-            //Copia los atributos del objeto Pendiente a un nuevo Usuario.
-            Usuario u = new Usuario();
-            u.setIdUsuario(p.getIdUsuario());
-            u.setNombreUsuario(p.getNombreUsuario());
-            u.setCorreo(p.getCorreo());
-            u.setContraseña(p.getContraseña());
-            //Confirmamos la transacción
-            em.persist(u);
-            em.getTransaction().commit();
-            //Regresamos el nuevo objeto Usuario.
-            return u;
-            
-        }catch(Exception ex){
-            System.err.println(ex.getMessage() + "\nError al buscar el usuario con correo: " + correo);
-        } return null;
-    }
-    
-    
 }

@@ -37,14 +37,23 @@
                   <p:inputTextarea value="#{agregarPuesto.descripcion}" rows="6" cols="33" />
                 
                   <h:outputLabel value="Imagen del Puesto: "/>
-                        <p:growl id="imagen" showDetail="true" />
-                        <p:fileUpload value="#{agregarPuesto.archivo}" mode="simple" skinSimple="true"/>
-                 
-            </h:panelGrid>      
+                    <p:growl id="imagen" showDetail="true" />
+                    <p:fileUpload value="#{agregarPuesto.archivo}" mode="simple" skinSimple="true"/>
+           </h:panelGrid> 
+            
+            <div>
+                <h4>Ubicación:</h4>
+                  
+                  <h:outputLabel value="Latitud: "/>
+                  <p:inputText value="#{agregarPuesto.lat}" p:placeholder="Latitud" required="true" size="15"/>
+                  
+                  <h:outputLabel value="Longitud: "/>
+                  <p:inputText value="#{agregarPuesto.lng}" p:placeholder="Longitud" required="true" size="15"/>
+            </div> 
             
             <h:panelGrid columns="2">
                 <p:commandButton value="Agregar" ajax="false" action="#{agregarPuesto.agregar()}"/>
-                <p:commandButton value="Reset" update="agregaPuesto" process="@this"  >
+                <p:commandButton value="Limpiar" update="agregaPuesto" process="@this"  >
                 <p:resetInput target="agregaPuesto" />
                 </p:commandButton>
             </h:panelGrid>
@@ -52,40 +61,5 @@
         </h:form>
          
     </h:body>
-    
-    <script type="text/javascript">
-    var currentMarker = null;
-    var insertado = 0;
-
-    function handlePointClick(event) {
-        if(insertado === 0) {
-            if (currentMarker === null) {
-              document.getElementById('lat').value = event.latLng.lat();
-              document.getElementById('lng').value = event.latLng.lng();
-              currentMarker = new google.maps.Marker({
-                position: new google.maps.LatLng(event.latLng.lat(), event.latLng.lng())
-              }); insertado = 1;
-              PF('map').addOverlay(currentMarker);
-              PF('dlg').show();
-            }
-        }
-    }
-
-    function markerAddComplete() {
-      var title = document.getElementById('title');
-      currentMarker.setTitle(title.value);
-      title.value = "";
-      currentMarker = null;
-      PF('dlg').hide();
-    }
-
-    function cancel() {
-      PF('dlg').hide();
-      currentMarker.setMap(null);
-      currentMarker = null;
-      return false;
-    }
-  </script>
-    
 </html>
       

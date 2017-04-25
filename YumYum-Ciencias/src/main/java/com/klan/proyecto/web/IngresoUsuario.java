@@ -83,37 +83,24 @@ public class IngresoUsuario implements Serializable{
      */
     public String ingresar() {
         // Se realiza la conexión a la BD.
-        EntityManagerFactory emf = Persistence.
-                createEntityManagerFactory("YumYum-Ciencias");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
         // Se busca al usuario por correo.
-        Usuario usuario = new UsuarioC(emf).encuentraCorreo(correo
-                +"@ciencias.unam.mx");
-        //Si es la primera vez que entra, significa que su confirmación se 
-        //encuentra pendiente, por lo cual se copia la tupla de pendiente a 
-        //un usuario
-        if(usuario == null){
-            usuario = new UsuarioC(emf).creaUsuarioPendiente(correo
-                    +"@ciencias.unam.mx");
-        }else{
-        //Si se encuentra el usuario y su contraseña coincide, se le da acceso.
-            if (usuario.getContraseña().equals(contraseña)) {
-                // Se guarda al usuario que se encuentra activo.
-                httpServletRequest.getSession().setAttribute("usuario",usuario); 
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, 
-                        "Acceso Correcto", null);
-                faceContext.addMessage(null, message);
-                return "index";
-            }
-        }// Se informa el error si ha ocurrido algún error.
-        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, 
-                "Usuario o contraseña incorrecto", null);
+        Usuario usuario = new UsuarioC(emf).findByCorreo(correo);
+        // Se verifica que el usuario exista y que haya ingresado la contraseña corrrecta.
+        if (usuario != null && usuario.getContraseña().equals(contraseña)) {
+            //System.out.println("Iniciando la sesión de " + usuario.getNombreUsuario());
+            httpServletRequest.getSession().setAttribute("usuario", usuario); // Se guarda al usuario.
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Acceso Correcto", null);
+            faceContext.addMessage(null, message);
+            return "index";
+        } // Se informa el error si ha ocurrido algún error.
+        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuario o contraseña incorrecto", null);
         faceContext.addMessage(null, message);
         return "ingresoUsuario";
     }
 
     /**
-     * Método que define las opciones disponibles de la barra de navegación en
-     * caso de ser un Usuario.
+     * Método que define las opciones disponibles de la barra de navegación.
      * @return Devuelve el xhtml que contiene las opciones correspondientes.
      */
     public String opcionesDisponibles() {

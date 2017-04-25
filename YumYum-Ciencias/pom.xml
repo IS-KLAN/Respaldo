@@ -12,13 +12,6 @@
   </properties>
 
   <dependencies>
-    <!--Dependencia necesaria para el envío de correos-->
-    <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-      <version>1.4.7</version>
-      <scope>compile</scope>
-    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
