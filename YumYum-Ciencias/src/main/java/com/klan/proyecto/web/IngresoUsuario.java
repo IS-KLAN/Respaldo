@@ -108,6 +108,15 @@ public class IngresoUsuario implements Serializable{
     }
 
     /**
+     * Método que define las opciones disponibles de la barra de navegación.
+     * @return Devuelve el xhtml que contiene las opciones correspondientes.
+     */
+    public String opcionesDisponibles() {
+        if (httpServletRequest.getSession().getAttribute("usuario") != null) return "opcionesUsuario";
+        return "opcionesInvitado";
+    }
+
+    /**
      * Método que indica si se tiene una sesión activa.
      * @return Devuelve true si hay una sesión seHaIngresado, o falso en otro caso.
      */
