@@ -52,8 +52,13 @@ public class ComidaPuestoC implements Serializable {
             if (comida == null) {
                 throw new NullPointerException("Llave de referencia inválida de puesto.");
             } else comidaPuesto.setPuesto(puesto);
+            comida.getComidaPuestoList().add(comidaPuesto);
+            puesto.getComidaPuestoList().add(comidaPuesto);
+            em.merge(comida);
+            em.merge(puesto);
             em.persist(comidaPuesto);
             em.getTransaction().commit();
+            // System.out.println("Relación agregada: " + comida.getNombreComida() + " a " + puesto.getNombrePuesto());
         } catch (Exception ex) {
             if (findComidaPuesto(comidaPuesto.getComidaPuestoPK()) != null) {
                 throw new PreexistingEntityException("ComidaPuesto " + comidaPuesto + " already exists.", ex);

@@ -80,6 +80,7 @@ public class PuestoC implements Serializable {
                 }
             }
             em.getTransaction().commit();
+            // System.out.println("Puesto agregado: \nNombre" + puesto.getNombrePuesto());
         } catch (Exception ex) {
             if (findPuesto(puesto.getNombrePuesto()) != null) {
                 throw new PreexistingEntityException("Puesto " + puesto + " already exists.", ex);
