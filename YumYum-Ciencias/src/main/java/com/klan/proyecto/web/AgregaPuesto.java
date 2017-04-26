@@ -194,10 +194,10 @@ public class AgregaPuesto implements Serializable {
                 int read = 0; // Bandera para saber si se sigue leyendo bytes del archivo subido.
                 byte[] bytes = new byte[1024]; // Buffer para cargar bloques de 1024 bytes (1 MegaByte).
                 while ((read = input.read(bytes)) != -1) output.write(bytes, 0, read); // Se escribe el archivo con lo que se lee.
-                System.out.println("Imagen guardada en: " + sub + rutaImagen);
+                System.out.println("Imagen guardada en: " + sub + "/" + rutaImagen);
             } catch (Exception ex) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-                FacesMessage.SEVERITY_ERROR, "Error al guardar la imagen", sub + rutaImagen));
+                FacesMessage.SEVERITY_ERROR, "Error al guardar la imagen", null));
                 System.err.println("Error al guardar la imagen\n" + ex.getMessage());
                 return false;
             }
@@ -219,18 +219,9 @@ public class AgregaPuesto implements Serializable {
                 Puesto puesto = new Puesto(nombrePuesto, idPuesto, lat, lng); // Se crea el nuevo puesto.
                 if (descripcion != null) puesto.setDescripcion(descripcion); // Se agrega su descripción si se ingresó.
                 if (rutaImagen != null) puesto.setRutaImagen(rutaImagen); // Se define el nombre de la rutaImagen si se cargó.
-                System.out.println(puesto.getNombrePuesto());
-                System.out.println(puesto.getDescripcion());
-                System.out.println(puesto.getRutaImagen());
-                System.out.println(puesto.getLatitud());
-                System.out.println(puesto.getLongitud());
                 pc.create(puesto); // Se agrega el puesto a la BD.
                 ComidaPuestoC cpc = new ComidaPuestoC(emf); // Para agregar las relaciones de comida.
-                ComidaC cc = new ComidaC(emf); // Para agregar las relaciones de comida.
-                for (String comida : seleccion) { // Se agregan las relaciones y comida nueva del puesto.
-                    String nombreComida = comida.toLowerCase(); // Se da formato correcto al nombre de la comida.
-                    System.out.println("Comida seleccionada: " + nombreComida);
-                    // if(cc.findComida(nombreComida) == null) cc.create(new Comida(nombreComida)); // Se crea la comida nueva.
+                for (String nombreComida : seleccion) { // Se agregan las relaciones y comida nueva del puesto.
                     cpc.create(new ComidaPuesto(nombreComida, nombrePuesto)); // Se crea la relación en la tabla comidaPuesto.
                 } // Se avisa al usuario que el puesto ha sido agregado.
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
@@ -245,7 +236,7 @@ public class AgregaPuesto implements Serializable {
             System.err.println("Error al agregar el puesto\n" + ex.getMessage());
         } return "agregaPuesto";
     }
-
+    
     /**
      * Método que se encarga de limpiar la información ingresada del puesto.
      */
@@ -264,8 +255,9 @@ public class AgregaPuesto implements Serializable {
      */
     public List<String> coincidencias(String inicio) {
         List<String> coincidencias = new ArrayList<>();
+        inicio = inicio.toLowerCase();
         for (String comida : lista) {
-            if (comida.toLowerCase().startsWith(inicio)) coincidencias.add(comida);
+            if (comida.startsWith(inicio)) coincidencias.add(comida);
         } return coincidencias;
     }        
 
