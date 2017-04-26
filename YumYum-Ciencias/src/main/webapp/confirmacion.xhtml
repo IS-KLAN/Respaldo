@@ -13,22 +13,24 @@ and open the template in the editor.
             xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <title>Confirma tu Registro</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <f:metadata>
             <f:viewParam name="clave" value="#{registro.clave}"/>
         </f:metadata>
-        <style type="text/css"> .ui-growl { right: 10%; top: 10%; } </style>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="author" content="KLAN"/>
+        <meta charset="utf-8"/>
     </h:head>
-    <h:body style="padding-top: 60px">
-        <h:form>
-            <p:growl id="growl" showDetail="true" showSummary="true" sticky="true"/>
-            <ui:include src="index/opciones.xhtml"/>
-            <b:container>
-                <h:panelGrid>
-                    <h:outputLabel value="Gracias por registrarse" style="font-size: 28px"/>
-                    <p:commandButton action="#{registro.confirmar()}" value="Entendido"/>
-                </h:panelGrid>
-            </b:container>
-        </h:form>
+    <h:body style="padding-top:70px">
+        <b:container>
+            <h:form>
+                <p:growl id="growl" showDetail="true" showSummary="true" sticky="true"/>
+                <ui:include src="index/opciones.xhtml"/>
+                    <h:panelGrid>
+                        <h:outputLabel value="Gracias por registrarse" style="font-size: 28px"/>
+                        <p:commandButton action="#{registro.confirmar()}" value="Confirmar"/>
+                    </h:panelGrid>
+            </h:form>
+            <footer><br/><p>© KLAN 2017</p> </footer>
+        </b:container>
     </h:body>
 </html>

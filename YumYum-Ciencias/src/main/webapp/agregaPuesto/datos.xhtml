@@ -3,13 +3,13 @@
             xmlns:p="http://primefaces.org/ui">
             <p:remoteCommand actionListener="#{agregaPuesto.actualiza()}" name="cambia"/>
             <h:panelGrid columns="2" cellpadding="5">
-                <h:outputLabel for="nombre" value="Nombre del puesto:" style="font-size: larger"/>
-                <p:inputText id="nombre" value="#{agregaPuesto.nombrePuesto}" required="true" label="text" style="font-size: larger"/>
+                <h:outputLabel for="nombre" value="Nombre del puesto:" style="font-size: medium"/>
+                <p:inputText id="nombre" value="#{agregaPuesto.nombrePuesto}" required="true" label="text" style="font-size: medium"/>
 
                 <h:outputLabel for="descrip" value="Descripcion:"  style="font-size: medium"/>
                 <p:inputTextarea id="descrip" value="#{agregaPuesto.descripcion}" rows="2" cols="45" style="font-size: medium"/>
 
-                <p:outputLabel value="Agregue la comida:" for="lista" />
+                <p:outputLabel value="Agregue la comida:" for="lista" style="font-size: medium"/>
                 <p:autoComplete onkeyup="cambia(); return false;" forceSelection="true"
                                 id="lista" multiple="true" completeMethod="#{agregaPuesto.coincidencias}"
                                 value="#{agregaPuesto.seleccion}"  var="c" itemLabel="#{c}" itemValue="#{c}">

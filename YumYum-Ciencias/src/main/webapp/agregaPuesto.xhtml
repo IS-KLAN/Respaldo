@@ -7,36 +7,29 @@
        xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Agregar Puesto</title>
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
-        <meta name="author" content="KLAN"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="author" content="KLAN"/>
         <meta charset="utf-8"/>
-        <style>
-            .ui-growl { right: 10%; top: 10%; }
-            .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
-            { background-color: #ddd !important; }
-        </style>
     </h:head>
-    <h:body style="padding-top:60px">
+    <h:body style="padding-top:50px">
         <!-- Barra de navegación. -->
-        <b:container>
+        <b:container rendered="#{ingresoAdministrador.accedido()}">
             <h:form><ui:include src="index/opciones.xhtml"/></h:form>
             <p:growl id="messages" showDetail="true" autoUpdate="true"/>
-            <h1>Agregar Puesto</h1>
+            <h1>Agregar Puesto<br/></h1>
             <h:form id="agregaPuesto" enctype="multipart/form-data">
                 <ui:include src="agregaPuesto/datos.xhtml"/>
             </h:form>
             <ui:include src="agregaPuesto/mapa.xhtml"/>
             <h:form enctype="multipart/form-data">
-                <h:outputLabel value="Imagen del Puesto: "/>
+                <h:outputLabel value="Imagen del Puesto: " style="font-size: medium"/>
                 <p:fileUpload value="#{agregaPuesto.archivo}" mode="simple" skinSimple="true" />
                 <h:panelGrid columns="2" cellpadding="5">
                     <p:commandButton value="Continuar" ajax="false" process="@all" action="#{agregaPuesto.agregar()}"/>
-                    <p:commandButton value="Limpiar" update="agregaPuesto" process="@all"  >
-                    <p:resetInput target="agregaPuesto" />
-                    </p:commandButton>
+                    <p:commandButton value="Limpiar" update="agregaPuesto" process="@all" action="agregaPuesto.xhtml?faces-redirect=true"/>
                 </h:panelGrid>
             </h:form>
+            <footer> <br/><p>© KLAN 2017</p> </footer>
         </b:container>
-        <footer> <p><br>© KLAN 2017</br></p> </footer>
     </h:body>
 </html>

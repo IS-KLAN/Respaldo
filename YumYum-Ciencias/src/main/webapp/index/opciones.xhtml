@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html  xmlns="http://www.w3.org/1999/xhtml"
-            xmlns:b="http://bootsfaces.net/ui">
+       xmlns:b="http://bootsfaces.net/ui">
+        <style>
+            .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
+            { background-color: #ddd !important; }
+        </style>
         <!-- Si se tiene una sesión iniciada se muestran las opciones de usuario. -->
         <b:container rendered="#{ingresoUsuario.accedido()}">
                 <b:navBar brand="YumYum Ciencias" inverse="true" brandHref="index.xhtml" fixed="top">

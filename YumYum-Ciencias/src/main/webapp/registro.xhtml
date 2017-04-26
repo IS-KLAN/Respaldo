@@ -5,35 +5,30 @@
        xmlns:ui="http://java.sun.com/jsf/facelets"
        xmlns:b="http://bootsfaces.net/ui"
        xmlns:p="http://primefaces.org/ui">
-
     <h:head>
         <title>Registro</title>
-        <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <meta name="author" content="KLAN"></meta>
-        <style>
-            .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
-            { background-color: #ddd !important; }
-        </style>
+        <meta name="author" content="KLAN"/>
+        <meta charset="utf-8"/>
     </h:head>
-    <h:body style="padding-top:75px">
+    <h:body style="padding-top:70px">
         <b:container>
             <h1>Formulario de registro</h1> <br/>
             <h:form id="miRegistro"> <!--Camiar por miFormulario-->
                 <p:messages id="messages" autoUpdate="true" closable="true" />
                 <ui:include src="index/opciones.xhtml"/>
                 <h:panelGrid columns="2" cellpadding="5">
-                    <h:outputLabel for="nombre" value="Nombre de usuario:" style="font-size: medium"/>
+                    <h:outputLabel for="nombre" value="Nombre de usuario:" style="margin-left: 4%; font-size: medium"/>
                     <p:inputText value="#{registro.nombreUsuario}" placeholder="Nombre" required="true" id="nombre" size="15">
-                        <p:keyFilter regEx="/[a-z0-9_.]/"/>
+                        <p:keyFilter regEx="/[A-Za-z0-9_. ]/"/>
                     </p:inputText>
 
-                    <h:outputLabel for="correo" value="Correo:" style="font-size: medium"/>
+                    <h:outputLabel for="correo" value="Correo:" style="margin-left: 4%; font-size: medium"/>
                     <h:panelGrid columns="2" cellpadding="5">
                         <p:inputText value="#{registro.correo}" placeholder="Correo" required="true" id="correo" size="20">
                             <p:keyFilter mask="alphanum"/>
                         </p:inputText>
-                        <h:outputLabel value="@ciencias.unam.mx" style="font-size: medium"/>
+                        <h:outputLabel value="@ciencias.unam.mx" style="margin-left: 4%; font-size: medium"/>
                     </h:panelGrid>
 
                     <h:outputLabel value="Contraseña" style="margin-left: 4%; font-size: medium"/>
@@ -46,7 +41,7 @@
                 <p:commandButton action="#{registro.registrar()}" value="Registrar"/>
                 <p:commandButton value="Limpiar" update="miRegistro" process="@this"  ><p:resetInput target="miRegistro" /></p:commandButton>
             </h:form>
+            <footer> <br/><p>© KLAN 2017</p> </footer>
         </b:container>
-        <footer> <p><br>© KLAN 2017</br></p> </footer>
     </h:body>
 </html>
