@@ -186,7 +186,7 @@ public class AgregaPuesto implements Serializable {
         final String dir = System.getProperty("user.dir").replace("\\", "/"); // Directorio de ejecución actual.
         final String sub = "/src/main/webapp/resources"; // Directorio especificado para guardar imagenes. 
         if (seCargaImagen()) { // Sólo si se intenta cargar una rutaImagen.
-            rutaImagen = nombrePuesto + "-" + idPuesto + ".jpg"; // Se define el nombrePuesto de la rutaImagen.
+            rutaImagen = nombrePuesto + "-" + latitud + ".jpg"; // Se define el nombrePuesto de la rutaImagen.
             try { // EL proceso de escritura en archivos puede lanzar excepciones.
                 File f = new File(dir + sub, rutaImagen); // Se define el Directorio y Nombre con extensión del file.
                 FileOutputStream output = new FileOutputStream(f); // Flujo de escritura para guardar la rutaImagen.
@@ -201,8 +201,10 @@ public class AgregaPuesto implements Serializable {
                 System.err.println("Error al guardar la imagen\n" + ex.getMessage());
                 return false;
             }
-        } else System.out.println("No se cargó imagen :(");
-        return true;
+        } else {
+            rutaImagen = "default.jpg";
+            System.out.println("No se cargó imagen :(");
+        } return true;
     }
     
     /**
@@ -228,10 +230,8 @@ public class AgregaPuesto implements Serializable {
                 for (String comida : seleccion) { // Se agregan las relaciones y comida nueva del puesto.
                     String nombreComida = comida.toLowerCase(); // Se da formato correcto al nombre de la comida.
                     System.out.println("Comida seleccionada: " + nombreComida);
-                /*
-                    if(cc.findComida(nombreComida) == null) cc.create(new Comida(nombreComida)); // Se crea la comida nueva.
+                    // if(cc.findComida(nombreComida) == null) cc.create(new Comida(nombreComida)); // Se crea la comida nueva.
                     cpc.create(new ComidaPuesto(nombreComida, nombrePuesto)); // Se crea la relación en la tabla comidaPuesto.
-                */
                 } // Se avisa al usuario que el puesto ha sido agregado.
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
                 FacesMessage.SEVERITY_INFO, "Puesto agregado con éxito!!!.", null));
