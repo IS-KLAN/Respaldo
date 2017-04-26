@@ -36,33 +36,17 @@ public class ComidaC implements Serializable {
     }
 
     public void create(Comida comida) throws PreexistingEntityException, Exception {
-        if (comida.getComidaPuestoList() == null) {
-            comida.setComidaPuestoList(new ArrayList<ComidaPuesto>());
-        }
         EntityManager em = null;
         try {
+            if (comida.getNombreComida() == null) throw new NullPointerException("La comida debe tener un nombre.");
+            comida.setIdComida(getComidaCount() + 1);
             em = getEntityManager();
             em.getTransaction().begin();
-            List<ComidaPuesto> attachedComidaPuestoList = new ArrayList<ComidaPuesto>();
-            for (ComidaPuesto comidaPuestoListComidaPuestoToAttach : comida.getComidaPuestoList()) {
-                comidaPuestoListComidaPuestoToAttach = em.getReference(comidaPuestoListComidaPuestoToAttach.getClass(), comidaPuestoListComidaPuestoToAttach.getComidaPuestoPK());
-                attachedComidaPuestoList.add(comidaPuestoListComidaPuestoToAttach);
-            }
-            comida.setComidaPuestoList(attachedComidaPuestoList);
             em.persist(comida);
-            for (ComidaPuesto comidaPuestoListComidaPuesto : comida.getComidaPuestoList()) {
-                Comida oldComidaOfComidaPuestoListComidaPuesto = comidaPuestoListComidaPuesto.getComida();
-                comidaPuestoListComidaPuesto.setComida(comida);
-                comidaPuestoListComidaPuesto = em.merge(comidaPuestoListComidaPuesto);
-                if (oldComidaOfComidaPuestoListComidaPuesto != null) {
-                    oldComidaOfComidaPuestoListComidaPuesto.getComidaPuestoList().remove(comidaPuestoListComidaPuesto);
-                    oldComidaOfComidaPuestoListComidaPuesto = em.merge(oldComidaOfComidaPuestoListComidaPuesto);
-                }
-            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             if (findComida(comida.getNombreComida()) != null) {
-                throw new PreexistingEntityException("Comida " + comida + " already exists.", ex);
+                throw new PreexistingEntityException("Comida " + comida + " ya existe.", ex);
             }
             throw ex;
         } finally {
