@@ -26,7 +26,7 @@
                     <h:outputLabel for="correo" value="Correo:" style="margin-left: 4%; font-size: medium"/>
                     <h:panelGrid columns="2" cellpadding="5">
                         <p:inputText value="#{registro.correo}" placeholder="Correo" required="true" id="correo" size="20">
-                            <p:keyFilter mask="alphanum"/>
+                            <p:keyFilter regEx="/[A-Za-z0-9_.]/"/>
                         </p:inputText>
                         <h:outputLabel value="@ciencias.unam.mx" style="margin-left: 4%; font-size: medium"/>
                     </h:panelGrid>
