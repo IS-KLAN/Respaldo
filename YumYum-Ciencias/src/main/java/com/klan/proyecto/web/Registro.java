@@ -121,7 +121,7 @@ public class Registro implements Serializable{
             String mensaje = String.format(texto, enlace + cifraClave(), nombreUsuario, contraseña);
             message.setText(mensaje); // Se usa si se va a mandar texto plano.
             Transport.send(message);
-            System.out.println("Correo enviado con Éxito!!!\n" + mensaje);
+            System.out.println("Correo enviado a " + correociencias + "con Éxito!!!\n" + mensaje);
             return true;
         } catch (MessagingException e) {
             System.err.println("\n" + e.getMessage());

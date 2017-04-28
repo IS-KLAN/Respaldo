@@ -12,7 +12,7 @@
                     <!-- Se muestran la imagen del primer puesto de manera responsiva. -->
                     <p:graphicImage  value="resources/#{carrusel.primerImagen()}" style="width: 100%; height: 450px"/></h:commandLink>
                 <b:carouselCaption style="text-shadow: black 0.2em 0.2em 0.2em"> <!-- Se agrega sombra para resaltar letra. -->
-                    <b:row><h:outputText value="Puesto #{carrusel.primerNombre()}" style="font-size: larger"/></b:row>
+                    <b:row><h:outputText value="#{carrusel.primerNombre()}" style="font-size: larger"/></b:row>
                     <h:outputText value="#{carrusel.primerDescripcion()}" style="font-size: medium"/>
                 </b:carouselCaption>
             </b:carouselItem>
@@ -24,7 +24,7 @@
                     <!-- Se muestran la imagen del primer puesto de manera responsiva. -->
                     <p:graphicImage value="resources/#{p.rutaImagen}" alt="YumYum-CIencias" style="width: 100%; height: 450px" /></h:commandLink>
                     <b:carouselCaption style="text-shadow: black 0.2em 0.2em 0.2em"> <!-- Se agrega sombra para resaltar letra. -->
-                        <b:row><h:outputText value="Puesto #{p.nombrePuesto}" style="font-size: larger"/></b:row>
+                        <b:row><h:outputText value="#{p.nombrePuesto}" style="font-size: larger"/></b:row>
                         <h:outputText value="#{p.descripcion}" style="font-size: medium"/>
                     </b:carouselCaption>
                </b:carouselItem>

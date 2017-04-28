@@ -37,34 +37,28 @@ public class ComidaPuestoC implements Serializable {
 
     public void create(ComidaPuesto comidaPuesto) throws PreexistingEntityException, Exception {
         if (comidaPuesto.getComidaPuestoPK() == null) {
-            comidaPuesto.setComidaPuestoPK(new ComidaPuestoPK());
-        }
-        comidaPuesto.getComidaPuestoPK().setNombrePuesto(comidaPuesto.getPuesto().getNombrePuesto());
-        comidaPuesto.getComidaPuestoPK().setNombreComida(comidaPuesto.getComida().getNombreComida());
+            throw new NullPointerException("No se encuentra una llave de comidaPuesto definida.");
+        } ComidaPuestoPK pk = comidaPuesto.getComidaPuestoPK();
         EntityManager em = null;
         try {
+            comidaPuesto.setIdComidaPuesto(getComidaPuestoCount() + 1);
             em = getEntityManager();
-            em.getTransaction().begin();
-            Comida comida = comidaPuesto.getComida();
-            if (comida != null) {
-                comida = em.getReference(comida.getClass(), comida.getNombreComida());
-                comidaPuesto.setComida(comida);
-            }
-            Puesto puesto = comidaPuesto.getPuesto();
-            if (puesto != null) {
-                puesto = em.getReference(puesto.getClass(), puesto.getNombrePuesto());
-                comidaPuesto.setPuesto(puesto);
-            }
+            em.getTransaction().begin();            
+            Comida comida = em.getReference(Comida.class, pk.getNombreComida());
+            if (comida == null) {
+                throw new NullPointerException("Llave de referencia inválida de comida.");
+            } else comidaPuesto.setComida(comida);
+            Puesto  puesto = em.getReference(Puesto.class, pk.getNombrePuesto());
+            if (comida == null) {
+                throw new NullPointerException("Llave de referencia inválida de puesto.");
+            } else comidaPuesto.setPuesto(puesto);
+            comida.getComidaPuestoList().add(comidaPuesto);
+            puesto.getComidaPuestoList().add(comidaPuesto);
+            em.merge(comida);
+            em.merge(puesto);
             em.persist(comidaPuesto);
-            if (comida != null) {
-                comida.getComidaPuestoList().add(comidaPuesto);
-                comida = em.merge(comida);
-            }
-            if (puesto != null) {
-                puesto.getComidaPuestoList().add(comidaPuesto);
-                puesto = em.merge(puesto);
-            }
             em.getTransaction().commit();
+            // System.out.println("Relación agregada: " + comida.getNombreComida() + " a " + puesto.getNombrePuesto());
         } catch (Exception ex) {
             if (findComidaPuesto(comidaPuesto.getComidaPuestoPK()) != null) {
                 throw new PreexistingEntityException("ComidaPuesto " + comidaPuesto + " already exists.", ex);

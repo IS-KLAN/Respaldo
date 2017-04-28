@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html  xmlns="http://www.w3.org/1999/xhtml"
-            xmlns:b="http://bootsfaces.net/ui">
+       xmlns:b="http://bootsfaces.net/ui">
+        <style>
+            .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
+            { background-color: #ddd !important; }
+        </style>
         <!-- Si se tiene una sesión iniciada se muestran las opciones de usuario. -->
         <b:container rendered="#{ingresoUsuario.accedido()}">
                 <b:navBar brand="YumYum Ciencias" inverse="true" brandHref="index.xhtml" fixed="top">
                         <b:navbarLinks>
                             <b:navLink value="Principal" iconAwesome="home" href="index.xhtml"/>
-                            <b:navLink value="Ver Mapa" icon="cross" href="mapa.xhtml"/>
+                            <b:navLink value="Ver Mapa" icon="glyphicon-globe" href="mapa.xhtml"/>
                             <!-- Opción para cerrar sesión con redirección. -->
                             <b:navCommandLink value="Salir (#{ingresoUsuario.usuarioActivo()})"
-                            action="index?faces-redirect=true" actionListener="#{salidaUsuario.cerrar()}"/>
+                            action="index?faces-redirect=true" actionListener="#{salidaUsuario.cerrar()}" 
+                            icon="glyphicon glyphicon-log-out"/>
                         </b:navbarLinks>
                 </b:navBar>
         </b:container>
@@ -19,9 +24,9 @@
                 <b:navBar brand="YumYum Ciencias" inverse="true" brandHref="index.xhtml" fixed="top">
                         <b:navbarLinks>
                             <b:navLink value="Principal" iconAwesome="home" href="index.xhtml"/>
-                            <b:navLink value="Ver Mapa" href="mapa.xhtml"/>
-                            <b:navLink value="Iniciar Sesion" href="ingresoUsuario.xhtml"/>
-                            <b:navLink value="Registrarse" href="registro.xhtml"/>
+                            <b:navLink value="Ver Mapa" icon="glyphicon-globe" href="mapa.xhtml"/>
+                            <b:navLink value="Iniciar Sesion" icon="glyphicon glyphicon-log-in" href="ingresoUsuario.xhtml"/>
+                            <b:navLink value="Registrarse" icon= "glyphicon glyphicon-list-alt" href="registro.xhtml"/>
                         </b:navbarLinks>
                 </b:navBar>
         </b:container>
@@ -30,9 +35,9 @@
                 <b:navBar brand="YumYum Ciencias" inverse="true" brandHref="index.xhtml" fixed="top">
                         <b:navbarLinks>
                             <b:navLink value="Principal" iconAwesome="home" href="index.xhtml"></b:navLink>
-                            <b:navLink value="Ver Mapa" icon="cross" href="mapa.xhtml"></b:navLink>
+                            <b:navLink value="Ver Mapa" icon="glyphicon-globe" href="mapa.xhtml"></b:navLink>
                             <b:navLink value="Crear puesto" icon= "glyphicon-cutlery" href="agregaPuesto.xhtml"></b:navLink>
-                            <b:navCommandLink value="Salir" 
+                            <b:navCommandLink value="Salir" icon="glyphicon glyphicon-log-out"
                             action="index?faces-redirect=true" actionListener="#{salidaAdministrador.cerrar()}"/>
                         </b:navbarLinks>
                 </b:navBar>

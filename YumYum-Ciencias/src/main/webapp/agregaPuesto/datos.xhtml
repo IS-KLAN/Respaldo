@@ -1,0 +1,23 @@
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:f="http://java.sun.com/jsf/core"
+       xmlns:h="http://java.sun.com/jsf/html"
+       xmlns:b="http://bootsfaces.net/ui"
+       xmlns:p="http://primefaces.org/ui">
+    <b:panelGrid columns="3">
+        <h:outputLabel for="nombre" value="Nombre del puesto:" style="font-size: medium"/>
+        <p:inputText id="nombre" value="#{agregaPuesto.nombrePuesto}" required="true" label="Nombre" style="font-size: medium" size="38"/>
+        <br style="font-size: x-large;"/>
+        <h:outputLabel for="descrip" value="Descripcion:"  style="font-size: medium"/>
+        <p:inputTextarea id="descrip" value="#{agregaPuesto.descripcion}" rows="2" cols="41" style="font-size: medium"/>
+        <br style="font-size: x-large;"/>
+        <h:outputLabel for="multiple" value="Comida que vende: " style="font-size: medium"/>
+        <p:selectCheckboxMenu id="multiple" value="#{agregaPuesto.seleccion}" label="Comida"
+                              filter="true" filterMatchMode="startsWith" panelStyle="width:250px" >
+            <f:selectItems value="#{agregaPuesto.lista}"/>
+        </p:selectCheckboxMenu>
+        <br style="font-size: x-large;"/>
+        <h:outputLabel for="up" value="Imagen del Puesto: " style="font-size: medium"/>
+        <p:fileUpload id="up" label="Cargar" value="#{agregaPuesto.archivo}" mode="simple" skinSimple="true" />
+        <br style="font-size: x-large;"/>
+    </b:panelGrid>
+</html>

@@ -54,6 +54,7 @@ public class Carrusel implements Serializable{
             primero.setRutaImagen("default.jpg");
             // En otro caso, se toma el primer elemento de la lista.
         } else primero = puestos.remove(0);
+        for (Puesto p : puestos) System.out.println("Imagen cargada: " + p.getRutaImagen());
     }
     
     /**

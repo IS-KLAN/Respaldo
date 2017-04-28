@@ -35,8 +35,8 @@ create table if not exists puesto (
   id_puesto serial,
   nombre_puesto varchar(64) primary key,
   descripcion varchar(255),
-  latitud varchar(16) not null,
-  longitud varchar(16) not null,
+  latitud varchar(64) not null,
+  longitud varchar(64) not null,
   rutaImagen varchar(255),
   unique key (latitud, longitud)
 ) engine=InnoDB default charset=utf8;
@@ -72,3 +72,31 @@ create table if not exists comida_puesto (
   foreign key(nombre_puesto)
   references puesto(nombre_puesto)
 ) engine=InnoDB default charset=utf8;
+
+-- Se insertan comidas de prueba.
+INSERT INTO comida (nombre_comida) VALUES('bollos');
+INSERT INTO comida (nombre_comida) VALUES('burritos');
+INSERT INTO comida (nombre_comida) VALUES('crepas');
+INSERT INTO comida (nombre_comida) VALUES('chilaquiles');
+INSERT INTO comida (nombre_comida) VALUES('enchiladas');
+INSERT INTO comida (nombre_comida) VALUES('flautas');
+INSERT INTO comida (nombre_comida) VALUES('gorditas');
+INSERT INTO comida (nombre_comida) VALUES('hamburguesas');
+INSERT INTO comida (nombre_comida) VALUES('hot-dogs');
+INSERT INTO comida (nombre_comida) VALUES('huaraches');
+INSERT INTO comida (nombre_comida) VALUES('molletes');
+INSERT INTO comida (nombre_comida) VALUES('nachos');
+INSERT INTO comida (nombre_comida) VALUES('pizza');
+INSERT INTO comida (nombre_comida) VALUES('pambazos');
+INSERT INTO comida (nombre_comida) VALUES('sincronizadas');
+INSERT INTO comida (nombre_comida) VALUES('quesadillas');
+INSERT INTO comida (nombre_comida) VALUES('sandwich');
+INSERT INTO comida (nombre_comida) VALUES('tacos');
+INSERT INTO comida (nombre_comida) VALUES('tortas');
+INSERT INTO comida (nombre_comida) VALUES('tostadas');
+-- Bebidas a partir de id 20.
+INSERT INTO comida (nombre_comida) VALUES('agua de sabor');
+INSERT INTO comida (nombre_comida) VALUES('jugo');
+INSERT INTO comida (nombre_comida) VALUES('refresco');
+INSERT INTO comida (nombre_comida) VALUES('café');
+INSERT INTO comida (nombre_comida) VALUES('licuado');

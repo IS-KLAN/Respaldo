@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html>
 <html  xmlns="http://www.w3.org/1999/xhtml"
        xmlns:ui="http://java.sun.com/jsf/facelets"
        xmlns:h="http://java.sun.com/jsf/html"
@@ -7,30 +6,30 @@
        xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Agregar Puesto</title>
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
-        <meta name="author" content="KLAN"></meta>
-        <style>
-            .ui-growl
-            { right: 10%; top: 10%; }
-            .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
-            { background-color: #ddd !important; }
-        </style>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="author" content="KLAN"/>
+        <meta charset="utf-8"/>
     </h:head>
     <h:body style="padding-top:50px">
-        <b:container>
-            <h:form id="formulario" enctype="multipart/form-data">
-                <!-- Barra de navegación. -->
-                <ui:include src="index/opciones.xhtml"/>
-                <h3>Agregar Puesto</h3>
-                <ui:include src="agregaPuesto/descripcion.xhtml"/>
-                <ui:include src="agregaPuesto/comida.xhtml" />
-                <b:panel><ui:include src="agregaPuesto/mapa.xhtml"/></b:panel>
-                <b:panelGrid columns="2">
-                    <p:commandButton value="Agregar" ajax="false" actionListener="#{agregaPuesto.agregar()}"/>
-                    <p:commandButton value="Limpiar" type="reset"/>
+        <!-- Barra de navegación. -->
+        <b:container rendered="#{ingresoAdministrador.accedido()}">
+            <h:form><ui:include src="index/opciones.xhtml"/></h:form>
+            <p:growl id="messages" showDetail="true" autoUpdate="true"/>
+            <h1>Agregar Puesto<br/></h1>
+            <b:panelGrid columns="2">
+                <b:panelGrid columns="1">
+                    <h:outputLabel value="Marque la ubicación:" style="font-size: medium"/>
+                    <ui:include src="agregaPuesto/mapa.xhtml"/>
                 </b:panelGrid>
-            </h:form>
+                <h:form id="agregaPuesto" enctype="multipart/form-data"><br/>
+                    <ui:include src="agregaPuesto/datos.xhtml"/>
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="Continuar" ajax="false" process="@all" action="#{agregaPuesto.agregar()}"/>
+                        <p:commandButton value="Limpiar" update="agregaPuesto" process="@all" action="agregaPuesto.xhtml?faces-redirect=true"/>
+                    </h:panelGrid>
+                </h:form>
+            </b:panelGrid>
+            <footer> <br/><p>© KLAN 2017</p> </footer>
         </b:container>
-        <footer> <p><br>© KLAN 2017</br></p> </footer>
     </h:body>
 </html>

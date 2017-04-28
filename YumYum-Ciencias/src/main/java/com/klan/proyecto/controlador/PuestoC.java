@@ -45,6 +45,7 @@ public class PuestoC implements Serializable {
         }
         EntityManager em = null;
         try {
+            puesto.setIdPuesto(getPuestoCount() + 1);
             em = getEntityManager();
             em.getTransaction().begin();
             List<ComidaPuesto> attachedComidaPuestoList = new ArrayList<ComidaPuesto>();
@@ -79,6 +80,7 @@ public class PuestoC implements Serializable {
                 }
             }
             em.getTransaction().commit();
+            // System.out.println("Puesto agregado: \nNombre" + puesto.getNombrePuesto());
         } catch (Exception ex) {
             if (findPuesto(puesto.getNombrePuesto()) != null) {
                 throw new PreexistingEntityException("Puesto " + puesto + " already exists.", ex);
