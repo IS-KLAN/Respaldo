@@ -25,9 +25,9 @@ import javax.persistence.NamedQueries;
  *
  * @author patlani
  */
-public class UsuarioJPA implements Serializable {
+public class UsuarioC implements Serializable {
 
-    public UsuarioJPA(EntityManagerFactory emf) {
+    public UsuarioC(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;

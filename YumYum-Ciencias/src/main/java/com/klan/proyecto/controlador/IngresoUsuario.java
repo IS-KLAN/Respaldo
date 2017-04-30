@@ -5,8 +5,8 @@
  */
 package com.klan.proyecto.controlador;
 
-import com.klan.proyecto.jpa.PendienteJPA;
-import com.klan.proyecto.jpa.UsuarioJPA; // Para consultar usuarios de la BD.
+import com.klan.proyecto.jpa.PendienteC;
+import com.klan.proyecto.jpa.UsuarioC; // Para consultar usuarios de la BD.
 import com.klan.proyecto.modelo.Pendiente;
 import com.klan.proyecto.modelo.Usuario; // Para construir un usuario.
 
@@ -87,7 +87,7 @@ public class IngresoUsuario implements Serializable{
         // Se realiza la conexión a la BD.
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
         // Se busca al usuario por correo.
-        Usuario usuario = new UsuarioJPA(emf).buscaCorreo(correo);
+        Usuario usuario = new UsuarioC(emf).buscaCorreo(correo);
         // Se verifica que el usuario exista y que haya ingresado la contraseña corrrecta.
         if (usuario != null && usuario.getContraseña().equals(contraseña)) {
             //System.out.println("Iniciando la sesión de " + usuario.getNombreUsuario());
@@ -97,7 +97,7 @@ public class IngresoUsuario implements Serializable{
             // Se asegura que el mensaje se muestre después de la redirección.
             faceContext.getExternalContext().getFlash().setKeepMessages(true);
             return "index?faces-redirect=true";
-        } Pendiente posible = new PendienteJPA(emf).buscaCorreo(correo);
+        } Pendiente posible = new PendienteC(emf).buscaCorreo(correo);
         if (posible != null) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Debe confirmar su registro desde su correo para ingresar", null);
             faceContext.addMessage(null, message);                        

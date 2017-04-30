@@ -24,9 +24,9 @@ import javax.persistence.EntityManagerFactory;
  *
  * @author patlani
  */
-public class ComidaJPA implements Serializable {
+public class ComidaC implements Serializable {
 
-    public ComidaJPA(EntityManagerFactory emf) {
+    public ComidaC(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;

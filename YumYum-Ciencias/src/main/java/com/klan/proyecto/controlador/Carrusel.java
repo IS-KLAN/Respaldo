@@ -7,7 +7,7 @@ package com.klan.proyecto.controlador;
 
 import java.util.List;
 
-import com.klan.proyecto.jpa.PuestoJPA; // Para consultar la lista de puestos.
+import com.klan.proyecto.jpa.PuestoC; // Para consultar la lista de puestos.
 import com.klan.proyecto.modelo.Puesto; // Para definir puestos.
 
 import javax.faces.bean.ManagedBean; // Para inyectar código dentro de un JSF.
@@ -45,8 +45,8 @@ public class Carrusel implements Serializable{
     public void init() {
         // Se realiza la conexión a la BD.
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
-        // Se realiza la consulta de todos los puestos en la BD con un JPA de Puesto y una conexión EMF.
-        puestos = new PuestoJPA(emf).buscaPuestos();
+        // Se realiza la consulta de todos los puestos en la BD con un C de Puesto y una conexión EMF.
+        puestos = new PuestoC(emf).buscaPuestos();
         // Se separa la lista para la correcta visualización del carrusel.
         if (puestos.size() < 1) {
             // Si no se tienen puestos disponibles se inicializa el primero por defecto.

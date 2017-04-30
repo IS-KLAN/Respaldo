@@ -5,8 +5,8 @@
  */
 package com.klan.proyecto.controlador;
 
-import com.klan.proyecto.jpa.PuestoJPA; // Para consultar puestos de la BD.
-import com.klan.proyecto.jpa.EvaluacionJPA; // Para actualizar y consultar evaluaciones en la BD.
+import com.klan.proyecto.jpa.PuestoC; // Para consultar puestos de la BD.
+import com.klan.proyecto.jpa.EvaluacionC; // Para actualizar y consultar evaluaciones en la BD.
 import com.klan.proyecto.modelo.Puesto; // Para construir un puesto.
 import com.klan.proyecto.modelo.Usuario; // Para construir un usuario.
 import com.klan.proyecto.modelo.Evaluacion; // Para construir evaluaciones.
@@ -57,13 +57,13 @@ public class Evaluador implements Serializable{
         // Se obtienen los datos guardados del puesto.
         if ((puesto = (Puesto)httpServletRequest.getSession().getAttribute("puesto")) != null) {
             // Se obtiene la versión más actual del puesto en la BD.
-            puesto = new PuestoJPA(emf).buscaId(puesto.getNombrePuesto());
+            puesto = new PuestoC(emf).buscaId(puesto.getNombrePuesto());
             //System.out.println("Nombre de puesto cargado: " + p.getNombrePuesto());
         } else puesto = new Puesto(); // Se inicializa por defecto.
         // Se construye la llave primaria del usuario encontrado.
         EvaluacionPK id = new EvaluacionPK(puesto.getNombrePuesto(), usuario.getNombreUsuario());
         // Se busca la evalución existente del usuario en el puesto definido.
-        Evaluacion actual = new EvaluacionJPA(emf).buscaId(id);
+        Evaluacion actual = new EvaluacionC(emf).buscaId(id);
         // Se inicializa la última calificación asignada del usuario.
         calificacion = (actual != null)? actual.getCalificacion() : 0;
         comentario = (actual != null)? actual.getComentario() : "";
@@ -123,8 +123,8 @@ public class Evaluador implements Serializable{
     public void comentar() {
         // Se realiza una conexión a la BD.
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
-        // Se inicializa un JPA para realizar una consulta de evaluación.
-        EvaluacionJPA controlador = new EvaluacionJPA(emf);
+        // Se inicializa un C para realizar una consulta de evaluación.
+        EvaluacionC controlador = new EvaluacionC(emf);
         // Se construye la llave primaria de la evaluación actual.
         EvaluacionPK id = new EvaluacionPK(puesto.getNombrePuesto(), usuario.getNombreUsuario());
         // Se construye la evaluación actual con su comentario, calificación y llave primaria.
@@ -140,7 +140,7 @@ public class Evaluador implements Serializable{
                 //System.out.println("Se intenta crear la evaluación: " + actual.getIdEvaluacion());
                 controlador.crear(actual);
             } // Se actualiza el contenido del puesto con la evaluación actual en su lista relacionada.
-            puesto = new PuestoJPA(emf).buscaId(puesto.getNombrePuesto());
+            puesto = new PuestoC(emf).buscaId(puesto.getNombrePuesto());
             httpServletRequest.getSession().setAttribute("puesto", puesto);
         }catch(Exception ex){
             System.err.println(ex.getMessage());

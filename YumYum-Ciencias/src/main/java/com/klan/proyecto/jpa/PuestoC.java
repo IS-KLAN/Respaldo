@@ -25,9 +25,9 @@ import javax.persistence.EntityManagerFactory;
  *
  * @author patlani
  */
-public class PuestoJPA implements Serializable {
+public class PuestoC implements Serializable {
 
-    public PuestoJPA(EntityManagerFactory emf) {
+    public PuestoC(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;

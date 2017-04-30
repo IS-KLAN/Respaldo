@@ -5,8 +5,8 @@
  */
 package com.klan.proyecto.controlador;
 
-import com.klan.proyecto.jpa.PendienteJPA; // Para insertar un nuevo pendiente.
-import com.klan.proyecto.jpa.UsuarioJPA;
+import com.klan.proyecto.jpa.PendienteC; // Para insertar un nuevo pendiente.
+import com.klan.proyecto.jpa.UsuarioC;
 import com.klan.proyecto.modelo.Pendiente; // Para construir un usuario pendiente.
 import com.klan.proyecto.modelo.Usuario;
 
@@ -135,7 +135,7 @@ public class Registro implements Serializable{
     public String registrar(){
         if (datosVerificados()) {
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
-            PendienteJPA pc = new PendienteJPA(emf);
+            PendienteC pc = new PendienteC(emf);
             Pendiente usuario = new Pendiente(nombreUsuario, correo, contraseña);
             try{ //Realiza la conexión a la BD y se inserta al nuevo usuario de confirmación pendiente.
                 pc.crear(usuario);
@@ -206,7 +206,7 @@ public class Registro implements Serializable{
      */
     public boolean datosVerificados() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
-        UsuarioJPA uc = new UsuarioJPA(emf); PendienteJPA pc = new PendienteJPA(emf);
+        UsuarioC uc = new UsuarioC(emf); PendienteC pc = new PendienteC(emf);
         if(pc.buscaId(nombreUsuario) != null || uc.buscaId(nombreUsuario) != null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
             FacesMessage.SEVERITY_ERROR, "Ese nombre de usuario ya ha sido registrado.", null));
@@ -225,15 +225,15 @@ public class Registro implements Serializable{
      */
     public String confirmar() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
-        PendienteJPA controlador = new PendienteJPA(emf);
+        PendienteC controlador = new PendienteC(emf);
         Pendiente confirmado = controlador.buscaId(descifraClave());
         if(confirmado != null) {
             correo = confirmado.getCorreo();
             contraseña = confirmado.getContraseña();
             try{ // Se crea al nuevo usuario y se borra al usuario pendiente.
                 Usuario nuevo = new Usuario(nombreUsuario, correo, contraseña);
-                new UsuarioJPA(emf).crear(nuevo); // Se inserta al nuevo usuario en la BD.
-                new PendienteJPA(emf).borrar(nombreUsuario); // Se borra de pendiente.
+                new UsuarioC(emf).crear(nuevo); // Se inserta al nuevo usuario en la BD.
+                new PendienteC(emf).borrar(nombreUsuario); // Se borra de pendiente.
                 faceContext.addMessage(null, new FacesMessage(
                 FacesMessage.SEVERITY_INFO, "El registro se ha realizado exitosamente :)", null));
                 // Se asegura que el mensaje se muestre después de la redirección.

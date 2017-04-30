@@ -22,9 +22,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.io.Serializable;
 
-import com.klan.proyecto.jpa.ComidaJPA;
-import com.klan.proyecto.jpa.ComidaPuestoJPA;
-import com.klan.proyecto.jpa.PuestoJPA;
+import com.klan.proyecto.jpa.ComidaC;
+import com.klan.proyecto.jpa.ComidaPuestoC;
+import com.klan.proyecto.jpa.PuestoC;
 import com.klan.proyecto.modelo.Comida;
 import com.klan.proyecto.modelo.ComidaPuesto;
 import com.klan.proyecto.modelo.Puesto;
@@ -56,7 +56,7 @@ public class AgregaPuesto implements Serializable {
     @PostConstruct
     public void init() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
-        List<Puesto> lugares = new PuestoJPA(emf).buscaPuestos();
+        List<Puesto> lugares = new PuestoC(emf).buscaPuestos();
         modelo = new DefaultMapModel();
         for (Puesto lugar : lugares) {
             Double latitud = Double.parseDouble(lugar.getLatitud());
@@ -66,7 +66,7 @@ public class AgregaPuesto implements Serializable {
             modelo.addOverlay(new Marker(new LatLng(latitud, longitud), nombre));
         } seleccion = new ArrayList<>(); // Se inicializan listas de lista y selección
         lista = new ArrayList<>(); 
-        todas = new ComidaJPA(emf).buscaComidas();
+        todas = new ComidaC(emf).buscaComidas();
         for (Comida c : todas) lista.add(c.getNombreComida());
     }
 
@@ -217,13 +217,13 @@ public class AgregaPuesto implements Serializable {
         try{ 
             if (latitud == null || longitud == null) throw new NullPointerException("Debe definirse la ubicación del puesto.");
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias"); //Realiza la conexión a la BD 
-            PuestoJPA pc = new PuestoJPA(emf); // Se utiliza para consultas a la tabla Puesto.
+            PuestoC pc = new PuestoC(emf); // Se utiliza para consultas a la tabla Puesto.
             if(guardaImagen()) { // Si no ocurrieron errores al tratar de guardar la rutaImagen.
                 Puesto puesto = new Puesto(nombrePuesto, idPuesto, lat, lng); // Se crea el nuevo puesto.
                 if (descripcion != null) puesto.setDescripcion(descripcion); // Se agrega su descripción si se ingresó.
                 if (rutaImagen != null) puesto.setRutaImagen(rutaImagen); // Se define el nombre de la rutaImagen si se cargó.
                 pc.crear(puesto); // Se agrega el puesto a la BD.
-                ComidaPuestoJPA cpc = new ComidaPuestoJPA(emf); // Para agregar las relaciones de comida.
+                ComidaPuestoC cpc = new ComidaPuestoC(emf); // Para agregar las relaciones de comida.
                 for (String nombreComida : seleccion) { // Se agregan las relaciones y comida nueva del puesto.
                     cpc.crear(new ComidaPuesto(nombreComida, nombrePuesto)); // Se crea la relación en la tabla comidaPuesto.
                 } // Se avisa al usuario que el puesto ha sido agregado.

@@ -14,7 +14,7 @@ import org.primefaces.model.map.LatLng;
 import org.primefaces.model.map.MapModel;
 import org.primefaces.model.map.Marker;
 
-import com.klan.proyecto.jpa.PuestoJPA;
+import com.klan.proyecto.jpa.PuestoC;
 import com.klan.proyecto.modelo.Puesto;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,7 +53,7 @@ public class Mapa implements Serializable {
     public void init() {      
         modelo = new DefaultMapModel();
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");        
-        List<Puesto> todos = new PuestoJPA(emf).buscaPuestos();
+        List<Puesto> todos = new PuestoC(emf).buscaPuestos();
         for (Puesto uno: todos){
             double lat= Double.parseDouble(uno.getLatitud());
             double lon= Double.parseDouble(uno.getLongitud());
@@ -78,7 +78,7 @@ public class Mapa implements Serializable {
         double lon= marker.getLatlng().getLng();
         
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
-        List<Puesto> puestos = new PuestoJPA(emf).buscaPuestos();
+        List<Puesto> puestos = new PuestoC(emf).buscaPuestos();
         for(Puesto uno: puestos){
             double lt= Double.parseDouble(uno.getLatitud());
             double ln= Double.parseDouble(uno.getLongitud());

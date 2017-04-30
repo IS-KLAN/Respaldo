@@ -21,17 +21,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
- * Controlador JPA de la Clase Evaluación. Utilizada para realizar consultas y modificaciones
+ * Controlador C de la Clase Evaluación. Utilizada para realizar consultas y modificaciones
  *  a la tabla Evaluación de la BD.
  * @author patlani
  */
-public class EvaluacionJPA implements Serializable {
+public class EvaluacionC implements Serializable {
 
     /**
      * Constructor a partir de una entidad de conexión a una base de datos.
      * @param emf Es la entidad que con la que se conecta a la base de datos.
      */
-    public EvaluacionJPA(EntityManagerFactory emf) {
+    public EvaluacionC(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
