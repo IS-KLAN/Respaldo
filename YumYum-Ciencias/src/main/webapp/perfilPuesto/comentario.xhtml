@@ -11,9 +11,12 @@
             <p:growl id="growl" showDetail="true" showSummary="true" sticky="true"/>
             <ui:include src="evaluaciones.xhtml"></ui:include>
         </h:panelGrid>
-        <h:panelGrid id="campo" style="margin: 4px;">
-            <p:rating id="calificacion" value="#{evaluador.calificacion}" stars="5" cancel="false" onRate="#{evaluador.setCalificacion(value)}"/>
-            <b:inputText style="margin: 3px; font-size: medium" id="comentario" placeholder="Escribe tu comentario ..." value="#{evaluador.comentario}"/>
+        <h:panelGrid id="campo" style="margin-top: 5px;">
+            <h:panelGrid columns="2">
+                <b:label text="Calificación" style="font-size: medium;"/>
+                <p:rating id="calificacion" value="#{evaluador.calificacion}" stars="5" cancel="false" onRate="#{evaluador.setCalificacion(value)}"/>
+            </h:panelGrid>
+            <b:inputText style="margin: 5px; font-size: medium" id="comentario" placeholder="Escribe tu comentario ..." value="#{evaluador.comentario}"/>
         </h:panelGrid>
         <b:commandButton look="sucess" size="md" value="Guardar" icon="ok"
                          update="datos" process="@form" actionListener="#{evaluador.comentar()}">
