@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html>
 <html  xmlns="http://www.w3.org/1999/xhtml"
        xmlns:ui="http://java.sun.com/jsf/facelets"
        xmlns:h="http://java.sun.com/jsf/html"
@@ -17,18 +16,19 @@
             <h:form><ui:include src="index/opciones.xhtml"/></h:form>
             <p:growl id="messages" showDetail="true" autoUpdate="true"/>
             <h1>Agregar Puesto<br/></h1>
-            <h:form id="agregaPuesto" enctype="multipart/form-data">
-                <ui:include src="agregaPuesto/datos.xhtml"/>
-            </h:form>
-            <ui:include src="agregaPuesto/mapa.xhtml"/>
-            <h:form enctype="multipart/form-data">
-                <h:outputLabel value="Imagen del Puesto: " style="font-size: medium"/>
-                <p:fileUpload value="#{agregaPuesto.archivo}" mode="simple" skinSimple="true" />
-                <h:panelGrid columns="2" cellpadding="5">
-                    <p:commandButton value="Continuar" ajax="false" process="@all" action="#{agregaPuesto.agregar()}"/>
-                    <p:commandButton value="Limpiar" update="agregaPuesto" process="@all" action="agregaPuesto.xhtml?faces-redirect=true"/>
-                </h:panelGrid>
-            </h:form>
+            <b:panelGrid columns="2">
+                <b:panelGrid columns="1">
+                    <h:outputLabel value="Marque la ubicación:" style="font-size: medium"/>
+                    <ui:include src="agregaPuesto/mapa.xhtml"/>
+                </b:panelGrid>
+                <h:form id="agregaPuesto" enctype="multipart/form-data"><br/>
+                    <ui:include src="agregaPuesto/datos.xhtml"/>
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="Continuar" ajax="false" process="@all" action="#{agregaPuesto.agregar()}"/>
+                        <p:commandButton value="Limpiar" update="agregaPuesto" process="@all" action="agregaPuesto.xhtml?faces-redirect=true"/>
+                    </h:panelGrid>
+                </h:form>
+            </b:panelGrid>
             <footer> <br/><p>© KLAN 2017</p> </footer>
         </b:container>
     </h:body>

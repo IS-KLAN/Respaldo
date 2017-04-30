@@ -22,7 +22,7 @@
             <h:form>
               <p:growl id="growl" showDetail="true" showSummary="true" sticky="true" />
               <p:gmap id="gmap" center="19.324525,-99.179392" zoom="18"
-                      type="roadmap" model="#{mapa.simpleModel}"
+                      type="roadmap" model="#{mapa.modelo}"
                       style="width:100%;height:500px"
                       widgetVar="map">
               <p:ajax event="overlaySelect" listener="#{mapa.onMarkerSelect}" update="growl" />
