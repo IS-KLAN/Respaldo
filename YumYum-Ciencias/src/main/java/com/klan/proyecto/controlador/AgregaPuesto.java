@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.klan.proyecto.web;
+package com.klan.proyecto.controlador;
 
 
 import org.primefaces.event.map.OverlaySelectEvent;
@@ -22,9 +22,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.io.Serializable;
 
-import com.klan.proyecto.controlador.ComidaC;
-import com.klan.proyecto.controlador.ComidaPuestoC;
-import com.klan.proyecto.controlador.PuestoC;
+import com.klan.proyecto.jpa.ComidaJPA;
+import com.klan.proyecto.jpa.ComidaPuestoJPA;
+import com.klan.proyecto.jpa.PuestoJPA;
 import com.klan.proyecto.modelo.Comida;
 import com.klan.proyecto.modelo.ComidaPuesto;
 import com.klan.proyecto.modelo.Puesto;
@@ -47,6 +47,7 @@ public class AgregaPuesto implements Serializable {
     private List<Comida> todas;
     private List<String> lista, seleccion;
     private String nombrePuesto, descripcion, rutaImagen;
+    private String lat, lng;
     private UploadedFile archivo;
     private Double latitud;
     private Double longitud;
@@ -55,7 +56,7 @@ public class AgregaPuesto implements Serializable {
     @PostConstruct
     public void init() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
-        List<Puesto> lugares = new PuestoC(emf).findPuestoEntities();
+        List<Puesto> lugares = new PuestoJPA(emf).buscaPuestos();
         modelo = new DefaultMapModel();
         for (Puesto lugar : lugares) {
             Double latitud = Double.parseDouble(lugar.getLatitud());
@@ -65,7 +66,7 @@ public class AgregaPuesto implements Serializable {
             modelo.addOverlay(new Marker(new LatLng(latitud, longitud), nombre));
         } seleccion = new ArrayList<>(); // Se inicializan listas de lista y selección
         lista = new ArrayList<>(); 
-        todas = new ComidaC(emf).findComidaEntities();
+        todas = new ComidaJPA(emf).buscaComidas();
         for (Comida c : todas) lista.add(c.getNombreComida());
     }
 
@@ -111,6 +112,7 @@ public class AgregaPuesto implements Serializable {
 
     public void setLatitud(Double latitud) {
         this.latitud = latitud;
+        this.lat = latitud.toString();
     }
 
     public Double getLongitud() {
@@ -119,6 +121,7 @@ public class AgregaPuesto implements Serializable {
 
     public void setLongitud(Double longitud) {
         this.longitud = longitud;
+        this.lng = longitud.toString();
     }
 
     public UploadedFile getArchivo() {
@@ -212,17 +215,17 @@ public class AgregaPuesto implements Serializable {
      */
     public String agregar() {
         try{ 
+            if (latitud == null || longitud == null) throw new NullPointerException("Debe definirse la ubicación del puesto.");
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias"); //Realiza la conexión a la BD 
-            PuestoC pc = new PuestoC(emf); // Se utiliza para consultas a la tabla Puesto.
+            PuestoJPA pc = new PuestoJPA(emf); // Se utiliza para consultas a la tabla Puesto.
             if(guardaImagen()) { // Si no ocurrieron errores al tratar de guardar la rutaImagen.
-                String lat = latitud.toString(), lng = longitud.toString(); // Se define la latitud y la longitud.
                 Puesto puesto = new Puesto(nombrePuesto, idPuesto, lat, lng); // Se crea el nuevo puesto.
                 if (descripcion != null) puesto.setDescripcion(descripcion); // Se agrega su descripción si se ingresó.
                 if (rutaImagen != null) puesto.setRutaImagen(rutaImagen); // Se define el nombre de la rutaImagen si se cargó.
-                pc.create(puesto); // Se agrega el puesto a la BD.
-                ComidaPuestoC cpc = new ComidaPuestoC(emf); // Para agregar las relaciones de comida.
+                pc.crear(puesto); // Se agrega el puesto a la BD.
+                ComidaPuestoJPA cpc = new ComidaPuestoJPA(emf); // Para agregar las relaciones de comida.
                 for (String nombreComida : seleccion) { // Se agregan las relaciones y comida nueva del puesto.
-                    cpc.create(new ComidaPuesto(nombreComida, nombrePuesto)); // Se crea la relación en la tabla comidaPuesto.
+                    cpc.crear(new ComidaPuesto(nombreComida, nombrePuesto)); // Se crea la relación en la tabla comidaPuesto.
                 } // Se avisa al usuario que el puesto ha sido agregado.
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
                 FacesMessage.SEVERITY_INFO, "Puesto agregado con éxito!!!.", null));
@@ -232,7 +235,7 @@ public class AgregaPuesto implements Serializable {
             } // Si no se guardo bien la rutaImagen, no se agrega el puesto.
         }catch(Exception ex){
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-            FacesMessage.SEVERITY_WARN, "Error al agregar el puesto.", null));
+            FacesMessage.SEVERITY_ERROR, "Error al agregar el puesto.", ex.getMessage()));
             System.err.println("Error al agregar el puesto\n" + ex.getMessage());
         } return "agregaPuesto";
     }
@@ -246,29 +249,5 @@ public class AgregaPuesto implements Serializable {
         descripcion = null;
         archivo = null;
         seleccion = new ArrayList<>();
-    }
-    
-    /**
-     * Método que se encarga de obtener las coincidencias de comida con lo que se escribe.
-     * @param inicio Es con lo que inicia la cadena que se ingresa.
-     * @return Devuelve una lista con las palabras que hayan coincidido.
-     */
-    public List<String> coincidencias(String inicio) {
-        List<String> coincidencias = new ArrayList<>();
-        inicio = inicio.toLowerCase();
-        for (String comida : lista) {
-            if (comida.startsWith(inicio)) coincidencias.add(comida);
-        } return coincidencias;
-    }        
-
-    /**
-     * Método que agrega o quita opciones de la lista que han sido seleccionadas o borradas.
-     */
-    public void actualiza() {
-        lista.clear();
-        for (Comida c : todas) lista.add(c.getNombreComida());
-        if (seleccion != null) {
-            for (String comida : seleccion) lista.remove(comida);        
-        }
     }
 }

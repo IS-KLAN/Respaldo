@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.klan.proyecto.web;
+package com.klan.proyecto.controlador;
 
 
 import javax.faces.application.FacesMessage; // Para mostrar mensajes en la interfaz.

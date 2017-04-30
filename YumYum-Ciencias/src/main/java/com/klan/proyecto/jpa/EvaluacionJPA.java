@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.klan.proyecto.controlador;
+package com.klan.proyecto.jpa;
 
-import com.klan.proyecto.controlador.exceptions.NonexistentEntityException;
-import com.klan.proyecto.controlador.exceptions.PreexistingEntityException;
+import com.klan.proyecto.jpa.excepciones.EntidadInexistenteException;
+import com.klan.proyecto.jpa.excepciones.EntidadExistenteException;
 import com.klan.proyecto.modelo.Evaluacion;
 import com.klan.proyecto.modelo.EvaluacionPK;
 import java.io.Serializable;
@@ -25,13 +25,13 @@ import javax.persistence.EntityManagerFactory;
  *  a la tabla Evaluación de la BD.
  * @author patlani
  */
-public class EvaluacionC implements Serializable {
+public class EvaluacionJPA implements Serializable {
 
     /**
      * Constructor a partir de una entidad de conexión a una base de datos.
      * @param emf Es la entidad que con la que se conecta a la base de datos.
      */
-    public EvaluacionC(EntityManagerFactory emf) {
+    public EvaluacionJPA(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -44,10 +44,10 @@ public class EvaluacionC implements Serializable {
      * Método que inserta en la BD una evaluación con sus atributos definidos.
      * Verificando que la PK este bien definida y sus listas de relaciones queden actualizadas.
      * @param evaluacion Es la evaluacipon a insertar.
-     * @throws PreexistingEntityException Indica que ya exisistía una evaluación con la misma PK.
+     * @throws EntidadExistenteException Indica que ya exisistía una evaluación con la misma PK.
      * @throws Exception  Cualquier otro error durante la transacción.
      */
-    public void create(Evaluacion evaluacion) throws PreexistingEntityException, Exception {
+    public void crear(Evaluacion evaluacion) throws EntidadExistenteException, Exception {
         // Se verifica que la evaluación tenga definida una llave primaria para insertar.
         if (evaluacion.getEvaluacionPK() == null) {
             throw new NullPointerException("Se debe definir una llave no nula para insertar la evaluación.");
@@ -67,7 +67,7 @@ public class EvaluacionC implements Serializable {
                 // Se cierra la conexión antes de cancelar la inserción.
                 em.close(); throw new NullPointerException("La llave de la evaluación contiene referencias nulas.");
             } // Se asigna el siguiente id de la numeración seriada según el número de entidades en la tabla.
-            evaluacion.setIdEvaluacion(getEvaluacionCount() + 1);
+            evaluacion.setIdEvaluacion(cantidadDeEvaluaciones() + 1);
             // Se agrega la evaluación a la lista de evaluaciones relacionadas con el puesto.
             puesto.getEvaluacionList().add(evaluacion); em.merge(puesto);
             // Se agrega la evaluación a la lista de evaluaciones relacionadas con el usuario.
@@ -75,8 +75,8 @@ public class EvaluacionC implements Serializable {
             em.persist(evaluacion); // Se inserta la evaluación en la BD.
             em.getTransaction().commit(); // Se confirma la transacción.
         } catch (Exception ex) {
-            if (findEvaluacion(id) != null) {
-                throw new PreexistingEntityException("La evaluación " + evaluacion + " ya existe en la BD.", ex);
+            if (buscaId(id) != null) {
+                throw new EntidadExistenteException("La evaluación " + evaluacion + " ya existe en la BD.", ex);
             } throw ex;
         } finally {
             if (em != null) em.close();
@@ -87,10 +87,10 @@ public class EvaluacionC implements Serializable {
      * Método que actualiza en la BD una evaluación con sus atributos definidos.
      * Verificando que la PK este bien definida y sus listas de relaciones queden actualizadas.
      * @param evaluacion Es la evaluacipon que se actualiza.
-     * @throws NonexistentEntityException Indica que la evaluación no existe en la BD.
+     * @throws EntidadInexistenteException Indica que la evaluación no existe en la BD.
      * @throws Exception Cualquier error que ocurra durante la transacción.
      */
-    public void edit(Evaluacion evaluacion) throws NonexistentEntityException, Exception {
+    public void editar(Evaluacion evaluacion) throws EntidadInexistenteException, Exception {
         // Se verifica que la evaluación tenga definida una llave primaria para actualizar.
         if (evaluacion.getEvaluacionPK() == null) {
             throw new NullPointerException("Se debe definir una llave no nula para insertar la evaluación.");
@@ -98,8 +98,8 @@ public class EvaluacionC implements Serializable {
         EvaluacionPK id = evaluacion.getEvaluacionPK();
         EntityManager em = null;
         try { // Se verifica que la evaluación con la PK deifinida, exista en la BD.
-            Evaluacion original = findEvaluacion(id);
-            if (original == null) throw new NonexistentEntityException("La evaluación con id " + id + "no existe.");
+            Evaluacion original = buscaId(id);
+            if (original == null) throw new EntidadInexistenteException("La evaluación con id " + id + "no existe.");
             // Se comienza la transacción de actualización en la BD.
             em = getEntityManager();
             em.getTransaction().begin();
@@ -135,9 +135,9 @@ public class EvaluacionC implements Serializable {
      * Método que elimina de la BD una evaluación con sus atributos definidos.
      * Verificando que la PK este bien definida y sus listas de relaciones queden actualizadas.
      * @param id Es la llave primaria de la evaluación.
-     * @throws NonexistentEntityException Indica que la evaluación no se elimina porque existe en la BD.
+     * @throws EntidadInexistenteException Indica que la evaluación no se elimina porque existe en la BD.
      */
-    public void destroy(EvaluacionPK id) throws NonexistentEntityException {
+    public void borrar(EvaluacionPK id) throws EntidadInexistenteException {
         EntityManager em = null;
         try { // Se comienza la transacción en la BD.
             em = getEntityManager();
@@ -147,8 +147,8 @@ public class EvaluacionC implements Serializable {
                 evaluacion = em.getReference(Evaluacion.class, id);
                 evaluacion.getEvaluacionPK();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("La evaluación con id " + id + " no existe en la BD.", enfe);
-            } // Se remueve la relación del puesto con la evaluación.
+                throw new EntidadInexistenteException("La evaluación con id " + id + " no existe en la BD.", enfe);
+            } // Se remueve la relación del puesto con la evaluación. // Se remueve la relación del puesto con la evaluación.
             Puesto puesto = evaluacion.getPuesto();
             if (puesto != null) {
                 puesto.getEvaluacionList().remove(evaluacion);
@@ -173,15 +173,15 @@ public class EvaluacionC implements Serializable {
      * Método que obtiene la lista de entidades en la tabla Evaluación de la BD.
      * @return Devuelve una lista con las evaluaciónes insertadas en la BD.
      */
-    public List<Evaluacion> findEvaluacionEntities() {
-        return findEvaluacionEntities(true, -1, -1);
+    public List<Evaluacion> buscaEvaluaciones() {
+        return buscaEntidades(true, -1, -1);
     }
 
-    public List<Evaluacion> findEvaluacionEntities(int maxResults, int firstResult) {
-        return findEvaluacionEntities(false, maxResults, firstResult);
+    public List<Evaluacion> buscaEntidades(int maxResults, int firstResult) {
+        return buscaEntidades(false, maxResults, firstResult);
     }
 
-    private List<Evaluacion> findEvaluacionEntities(boolean all, int maxResults, int firstResult) {
+    private List<Evaluacion> buscaEntidades(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
@@ -203,7 +203,7 @@ public class EvaluacionC implements Serializable {
      * un nombre de puesto y un nombre de usuario.
      * @return Devuelve la entidad encontrada, o NULL si no se encuentra.
      */
-    public Evaluacion findEvaluacion(EvaluacionPK id) {
+    public Evaluacion buscaId(EvaluacionPK id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Evaluacion.class, id);
@@ -216,7 +216,7 @@ public class EvaluacionC implements Serializable {
      * Devuelve la cantidad de entidades en la tabla Evaluación de la BD.
      * @return Devuelve un entero con la cantidad de entidades en la tabla Evaluación de la BD.
      */
-    public int getEvaluacionCount() {
+    public int cantidadDeEvaluaciones() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();

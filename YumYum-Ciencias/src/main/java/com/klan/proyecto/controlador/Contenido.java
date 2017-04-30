@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.klan.proyecto.web;
+package com.klan.proyecto.controlador;
 
 import com.klan.proyecto.modelo.Puesto; // Para construir un puesto.
 import com.klan.proyecto.modelo.Evaluacion; // Para construir evaluaciones.

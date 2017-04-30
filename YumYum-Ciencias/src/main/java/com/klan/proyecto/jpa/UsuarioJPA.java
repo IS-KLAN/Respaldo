@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.klan.proyecto.controlador;
+package com.klan.proyecto.jpa;
 
-import com.klan.proyecto.controlador.exceptions.IllegalOrphanException;
-import com.klan.proyecto.controlador.exceptions.NonexistentEntityException;
-import com.klan.proyecto.controlador.exceptions.PreexistingEntityException;
+import com.klan.proyecto.jpa.excepciones.InconsistenciasException;
+import com.klan.proyecto.jpa.excepciones.EntidadInexistenteException;
+import com.klan.proyecto.jpa.excepciones.EntidadExistenteException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -25,9 +25,9 @@ import javax.persistence.NamedQueries;
  *
  * @author patlani
  */
-public class UsuarioC implements Serializable {
+public class UsuarioJPA implements Serializable {
 
-    public UsuarioC(EntityManagerFactory emf) {
+    public UsuarioJPA(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -36,13 +36,13 @@ public class UsuarioC implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Usuario usuario) throws PreexistingEntityException, Exception {
+    public void crear(Usuario usuario) throws EntidadExistenteException, Exception {
         if (usuario.getEvaluacionList() == null) {
             usuario.setEvaluacionList(new ArrayList<Evaluacion>());
         }
         EntityManager em = null;
         try {
-            usuario.setIdUsuario(getUsuarioCount() + 1);
+            usuario.setIdUsuario(cantidadDeUsuarios() + 1);
             em = getEntityManager();
             em.getTransaction().begin();
             List<Evaluacion> attachedEvaluacionList = new ArrayList<Evaluacion>();
@@ -63,8 +63,8 @@ public class UsuarioC implements Serializable {
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (findUsuario(usuario.getNombreUsuario()) != null) {
-                throw new PreexistingEntityException("Usuario " + usuario + " already exists.", ex);
+            if (buscaId(usuario.getNombreUsuario()) != null) {
+                throw new EntidadExistenteException("Usuario " + usuario + " already exists.", ex);
             }
             throw ex;
         } finally {
@@ -74,7 +74,7 @@ public class UsuarioC implements Serializable {
         }
     }
 
-    public void edit(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void editar(Usuario usuario) throws InconsistenciasException, EntidadInexistenteException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -88,11 +88,11 @@ public class UsuarioC implements Serializable {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Evaluacion " + evaluacionListOldEvaluacion + " since its usuario field is not nullable.");
+                    illegalOrphanMessages.add("Se debe mantener Evaluacion " + evaluacionListOldEvaluacion + " since its usuario field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
+                throw new InconsistenciasException(illegalOrphanMessages);
             }
             List<Evaluacion> attachedEvaluacionListNew = new ArrayList<Evaluacion>();
             for (Evaluacion evaluacionListNewEvaluacionToAttach : evaluacionListNew) {
@@ -118,8 +118,8 @@ public class UsuarioC implements Serializable {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 String id = usuario.getNombreUsuario();
-                if (findUsuario(id) == null) {
-                    throw new NonexistentEntityException("The usuario with id " + id + " no longer exists.");
+                if (buscaId(id) == null) {
+                    throw new EntidadInexistenteException("No existe usuario con id " + id);
                 }
             }
             throw ex;
@@ -130,7 +130,7 @@ public class UsuarioC implements Serializable {
         }
     }
 
-    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException {
+    public void borrar(String id) throws InconsistenciasException, EntidadInexistenteException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -140,7 +140,7 @@ public class UsuarioC implements Serializable {
                 usuario = em.getReference(Usuario.class, id);
                 usuario.getNombreUsuario();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The usuario with id " + id + " no longer exists.", enfe);
+                throw new EntidadInexistenteException("No existe usuario with id " + id, enfe);
             }
             List<String> illegalOrphanMessages = null;
             List<Evaluacion> evaluacionListOrphanCheck = usuario.getEvaluacionList();
@@ -151,7 +151,7 @@ public class UsuarioC implements Serializable {
                 illegalOrphanMessages.add("This Usuario (" + usuario + ") cannot be destroyed since the Evaluacion " + evaluacionListOrphanCheckEvaluacion + " in its evaluacionList field has a non-nullable usuario field.");
             }
             if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
+                throw new InconsistenciasException(illegalOrphanMessages);
             }
             em.remove(usuario);
             em.getTransaction().commit();
@@ -162,15 +162,15 @@ public class UsuarioC implements Serializable {
         }
     }
 
-    public List<Usuario> findUsuarioEntities() {
-        return findUsuarioEntities(true, -1, -1);
+    public List<Usuario> buscaUsuarios() {
+        return buscaUsuarios(true, -1, -1);
     }
 
-    public List<Usuario> findUsuarioEntities(int maxResults, int firstResult) {
-        return findUsuarioEntities(false, maxResults, firstResult);
+    public List<Usuario> buscaUsuarios(int maxResults, int firstResult) {
+        return buscaUsuarios(false, maxResults, firstResult);
     }
 
-    private List<Usuario> findUsuarioEntities(boolean all, int maxResults, int firstResult) {
+    private List<Usuario> buscaUsuarios(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
@@ -186,7 +186,7 @@ public class UsuarioC implements Serializable {
         }
     }
 
-    public Usuario findUsuario(String id) {
+    public Usuario buscaId(String id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Usuario.class, id);
@@ -195,7 +195,17 @@ public class UsuarioC implements Serializable {
         }
     }
 
-    public int getUsuarioCount() {
+    public Usuario buscaCorreo(String correo) {
+        try{
+            EntityManager em = getEntityManager();
+            return (Usuario)(em.createNamedQuery("Usuario.findByCorreo")
+                    .setParameter("correo", correo).getSingleResult());
+        }catch(Exception ex){
+            System.err.println(ex.getMessage() + "\nError al buscar el usuario con correo: " + correo);
+        } return null;
+    }    
+
+    public int cantidadDeUsuarios() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
@@ -206,15 +216,5 @@ public class UsuarioC implements Serializable {
         } finally {
             em.close();
         }
-    }
-    
-    public Usuario findByCorreo(String correo) {
-        try{
-            EntityManager em = getEntityManager();
-            return (Usuario)(em.createNamedQuery("Usuario.findByCorreo")
-                    .setParameter("correo", correo).getSingleResult());
-        }catch(Exception ex){
-            System.err.println(ex.getMessage() + "\nError al buscar el usuario con correo: " + correo);
-        } return null;
     }    
 }

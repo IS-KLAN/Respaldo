@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.klan.proyecto.controlador;
+package com.klan.proyecto.jpa;
 
-import com.klan.proyecto.controlador.exceptions.IllegalOrphanException;
-import com.klan.proyecto.controlador.exceptions.NonexistentEntityException;
-import com.klan.proyecto.controlador.exceptions.PreexistingEntityException;
+import com.klan.proyecto.jpa.excepciones.InconsistenciasException;
+import com.klan.proyecto.jpa.excepciones.EntidadInexistenteException;
+import com.klan.proyecto.jpa.excepciones.EntidadExistenteException;
 import com.klan.proyecto.modelo.Comida;
 import java.io.Serializable;
 import javax.persistence.Query;
@@ -24,9 +24,9 @@ import javax.persistence.EntityManagerFactory;
  *
  * @author patlani
  */
-public class ComidaC implements Serializable {
+public class ComidaJPA implements Serializable {
 
-    public ComidaC(EntityManagerFactory emf) {
+    public ComidaJPA(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -35,18 +35,18 @@ public class ComidaC implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Comida comida) throws PreexistingEntityException, Exception {
+    public void crear(Comida comida) throws EntidadExistenteException, Exception {
         EntityManager em = null;
         try {
             if (comida.getNombreComida() == null) throw new NullPointerException("La comida debe tener un nombre.");
-            comida.setIdComida(getComidaCount() + 1);
+            comida.setIdComida(cantidadDeComidas() + 1);
             em = getEntityManager();
             em.getTransaction().begin();
             em.persist(comida);
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (findComida(comida.getNombreComida()) != null) {
-                throw new PreexistingEntityException("Comida " + comida + " ya existe.", ex);
+            if (buscaId(comida.getNombreComida()) != null) {
+                throw new EntidadExistenteException("Comida " + comida + " ya existe.", ex);
             }
             throw ex;
         } finally {
@@ -56,7 +56,7 @@ public class ComidaC implements Serializable {
         }
     }
 
-    public void edit(Comida comida) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void editar(Comida comida) throws InconsistenciasException, EntidadInexistenteException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -70,11 +70,11 @@ public class ComidaC implements Serializable {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain ComidaPuesto " + comidaPuestoListOldComidaPuesto + " since its comida field is not nullable.");
+                    illegalOrphanMessages.add("Se debe mantener ComidaPuesto " + comidaPuestoListOldComidaPuesto + " since its comida field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
+                throw new InconsistenciasException(illegalOrphanMessages);
             }
             List<ComidaPuesto> attachedComidaPuestoListNew = new ArrayList<ComidaPuesto>();
             for (ComidaPuesto comidaPuestoListNewComidaPuestoToAttach : comidaPuestoListNew) {
@@ -100,8 +100,8 @@ public class ComidaC implements Serializable {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 String id = comida.getNombreComida();
-                if (findComida(id) == null) {
-                    throw new NonexistentEntityException("The comida with id " + id + " no longer exists.");
+                if (buscaId(id) == null) {
+                    throw new EntidadInexistenteException("No existe comida con id " + id);
                 }
             }
             throw ex;
@@ -112,7 +112,7 @@ public class ComidaC implements Serializable {
         }
     }
 
-    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException {
+    public void borrar(String id) throws InconsistenciasException, EntidadInexistenteException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -122,7 +122,7 @@ public class ComidaC implements Serializable {
                 comida = em.getReference(Comida.class, id);
                 comida.getNombreComida();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The comida with id " + id + " no longer exists.", enfe);
+                throw new EntidadInexistenteException("No existe comida with id " + id, enfe);
             }
             List<String> illegalOrphanMessages = null;
             List<ComidaPuesto> comidaPuestoListOrphanCheck = comida.getComidaPuestoList();
@@ -133,7 +133,7 @@ public class ComidaC implements Serializable {
                 illegalOrphanMessages.add("This Comida (" + comida + ") cannot be destroyed since the ComidaPuesto " + comidaPuestoListOrphanCheckComidaPuesto + " in its comidaPuestoList field has a non-nullable comida field.");
             }
             if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
+                throw new InconsistenciasException(illegalOrphanMessages);
             }
             em.remove(comida);
             em.getTransaction().commit();
@@ -144,15 +144,15 @@ public class ComidaC implements Serializable {
         }
     }
 
-    public List<Comida> findComidaEntities() {
-        return findComidaEntities(true, -1, -1);
+    public List<Comida> buscaComidas() {
+        return buscaComidas(true, -1, -1);
     }
 
-    public List<Comida> findComidaEntities(int maxResults, int firstResult) {
-        return findComidaEntities(false, maxResults, firstResult);
+    public List<Comida> buscaComidas(int maxResults, int firstResult) {
+        return buscaComidas(false, maxResults, firstResult);
     }
 
-    private List<Comida> findComidaEntities(boolean all, int maxResults, int firstResult) {
+    private List<Comida> buscaComidas(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
@@ -168,7 +168,7 @@ public class ComidaC implements Serializable {
         }
     }
 
-    public Comida findComida(String id) {
+    public Comida buscaId(String id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Comida.class, id);
@@ -177,7 +177,7 @@ public class ComidaC implements Serializable {
         }
     }
 
-    public int getComidaCount() {
+    public int cantidadDeComidas() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();

@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.klan.proyecto.web;
+package com.klan.proyecto.controlador;
 
-import com.klan.proyecto.controlador.PendienteC; // Para insertar un nuevo pendiente.
-import com.klan.proyecto.controlador.UsuarioC;
+import com.klan.proyecto.jpa.PendienteJPA; // Para insertar un nuevo pendiente.
+import com.klan.proyecto.jpa.UsuarioJPA;
 import com.klan.proyecto.modelo.Pendiente; // Para construir un usuario pendiente.
 import com.klan.proyecto.modelo.Usuario;
 
@@ -121,7 +121,7 @@ public class Registro implements Serializable{
             String mensaje = String.format(texto, enlace + cifraClave(), nombreUsuario, contraseña);
             message.setText(mensaje); // Se usa si se va a mandar texto plano.
             Transport.send(message);
-            System.out.println("Correo enviado con Éxito!!!\n" + mensaje);
+            System.out.println("Correo enviado a " + correociencias + " con Éxito!!!\n" + mensaje);
             return true;
         } catch (MessagingException e) {
             System.err.println("\n" + e.getMessage());
@@ -135,10 +135,10 @@ public class Registro implements Serializable{
     public String registrar(){
         if (datosVerificados()) {
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
-            PendienteC pc = new PendienteC(emf);
+            PendienteJPA pc = new PendienteJPA(emf);
             Pendiente usuario = new Pendiente(nombreUsuario, correo, contraseña);
             try{ //Realiza la conexión a la BD y se inserta al nuevo usuario de confirmación pendiente.
-                pc.create(usuario);
+                pc.crear(usuario);
                 if(enviaCorreo()) {
                     faceContext.addMessage(null, new FacesMessage(
                     FacesMessage.SEVERITY_INFO, "Se le ha enviado un correo para confirmar su registro :)", null));
@@ -171,7 +171,7 @@ public class Registro implements Serializable{
             // Se utiliza el código hexadecimal de la posición correspondiente si no se ha rebasado n.
             if (i < n) clave += Integer.toHexString((int)(nombreUsuario.charAt(i)));
             else clave += (char)(r.nextInt(20) + 71); // Se agrega cualquier letra no hexadecimal para indicar el fin.
-            System.out.println("Clave actual: " + clave);
+            //System.out.println("Clave actual: " + clave);
             clave += (char)(r.nextInt(20) + 71); // Se agrega cualquier letra no hexadecimal para separa letras.
         } System.out.println("Clave cifrada: " + clave);
         return clave;
@@ -189,7 +189,7 @@ public class Registro implements Serializable{
         System.out.println("Clave original: " + clave);
         for (int c, i = 0; i < n - 1; i++) { // Se descifra cada char de la clave.
             c = (int)(clave.charAt(i)); // Se obtiene el valor del char i.
-            System.out.println("Nombre actual: " + nombreUsuario);
+            //System.out.println("Nombre actual: " + nombreUsuario);
             if (c > 70 && c < 91) { // Si el valor no es hexadecimal se descifra el hexadecimal.
                 nombreUsuario += (char)(Integer.parseInt(hex, 16)); // Se concatena la letra obtenida.
                 hex = ""; // Se reinicia la cadena auxiliar para guardar el siguiente hexadecimal.
@@ -206,13 +206,13 @@ public class Registro implements Serializable{
      */
     public boolean datosVerificados() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
-        UsuarioC uc = new UsuarioC(emf); PendienteC pc = new PendienteC(emf);
-        if(pc.findPendiente(nombreUsuario) != null || uc.findUsuario(nombreUsuario) != null) {
+        UsuarioJPA uc = new UsuarioJPA(emf); PendienteJPA pc = new PendienteJPA(emf);
+        if(pc.buscaId(nombreUsuario) != null || uc.buscaId(nombreUsuario) != null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
             FacesMessage.SEVERITY_ERROR, "Ese nombre de usuario ya ha sido registrado.", null));
             return false;
         }
-        if(pc.findByCorreo(correo) != null || uc.findByCorreo(correo) != null) {
+        if(pc.buscaCorreo(correo) != null || uc.buscaCorreo(correo) != null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
             FacesMessage.SEVERITY_ERROR, "Ese correo ya ha sido registrado.", null));
             return false;
@@ -225,15 +225,15 @@ public class Registro implements Serializable{
      */
     public String confirmar() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
-        PendienteC controlador = new PendienteC(emf);
-        Pendiente confirmado = controlador.findPendiente(descifraClave());
+        PendienteJPA controlador = new PendienteJPA(emf);
+        Pendiente confirmado = controlador.buscaId(descifraClave());
         if(confirmado != null) {
             correo = confirmado.getCorreo();
             contraseña = confirmado.getContraseña();
             try{ // Se crea al nuevo usuario y se borra al usuario pendiente.
                 Usuario nuevo = new Usuario(nombreUsuario, correo, contraseña);
-                new UsuarioC(emf).create(nuevo); // Se inserta al nuevo usuario en la BD.
-                new PendienteC(emf).destroy(nombreUsuario); // Se borra de pendiente.
+                new UsuarioJPA(emf).crear(nuevo); // Se inserta al nuevo usuario en la BD.
+                new PendienteJPA(emf).borrar(nombreUsuario); // Se borra de pendiente.
                 faceContext.addMessage(null, new FacesMessage(
                 FacesMessage.SEVERITY_INFO, "El registro se ha realizado exitosamente :)", null));
                 // Se asegura que el mensaje se muestre después de la redirección.

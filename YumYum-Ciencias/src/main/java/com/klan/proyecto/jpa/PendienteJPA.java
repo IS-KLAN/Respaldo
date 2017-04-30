@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.klan.proyecto.controlador;
+package com.klan.proyecto.jpa;
 
-import com.klan.proyecto.controlador.exceptions.NonexistentEntityException;
-import com.klan.proyecto.controlador.exceptions.PreexistingEntityException;
+import com.klan.proyecto.jpa.excepciones.EntidadInexistenteException;
+import com.klan.proyecto.jpa.excepciones.EntidadExistenteException;
 import com.klan.proyecto.modelo.Pendiente;
 import java.io.Serializable;
 import java.util.List;
@@ -21,9 +21,9 @@ import javax.persistence.criteria.Root;
  *
  * @author patlani
  */
-public class PendienteC implements Serializable {
+public class PendienteJPA implements Serializable {
 
-    public PendienteC(EntityManagerFactory emf) {
+    public PendienteJPA(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -32,17 +32,17 @@ public class PendienteC implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Pendiente pendiente) throws PreexistingEntityException, Exception {
+    public void crear(Pendiente pendiente) throws EntidadExistenteException, Exception {
         EntityManager em = null;
         try {
-            pendiente.setIdUsuario(getPendienteCount() + 1);
+            pendiente.setIdUsuario(cantidadDePendientes() + 1);
             em = getEntityManager();
             em.getTransaction().begin();
             em.persist(pendiente);
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (findPendiente(pendiente.getNombreUsuario()) != null) {
-                throw new PreexistingEntityException("Pendiente " + pendiente + " already exists.", ex);
+            if (buscaId(pendiente.getNombreUsuario()) != null) {
+                throw new EntidadExistenteException("Pendiente " + pendiente + " already exists.", ex);
             }
             throw ex;
         } finally {
@@ -52,7 +52,7 @@ public class PendienteC implements Serializable {
         }
     }
 
-    public void edit(Pendiente pendiente) throws NonexistentEntityException, Exception {
+    public void editar(Pendiente pendiente) throws EntidadInexistenteException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -63,8 +63,8 @@ public class PendienteC implements Serializable {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 String id = pendiente.getNombreUsuario();
-                if (findPendiente(id) == null) {
-                    throw new NonexistentEntityException("The pendiente with id " + id + " no longer exists.");
+                if (buscaId(id) == null) {
+                    throw new EntidadInexistenteException("No existe pendiente con id " + id);
                 }
             }
             throw ex;
@@ -75,7 +75,7 @@ public class PendienteC implements Serializable {
         }
     }
 
-    public void destroy(String id) throws NonexistentEntityException {
+    public void borrar(String id) throws EntidadInexistenteException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -85,7 +85,7 @@ public class PendienteC implements Serializable {
                 pendiente = em.getReference(Pendiente.class, id);
                 pendiente.getNombreUsuario();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The pendiente with id " + id + " no longer exists.", enfe);
+                throw new EntidadInexistenteException("No existe pendiente with id " + id, enfe);
             }
             em.remove(pendiente);
             em.getTransaction().commit();
@@ -96,15 +96,15 @@ public class PendienteC implements Serializable {
         }
     }
 
-    public List<Pendiente> findPendienteEntities() {
-        return findPendienteEntities(true, -1, -1);
+    public List<Pendiente> buscaPendientes() {
+        return buscaPendientes(true, -1, -1);
     }
 
-    public List<Pendiente> findPendienteEntities(int maxResults, int firstResult) {
-        return findPendienteEntities(false, maxResults, firstResult);
+    public List<Pendiente> buscaPendientes(int maxResults, int firstResult) {
+        return buscaPendientes(false, maxResults, firstResult);
     }
 
-    private List<Pendiente> findPendienteEntities(boolean all, int maxResults, int firstResult) {
+    private List<Pendiente> buscaPendientes(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
@@ -120,7 +120,7 @@ public class PendienteC implements Serializable {
         }
     }
 
-    public Pendiente findPendiente(String id) {
+    public Pendiente buscaId(String id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Pendiente.class, id);
@@ -129,7 +129,7 @@ public class PendienteC implements Serializable {
         }
     }
     
-    public Pendiente findByCorreo(String correo) {
+    public Pendiente buscaCorreo(String correo) {
         try{
             EntityManager em = getEntityManager();
             return (Pendiente)(em.createNamedQuery("Pendiente.findByCorreo")
@@ -138,18 +138,8 @@ public class PendienteC implements Serializable {
             System.err.println(ex.getMessage() + "\nError al buscar el usuario con correo: " + correo);
         } return null;
     }    
-    
-    public Pendiente findByIdUsuario(int idUsuario) {
-        try{
-            EntityManager em = getEntityManager();
-            return (Pendiente)(em.createNamedQuery("Pendiente.findByIdUsuario")
-                    .setParameter("idUsuario", idUsuario).getSingleResult());
-        }catch(Exception ex){
-            System.err.println(ex.getMessage() + "\nError al buscar el usuario con id: " + idUsuario);
-        } return null;
-    }    
 
-    public int getPendienteCount() {
+    public int cantidadDePendientes() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();

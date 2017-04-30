@@ -140,7 +140,7 @@ public class Evaluacion implements Serializable {
 
     @Override
     public String toString() {
-        return "com.klan.proyecto.modelo.Evaluacion[ evaluacionPK=" + evaluacionPK + " ]";
+        return "Evaluacion[ evaluacionPK=" + evaluacionPK.toString() + " ]";
     }
     
 }

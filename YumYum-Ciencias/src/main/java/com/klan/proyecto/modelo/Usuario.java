@@ -138,7 +138,7 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "com.klan.proyecto.modelo.Usuario[ nombreUsuario=" + nombreUsuario + " ]";
+        return nombreUsuario;
     }
     
 }

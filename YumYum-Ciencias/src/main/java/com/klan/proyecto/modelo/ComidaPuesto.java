@@ -116,7 +116,7 @@ public class ComidaPuesto implements Serializable {
 
     @Override
     public String toString() {
-        return "com.klan.proyecto.modelo.ComidaPuesto[ comidaPuestoPK=" + comidaPuestoPK + " ]";
+        return "[ comidaPuestoPK=" + comidaPuestoPK.toString() + " ]";
     }
     
 }

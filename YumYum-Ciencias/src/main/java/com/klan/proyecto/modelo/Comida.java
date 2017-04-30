@@ -104,7 +104,7 @@ public class Comida implements Serializable {
 
     @Override
     public String toString() {
-        return "com.klan.proyecto.modelo.Comida[ nombreComida=" + nombreComida + " ]";
+        return nombreComida;
     }
     
 }

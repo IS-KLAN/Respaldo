@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.klan.proyecto.controlador;
+package com.klan.proyecto.jpa;
 
-import com.klan.proyecto.controlador.exceptions.IllegalOrphanException;
-import com.klan.proyecto.controlador.exceptions.NonexistentEntityException;
-import com.klan.proyecto.controlador.exceptions.PreexistingEntityException;
+import com.klan.proyecto.jpa.excepciones.InconsistenciasException;
+import com.klan.proyecto.jpa.excepciones.EntidadInexistenteException;
+import com.klan.proyecto.jpa.excepciones.EntidadExistenteException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -25,9 +25,9 @@ import javax.persistence.EntityManagerFactory;
  *
  * @author patlani
  */
-public class PuestoC implements Serializable {
+public class PuestoJPA implements Serializable {
 
-    public PuestoC(EntityManagerFactory emf) {
+    public PuestoJPA(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -36,7 +36,7 @@ public class PuestoC implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Puesto puesto) throws PreexistingEntityException, Exception {
+    public void crear(Puesto puesto) throws EntidadExistenteException, Exception {
         if (puesto.getComidaPuestoList() == null) {
             puesto.setComidaPuestoList(new ArrayList<ComidaPuesto>());
         }
@@ -45,7 +45,7 @@ public class PuestoC implements Serializable {
         }
         EntityManager em = null;
         try {
-            puesto.setIdPuesto(getPuestoCount() + 1);
+            puesto.setIdPuesto(cantidadDePuestos() + 1);
             em = getEntityManager();
             em.getTransaction().begin();
             List<ComidaPuesto> attachedComidaPuestoList = new ArrayList<ComidaPuesto>();
@@ -82,8 +82,8 @@ public class PuestoC implements Serializable {
             em.getTransaction().commit();
             // System.out.println("Puesto agregado: \nNombre" + puesto.getNombrePuesto());
         } catch (Exception ex) {
-            if (findPuesto(puesto.getNombrePuesto()) != null) {
-                throw new PreexistingEntityException("Puesto " + puesto + " already exists.", ex);
+            if (buscaId(puesto.getNombrePuesto()) != null) {
+                throw new EntidadExistenteException("Puesto " + puesto + " ya existe.", ex);
             }
             throw ex;
         } finally {
@@ -93,7 +93,7 @@ public class PuestoC implements Serializable {
         }
     }
 
-    public void edit(Puesto puesto) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void editar(Puesto puesto) throws InconsistenciasException, EntidadInexistenteException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -109,7 +109,7 @@ public class PuestoC implements Serializable {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain ComidaPuesto " + comidaPuestoListOldComidaPuesto + " since its puesto field is not nullable.");
+                    illegalOrphanMessages.add("Se debe mantener ComidaPuesto " + comidaPuestoListOldComidaPuesto + " since its puesto field is not nullable.");
                 }
             }
             for (Evaluacion evaluacionListOldEvaluacion : evaluacionListOld) {
@@ -117,11 +117,11 @@ public class PuestoC implements Serializable {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Evaluacion " + evaluacionListOldEvaluacion + " since its puesto field is not nullable.");
+                    illegalOrphanMessages.add("Se debe mantener Evaluacion " + evaluacionListOldEvaluacion + " since its puesto field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
+                throw new InconsistenciasException(illegalOrphanMessages);
             }
             List<ComidaPuesto> attachedComidaPuestoListNew = new ArrayList<ComidaPuesto>();
             for (ComidaPuesto comidaPuestoListNewComidaPuestoToAttach : comidaPuestoListNew) {
@@ -165,8 +165,8 @@ public class PuestoC implements Serializable {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 String id = puesto.getNombrePuesto();
-                if (findPuesto(id) == null) {
-                    throw new NonexistentEntityException("The puesto with id " + id + " no longer exists.");
+                if (buscaId(id) == null) {
+                    throw new EntidadInexistenteException("No existe puesto con id " + id);
                 }
             }
             throw ex;
@@ -177,7 +177,7 @@ public class PuestoC implements Serializable {
         }
     }
 
-    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException {
+    public void borrar(String id) throws InconsistenciasException, EntidadInexistenteException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -187,7 +187,7 @@ public class PuestoC implements Serializable {
                 puesto = em.getReference(Puesto.class, id);
                 puesto.getNombrePuesto();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The puesto with id " + id + " no longer exists.", enfe);
+                throw new EntidadInexistenteException("No existe puesto with id " + id, enfe);
             }
             List<String> illegalOrphanMessages = null;
             List<ComidaPuesto> comidaPuestoListOrphanCheck = puesto.getComidaPuestoList();
@@ -205,7 +205,7 @@ public class PuestoC implements Serializable {
                 illegalOrphanMessages.add("This Puesto (" + puesto + ") cannot be destroyed since the Evaluacion " + evaluacionListOrphanCheckEvaluacion + " in its evaluacionList field has a non-nullable puesto field.");
             }
             if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
+                throw new InconsistenciasException(illegalOrphanMessages);
             }
             em.remove(puesto);
             em.getTransaction().commit();
@@ -216,15 +216,15 @@ public class PuestoC implements Serializable {
         }
     }
 
-    public List<Puesto> findPuestoEntities() {
-        return findPuestoEntities(true, -1, -1);
+    public List<Puesto> buscaPuestos() {
+        return buscaPuestos(true, -1, -1);
     }
 
-    public List<Puesto> findPuestoEntities(int maxResults, int firstResult) {
-        return findPuestoEntities(false, maxResults, firstResult);
+    public List<Puesto> buscaPuestos(int maxResults, int firstResult) {
+        return buscaPuestos(false, maxResults, firstResult);
     }
 
-    private List<Puesto> findPuestoEntities(boolean all, int maxResults, int firstResult) {
+    private List<Puesto> buscaPuestos(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
@@ -240,7 +240,7 @@ public class PuestoC implements Serializable {
         }
     }
 
-    public Puesto findPuesto(String id) {
+    public Puesto buscaId(String id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Puesto.class, id);
@@ -249,7 +249,7 @@ public class PuestoC implements Serializable {
         }
     }
 
-    public int getPuestoCount() {
+    public int cantidadDePuestos() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();

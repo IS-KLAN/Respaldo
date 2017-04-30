@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.klan.proyecto.web;
+package com.klan.proyecto.controlador;
 
 
 import org.primefaces.model.map.DefaultMapModel;
@@ -29,8 +29,8 @@ import java.io.Serializable;
 @ManagedBean
 @ViewScoped
 public class MapaPuesto implements Serializable {
-    private MapModel simpleModel;
-    private Puesto uno;
+    private MapModel modelo;
+    private Puesto elegido;
     private final HttpServletRequest httpServletRequest; // Obtiene información de todas las peticiones de usuario.
     private final FacesContext faceContext;
     
@@ -41,17 +41,17 @@ public class MapaPuesto implements Serializable {
     
     @PostConstruct
     public void init() {      
-        simpleModel = new DefaultMapModel();
+        modelo = new DefaultMapModel();
         
-        uno = (Puesto) httpServletRequest.getSession().getAttribute("puesto");
+        elegido = (Puesto) httpServletRequest.getSession().getAttribute("puesto");
         
-        double lat= Double.parseDouble(uno.getLatitud());
-        double lon= Double.parseDouble(uno.getLongitud());
-        String nombre = uno.getNombrePuesto();          
-        simpleModel.addOverlay(new Marker(new LatLng(lat, lon), nombre)); 
+        double lat= Double.parseDouble(elegido.getLatitud());
+        double lon= Double.parseDouble(elegido.getLongitud());
+        String nombre = elegido.getNombrePuesto();          
+        modelo.addOverlay(new Marker(new LatLng(lat, lon), nombre)); 
     }       
     
-    public MapModel getSimpleModel() {
-        return simpleModel;
+    public MapModel getModelo() {
+        return modelo;
     }
 }

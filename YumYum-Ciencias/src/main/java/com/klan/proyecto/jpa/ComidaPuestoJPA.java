@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.klan.proyecto.controlador;
+package com.klan.proyecto.jpa;
 
-import com.klan.proyecto.controlador.exceptions.NonexistentEntityException;
-import com.klan.proyecto.controlador.exceptions.PreexistingEntityException;
+import com.klan.proyecto.jpa.excepciones.EntidadInexistenteException;
+import com.klan.proyecto.jpa.excepciones.EntidadExistenteException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -24,9 +24,9 @@ import javax.persistence.EntityManagerFactory;
  *
  * @author patlani
  */
-public class ComidaPuestoC implements Serializable {
+public class ComidaPuestoJPA implements Serializable {
 
-    public ComidaPuestoC(EntityManagerFactory emf) {
+    public ComidaPuestoJPA(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -35,13 +35,13 @@ public class ComidaPuestoC implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(ComidaPuesto comidaPuesto) throws PreexistingEntityException, Exception {
+    public void crear(ComidaPuesto comidaPuesto) throws EntidadExistenteException, Exception {
         if (comidaPuesto.getComidaPuestoPK() == null) {
             throw new NullPointerException("No se encuentra una llave de comidaPuesto definida.");
         } ComidaPuestoPK pk = comidaPuesto.getComidaPuestoPK();
         EntityManager em = null;
         try {
-            comidaPuesto.setIdComidaPuesto(getComidaPuestoCount() + 1);
+            comidaPuesto.setIdComidaPuesto(cantidadDeEntidades() + 1);
             em = getEntityManager();
             em.getTransaction().begin();            
             Comida comida = em.getReference(Comida.class, pk.getNombreComida());
@@ -60,8 +60,8 @@ public class ComidaPuestoC implements Serializable {
             em.getTransaction().commit();
             // System.out.println("Relación agregada: " + comida.getNombreComida() + " a " + puesto.getNombrePuesto());
         } catch (Exception ex) {
-            if (findComidaPuesto(comidaPuesto.getComidaPuestoPK()) != null) {
-                throw new PreexistingEntityException("ComidaPuesto " + comidaPuesto + " already exists.", ex);
+            if (buscaId(comidaPuesto.getComidaPuestoPK()) != null) {
+                throw new EntidadExistenteException("ComidaPuesto " + comidaPuesto + " already exists.", ex);
             }
             throw ex;
         } finally {
@@ -71,7 +71,7 @@ public class ComidaPuestoC implements Serializable {
         }
     }
 
-    public void edit(ComidaPuesto comidaPuesto) throws NonexistentEntityException, Exception {
+    public void editar(ComidaPuesto comidaPuesto) throws EntidadInexistenteException, Exception {
         comidaPuesto.getComidaPuestoPK().setNombrePuesto(comidaPuesto.getPuesto().getNombrePuesto());
         comidaPuesto.getComidaPuestoPK().setNombreComida(comidaPuesto.getComida().getNombreComida());
         EntityManager em = null;
@@ -113,8 +113,8 @@ public class ComidaPuestoC implements Serializable {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 ComidaPuestoPK id = comidaPuesto.getComidaPuestoPK();
-                if (findComidaPuesto(id) == null) {
-                    throw new NonexistentEntityException("The comidaPuesto with id " + id + " no longer exists.");
+                if (buscaId(id) == null) {
+                    throw new EntidadInexistenteException("No existe comidaPuesto con id " + id);
                 }
             }
             throw ex;
@@ -125,7 +125,7 @@ public class ComidaPuestoC implements Serializable {
         }
     }
 
-    public void destroy(ComidaPuestoPK id) throws NonexistentEntityException {
+    public void borrar(ComidaPuestoPK id) throws EntidadInexistenteException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -135,7 +135,7 @@ public class ComidaPuestoC implements Serializable {
                 comidaPuesto = em.getReference(ComidaPuesto.class, id);
                 comidaPuesto.getComidaPuestoPK();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The comidaPuesto with id " + id + " no longer exists.", enfe);
+                throw new EntidadInexistenteException("No existe comidaPuesto with id " + id, enfe);
             }
             Comida comida = comidaPuesto.getComida();
             if (comida != null) {
@@ -156,15 +156,15 @@ public class ComidaPuestoC implements Serializable {
         }
     }
 
-    public List<ComidaPuesto> findComidaPuestoEntities() {
-        return findComidaPuestoEntities(true, -1, -1);
+    public List<ComidaPuesto> buscaEntidades() {
+        return buscaEntidades(true, -1, -1);
     }
 
-    public List<ComidaPuesto> findComidaPuestoEntities(int maxResults, int firstResult) {
-        return findComidaPuestoEntities(false, maxResults, firstResult);
+    public List<ComidaPuesto> buscaEntidades(int maxResults, int firstResult) {
+        return buscaEntidades(false, maxResults, firstResult);
     }
 
-    private List<ComidaPuesto> findComidaPuestoEntities(boolean all, int maxResults, int firstResult) {
+    private List<ComidaPuesto> buscaEntidades(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
@@ -185,7 +185,7 @@ public class ComidaPuestoC implements Serializable {
      * @param id Es la llave primaria de la relación buscada.
      * @return Devuelve la entidad encontrada en la BD, o NULL en caso de encontrarla.
      */
-    public ComidaPuesto findComidaPuesto(ComidaPuestoPK id) {
+    public ComidaPuesto buscaId(ComidaPuestoPK id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(ComidaPuesto.class, id);
@@ -194,7 +194,7 @@ public class ComidaPuestoC implements Serializable {
         }
     }
 
-    public int getComidaPuestoCount() {
+    public int cantidadDeEntidades() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.klan.proyecto.web;
+package com.klan.proyecto.controlador;
 
 import java.io.IOException;
 import javax.faces.context.ExternalContext;
@@ -14,7 +14,7 @@ import org.primefaces.model.map.LatLng;
 import org.primefaces.model.map.MapModel;
 import org.primefaces.model.map.Marker;
 
-import com.klan.proyecto.controlador.PuestoC;
+import com.klan.proyecto.jpa.PuestoJPA;
 import com.klan.proyecto.modelo.Puesto;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,35 +38,35 @@ import javax.faces.application.FacesMessage;
 @ViewScoped
 public class Mapa implements Serializable {
     
-    private String title;
+    private String etiqueta;
       
     private double lat;
       
     private double lng;
      
-    private MapModel simpleModel;
-    private Marker marker;
+    private MapModel modelo;
+    private Marker marcador;
 
     private ExternalContext ec;
   
     @PostConstruct
     public void init() {      
-        simpleModel = new DefaultMapModel();
+        modelo = new DefaultMapModel();
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");        
-        List<Puesto> todos = new PuestoC(emf).findPuestoEntities();
+        List<Puesto> todos = new PuestoJPA(emf).buscaPuestos();
         for (Puesto uno: todos){
             double lat= Double.parseDouble(uno.getLatitud());
             double lon= Double.parseDouble(uno.getLongitud());
             String nombre = uno.getNombrePuesto();          
-            simpleModel.addOverlay(new Marker(new LatLng(lat, lon), nombre));
+            modelo.addOverlay(new Marker(new LatLng(lat, lon), nombre));
         }       
     }
 
       
     public void onMarkerSelect(OverlaySelectEvent event) throws IOException {
-        marker = (Marker) event.getOverlay();
-        //System.out.println(marker.getLatlng());
-        Puesto p = buscaPuesto(marker);
+        marcador = (Marker) event.getOverlay();
+        //System.out.println(marcador.getLatlng());
+        Puesto p = buscaPuesto(marcador);
         //System.out.println("Seleccionando el puesto: " + p.getNombrePuesto());
         ec = FacesContext.getCurrentInstance().getExternalContext();
         ((HttpServletRequest)ec.getRequest()).getSession().setAttribute("puesto", p);
@@ -78,7 +78,7 @@ public class Mapa implements Serializable {
         double lon= marker.getLatlng().getLng();
         
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
-        List<Puesto> puestos = new PuestoC(emf).findPuestoEntities();
+        List<Puesto> puestos = new PuestoJPA(emf).buscaPuestos();
         for(Puesto uno: puestos){
             double lt= Double.parseDouble(uno.getLatitud());
             double ln= Double.parseDouble(uno.getLongitud());
@@ -89,20 +89,20 @@ public class Mapa implements Serializable {
         } return null;
     }
           
-    public MapModel getSimpleModel() {
-        return simpleModel;
+    public MapModel getModelo() {
+        return modelo;
     }
       
-    public Marker getMarker() {
-        return marker;
+    public Marker getMarcador() {
+        return marcador;
     }
 
-    public String getTitle() {
-        return title;
+    public String getEtiqueta() {
+        return etiqueta;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setEtiqueta(String etiqueta) {
+        this.etiqueta = etiqueta;
     }
 
     public double getLat() {
@@ -130,8 +130,8 @@ public class Mapa implements Serializable {
     }
     
     public void addMarker() {
-        Marker marker = new Marker(new LatLng(lat, lng), title);
-        simpleModel.addOverlay(marker);
+        Marker marker = new Marker(new LatLng(lat, lng), etiqueta);
+        modelo.addOverlay(marker);
           
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Marker Added", "Lat:" + lat + ", Lng:" + lng));
     }

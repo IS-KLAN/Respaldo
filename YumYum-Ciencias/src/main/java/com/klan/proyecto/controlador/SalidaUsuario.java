@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.klan.proyecto.web;
+package com.klan.proyecto.controlador;
 
 import javax.faces.application.FacesMessage; // Para mostrar y obtener mensajes de avisos.
 import javax.faces.bean.ManagedBean; // Para inyectar código dentro de un JSF.
@@ -19,7 +19,7 @@ import java.io.Serializable; // Para conservar la persistencia de objetos que se
  */
 @ManagedBean // LEER LA DOCUMENTACIÖN DE ESTA ANOTACIÓN: Permite dar de alta al bean en la aplicación
 @RequestScoped // Sólo está disponible a partir de peticiones al bean
-public class SalidaAdministrador implements Serializable{
+public class SalidaUsuario implements Serializable{
 
     private final HttpServletRequest httpServletRequest; // Obtiene información de todas las peticiones de correo.
     private final FacesContext faceContext; // Obtiene información de la aplicación
@@ -29,7 +29,7 @@ public class SalidaAdministrador implements Serializable{
      * Constructor para inicializar los valores de faceContext y
      * httpServletRequest.
      */
-    public SalidaAdministrador() {
+    public SalidaUsuario() {
         faceContext = FacesContext.getCurrentInstance();
         httpServletRequest = (HttpServletRequest) faceContext.getExternalContext().getRequest();
     }
@@ -39,7 +39,7 @@ public class SalidaAdministrador implements Serializable{
      */
     public void cerrar() {
             //System.out.println("Cerrando la sesión.");
-            httpServletRequest.getSession().removeAttribute("administrador"); // Se borra al usuario.
+            httpServletRequest.getSession().removeAttribute("usuario"); // Se borra al usuario.
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Salida satisfactoria.", null);
             faceContext.addMessage(null, message); // Se agrega el mensaje.
             // Se asegura que el mensaje se muestre después de la redirección.

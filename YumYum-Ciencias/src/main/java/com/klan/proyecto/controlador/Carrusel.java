@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.klan.proyecto.web;
+package com.klan.proyecto.controlador;
 
 import java.util.List;
 
-import com.klan.proyecto.controlador.PuestoC; // Para consultar la lista de puestos.
+import com.klan.proyecto.jpa.PuestoJPA; // Para consultar la lista de puestos.
 import com.klan.proyecto.modelo.Puesto; // Para definir puestos.
 
 import javax.faces.bean.ManagedBean; // Para inyectar código dentro de un JSF.
@@ -46,7 +46,7 @@ public class Carrusel implements Serializable{
         // Se realiza la conexión a la BD.
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
         // Se realiza la consulta de todos los puestos en la BD con un JPA de Puesto y una conexión EMF.
-        puestos = new PuestoC(emf).findPuestoEntities();
+        puestos = new PuestoJPA(emf).buscaPuestos();
         // Se separa la lista para la correcta visualización del carrusel.
         if (puestos.size() < 1) {
             // Si no se tienen puestos disponibles se inicializa el primero por defecto.
@@ -54,6 +54,7 @@ public class Carrusel implements Serializable{
             primero.setRutaImagen("default.jpg");
             // En otro caso, se toma el primer elemento de la lista.
         } else primero = puestos.remove(0);
+        for (Puesto p : puestos) System.out.println("Imagen cargada: " + p.getRutaImagen());
     }
     
     /**

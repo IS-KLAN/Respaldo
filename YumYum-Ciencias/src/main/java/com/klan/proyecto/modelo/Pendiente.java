@@ -121,6 +121,6 @@ public class Pendiente implements Serializable {
 
     @Override
     public String toString() {
-        return "com.klan.proyecto.modelo.Pendiente[ nombreUsuario=" + nombreUsuario + " ]";
+        return nombreUsuario;
     }  
 }

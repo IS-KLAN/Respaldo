@@ -74,7 +74,7 @@ public class EvaluacionPK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.klan.proyecto.modelo.EvaluacionPK[ nombrePuesto=" + nombrePuesto + ", nombreUsuario=" + nombreUsuario + " ]";
+        return "[ nombrePuesto=" + nombrePuesto + ", nombreUsuario=" + nombreUsuario + " ]";
     }
     
 }

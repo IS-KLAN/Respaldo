@@ -164,7 +164,7 @@ public class Puesto implements Serializable {
 
     @Override
     public String toString() {
-        return "com.klan.proyecto.modelo.Puesto[ nombrePuesto=" + nombrePuesto + " ]";
+        return nombrePuesto;
     }
     
 }
