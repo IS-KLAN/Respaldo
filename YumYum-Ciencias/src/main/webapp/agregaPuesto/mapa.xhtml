@@ -9,11 +9,11 @@
     <h:form enctype="multipart/form-data">
         <p:gmap id="gmap" center="19.324525,-99.179392" zoom="17"
                 type="roadmap" model="#{agregaPuesto.modelo}" widgetVar="map"
-                style="width:100%;height:350px" onPointClick="handlePointClick(event);">
+                style="width:100%;height:240px" onPointClick="handlePointClick(event);">
             <p:ajax event="overlaySelect" listener="#{agregaPuesto.onMarkerSelect}"/>
         </p:gmap>
     </h:form>
-    <p:dialog widgetVar="dlg" showEffect="fade">
+    <p:dialog widgetVar="dlg" showEffect="fade" closable="false">
         <h:form prependId="false" enctype="multipart/form-data">
             <h:panelGrid columns="2">
                 <h:outputLabel value="Ubicación definida" />
