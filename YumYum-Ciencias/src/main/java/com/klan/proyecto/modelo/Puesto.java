@@ -62,15 +62,12 @@ public class Puesto implements Serializable {
     public Puesto() {
     }
 
-    public Puesto(String nombrePuesto) {
-        this.nombre = nombrePuesto;
-    }
-
-    public Puesto(String nombrePuesto, long idPuesto, String latitud, String longitud) {
-        this.nombre = nombrePuesto;
-        this.id = idPuesto;
+    public Puesto(String nombre, String descripcion, String latitud, String longitud, String rutaImagen) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
         this.latitud = latitud;
         this.longitud = longitud;
+        this.rutaImagen = rutaImagen;
     }
 
     public long getId() {
