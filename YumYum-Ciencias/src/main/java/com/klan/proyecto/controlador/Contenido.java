@@ -43,7 +43,7 @@ public class Contenido implements Serializable{
         Puesto p = (Puesto)httpServletRequest.getSession().getAttribute("puesto");
         puesto = (p != null)? p : new Puesto(); // Se inicializa con el puesto encontrado o por defecto.
         // Se calcula la evaluación global del puesto.
-        List<Evaluacion> evaluaciones = getPuesto().getEvaluacionList();
+        List<Evaluacion> evaluaciones = getPuesto().getEvaluaciones();
         if (evaluaciones != null && evaluaciones.size() > 0) {
             calificacionGlobal = 0;
             for (Evaluacion e : evaluaciones) calificacionGlobal += e.getCalificacion();
@@ -72,7 +72,7 @@ public class Contenido implements Serializable{
      * @return Devuelve true si hay comida en el puesto, falso en otro caso.
      */
     public boolean comidaDisponible() {
-        return getPuesto().getComidaPuestoList().size() > 0;
+        return getPuesto().getComida().size() > 0;
     }
 
     /**
@@ -80,6 +80,6 @@ public class Contenido implements Serializable{
      * @return Devuelve el nombre de la página correspondiente al contenido del puesto.
      */
     public boolean evaluacionesDisponibles() {
-        return getPuesto().getEvaluacionList().size() > 0;
+        return getPuesto().getEvaluaciones().size() > 0;
     }
 }

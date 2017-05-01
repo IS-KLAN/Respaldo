@@ -61,13 +61,13 @@ public class AgregaPuesto implements Serializable {
         for (Puesto lugar : lugares) {
             Double latitud = Double.parseDouble(lugar.getLatitud());
             Double longitud = Double.parseDouble(lugar.getLongitud());
-            String nombre = lugar.getNombrePuesto();
+            String nombre = lugar.getNombre();
             System.out.println(latitud + ", " + longitud + ", " + nombre);
             modelo.addOverlay(new Marker(new LatLng(latitud, longitud), nombre));
         } seleccion = new ArrayList<>(); // Se inicializan listas de lista y selección
         lista = new ArrayList<>(); 
         todas = new ComidaC(emf).buscaComidas();
-        for (Comida c : todas) lista.add(c.getNombreComida());
+        for (Comida c : todas) lista.add(c.getNombre());
     }
 
     public List<String> getLista() {

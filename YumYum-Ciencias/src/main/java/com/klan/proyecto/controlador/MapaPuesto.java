@@ -47,7 +47,7 @@ public class MapaPuesto implements Serializable {
         
         double lat= Double.parseDouble(elegido.getLatitud());
         double lon= Double.parseDouble(elegido.getLongitud());
-        String nombre = elegido.getNombrePuesto();          
+        String nombre = elegido.getNombre();          
         modelo.addOverlay(new Marker(new LatLng(lat, lon), nombre)); 
     }       
     

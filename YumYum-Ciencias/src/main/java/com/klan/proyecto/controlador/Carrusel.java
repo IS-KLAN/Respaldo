@@ -31,6 +31,7 @@ public class Carrusel implements Serializable{
     private List<Puesto> puestos; // Resto de la lista de puestos en la BD.
     private final HttpServletRequest httpServletRequest; // Obtiene información de todas las peticiones.
     private final FacesContext faceContext; // Obtiene información de la aplicación.
+    private boolean hayPuestos;
 
     /**
      * Constructor que inicializa las instancias de FaceContext y HttpServerRequest, así como
@@ -48,12 +49,7 @@ public class Carrusel implements Serializable{
         // Se realiza la consulta de todos los puestos en la BD con un C de Puesto y una conexión EMF.
         puestos = new PuestoC(emf).buscaPuestos();
         // Se separa la lista para la correcta visualización del carrusel.
-        if (puestos.size() < 1) {
-            // Si no se tienen puestos disponibles se inicializa el primero por defecto.
-            primero = new Puesto();
-            primero.setRutaImagen("default.jpg");
-            // En otro caso, se toma el primer elemento de la lista.
-        } else primero = puestos.remove(0);
+        if (hayPuestos = puestos.size() > 0)  primero = puestos.remove(0);
         for (Puesto p : puestos) System.out.println("Imagen cargada: " + p.getRutaImagen());
     }
     
@@ -62,7 +58,7 @@ public class Carrusel implements Serializable{
      * @return Devuelve el nombre del primer puesto en la tabla.
      */
     public String primerNombre() {
-        return primero.getNombrePuesto();
+        return primero.getNombre();
     }
     
     /**
@@ -89,17 +85,19 @@ public class Carrusel implements Serializable{
         return puestos;
     }
 
+    public boolean hayPuestos() {
+        return hayPuestos;
+    }
+    
     /**
      * Método que guarda el primer puesto como seleccionado para redirigir al un selecciona del primer puesto.
      * @return Devuelve la página del selecciona del puesto a la que se redirigie.
      */
     public String primerSeleccion() {
-        if(primero.getNombrePuesto() != null){
-            // Se guarda el primer puesto para ser mostrado en perfilPuesto.
-            httpServletRequest.getSession().setAttribute("puesto", primero);
-            // Se redirige al perfilPuesto con redirect=true para actualizar la url.
-            return "perfilPuesto?faces-redirect=true";
-        } return "index"; // No se cargaron los puestos.
+        // Se guarda el primer puesto para ser mostrado en perfilPuesto.
+        httpServletRequest.getSession().setAttribute("puesto", primero);
+        // Se redirige al perfilPuesto con redirect=true para actualizar la url.
+        return "perfilPuesto?faces-redirect=true";
     }
 
     /**

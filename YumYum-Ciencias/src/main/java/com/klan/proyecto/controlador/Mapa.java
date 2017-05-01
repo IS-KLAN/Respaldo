@@ -26,7 +26,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.io.Serializable;
 import java.util.List;
-import javax.faces.application.FacesMessage;
 
 
 /**
@@ -37,8 +36,6 @@ import javax.faces.application.FacesMessage;
 @ManagedBean
 @ViewScoped
 public class Mapa implements Serializable {
-    
-    private String etiqueta;
       
     private double lat;
       
@@ -57,7 +54,7 @@ public class Mapa implements Serializable {
         for (Puesto uno: todos){
             double lat= Double.parseDouble(uno.getLatitud());
             double lon= Double.parseDouble(uno.getLongitud());
-            String nombre = uno.getNombrePuesto();          
+            String nombre = uno.getNombre();          
             modelo.addOverlay(new Marker(new LatLng(lat, lon), nombre));
         }       
     }
@@ -74,19 +71,10 @@ public class Mapa implements Serializable {
     }
     
     public Puesto buscaPuesto(Marker marker){
-        double lat= marker.getLatlng().getLat();
-        double lon= marker.getLatlng().getLng();
-        
+        String lat= Double.toString(marker.getLatlng().getLat());
+        String lng= Double.toString(marker.getLatlng().getLng());
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
-        List<Puesto> puestos = new PuestoC(emf).buscaPuestos();
-        for(Puesto uno: puestos){
-            double lt= Double.parseDouble(uno.getLatitud());
-            double ln= Double.parseDouble(uno.getLongitud());
-            
-            if(lt==lat && ln==lon){
-               return uno;
-            }
-        } return null;
+        return new PuestoC(emf).buscaLugar(lat, lng);
     }
           
     public MapModel getModelo() {
@@ -95,14 +83,6 @@ public class Mapa implements Serializable {
       
     public Marker getMarcador() {
         return marcador;
-    }
-
-    public String getEtiqueta() {
-        return etiqueta;
-    }
-
-    public void setEtiqueta(String etiqueta) {
-        this.etiqueta = etiqueta;
     }
 
     public double getLat() {
@@ -120,21 +100,4 @@ public class Mapa implements Serializable {
     public void setLng(double lng) {
         this.lng = lng;
     }
-
-    public ExternalContext getEc() {
-        return ec;
-    }
-
-    public void setEc(ExternalContext ec) {
-        this.ec = ec;
-    }
-    
-    public void addMarker() {
-        Marker marker = new Marker(new LatLng(lat, lng), etiqueta);
-        modelo.addOverlay(marker);
-          
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Marker Added", "Lat:" + lat + ", Lng:" + lng));
-    }
-    
-    
 }

@@ -130,6 +130,6 @@ public class IngresoUsuario implements Serializable{
      */
     public String usuarioActivo() {
         Usuario u = ((Usuario)httpServletRequest.getSession().getAttribute("usuario"));
-        return (u != null)? u.getNombreUsuario() : null;
+        return (u != null)? u.getNombre() : null;
     }
 }
