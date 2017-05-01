@@ -51,7 +51,7 @@ public class Evaluador implements Serializable{
     }
     
     @PostConstruct
-    public void init() {
+    public void cargar() {
         // Se realiza una conexión a la BD.
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
         // Se obtienen los datos guardados del puesto.
@@ -120,7 +120,7 @@ public class Evaluador implements Serializable{
     /**
      * Método que se encarga de capturar la evaluación ingresada en la interfaz.
      */
-    public void comentar() {
+    public void evaluar() {
         // Se realiza una conexión a la BD.
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
         // Se inicializa un C para realizar una consulta de evaluación.

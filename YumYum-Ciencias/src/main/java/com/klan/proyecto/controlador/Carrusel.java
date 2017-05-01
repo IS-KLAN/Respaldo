@@ -43,7 +43,7 @@ public class Carrusel implements Serializable{
     }
 
     @PostConstruct
-    public void init() {
+    public void cargar() {
         // Se realiza la conexión a la BD.
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
         // Se realiza la consulta de todos los puestos en la BD con un C de Puesto y una conexión EMF.

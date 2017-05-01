@@ -40,7 +40,7 @@ public class MapaPuesto implements Serializable {
     }
     
     @PostConstruct
-    public void init() {      
+    public void cargar() {      
         modelo = new DefaultMapModel();
         
         elegido = (Puesto) httpServletRequest.getSession().getAttribute("puesto");

@@ -55,7 +55,7 @@ public class AgregaPuesto implements Serializable {
     private int idPuesto;
 
     @PostConstruct
-    public void init() {
+    public void cargar() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
         List<Puesto> lugares = new PuestoC(emf).buscaPuestos();
         modelo = new DefaultMapModel();
@@ -232,6 +232,7 @@ public class AgregaPuesto implements Serializable {
                 FacesMessage.SEVERITY_INFO, "Puesto agregado con éxito!!!.", null));
                 // Se asegura que el mensaje se muestre después de la redirección.
                 FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+                puesto = new PuestoC(emf).buscaNombre(nombrePuesto); //Se actualiza el puesto.
                 ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession().setAttribute("puesto", puesto);
                 return "perfilPuesto?faces-redirect=true";
             } // Si no se guardo bien la rutaImagen, no se agrega el puesto.

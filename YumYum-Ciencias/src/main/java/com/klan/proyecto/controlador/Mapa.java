@@ -47,7 +47,7 @@ public class Mapa implements Serializable {
     private ExternalContext ec;
   
     @PostConstruct
-    public void init() {      
+    public void cargar() {      
         modelo = new DefaultMapModel();
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");        
         List<Puesto> todos = new PuestoC(emf).buscaPuestos();

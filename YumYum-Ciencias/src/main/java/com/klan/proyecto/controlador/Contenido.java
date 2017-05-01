@@ -39,7 +39,7 @@ public class Contenido implements Serializable{
     }
     
     @PostConstruct
-    public void init() {
+    public void cargar() {
         Puesto p = (Puesto)httpServletRequest.getSession().getAttribute("puesto");
         puesto = (p != null)? p : new Puesto(); // Se inicializa con el puesto encontrado o por defecto.
         // Se calcula la evaluación global del puesto.
