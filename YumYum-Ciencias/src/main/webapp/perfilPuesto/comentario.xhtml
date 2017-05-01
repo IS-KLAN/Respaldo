@@ -19,8 +19,8 @@
             <b:inputText style="margin: 5px; font-size: medium" id="comentario" placeholder="Escribe tu comentario ..." value="#{evaluador.comentario}"/>
         </h:panelGrid>
         <b:commandButton look="sucess" size="md" value="Guardar" icon="ok"
-                         update="datos" process="@form" actionListener="#{evaluador.comentar()}">
-                        <f:actionListener binding="#{contenido.init()}"/></b:commandButton>
+                         update="datos" process="@form" actionListener="#{evaluador.evaluar()}">
+                        <f:actionListener binding="#{contenido.cargar()}"/></b:commandButton>
         <b:commandButton look="danger" size="md" value="Cancelar" icon="remove"
         update="campo" process="@this" action-listener="#{evaluador.cancelar()}"/>
     </h:form>
