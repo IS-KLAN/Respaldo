@@ -8,7 +8,7 @@ package com.klan.proyecto.jpa;
 import com.klan.proyecto.jpa.excepciones.EntidadInexistenteException;
 import com.klan.proyecto.jpa.excepciones.EntidadExistenteException;
 import com.klan.proyecto.modelo.Evaluacion;
-import com.klan.proyecto.modelo.EvaluacionPK;
+import com.klan.proyecto.modelo.EvaluacionP;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -49,10 +49,10 @@ public class EvaluacionC implements Serializable {
      */
     public void crear(Evaluacion evaluacion) throws EntidadExistenteException, Exception {
         // Se verifica que la evaluación tenga definida una llave primaria para insertar.
-        if (evaluacion.getEvaluacionPK() == null) {
+        if (evaluacion.getLlave() == null) {
             throw new NullPointerException("Se debe definir una llave no nula para insertar la evaluación.");
         } // Se guarda la llave primaria como id para usarla más adelante.
-        EvaluacionPK id = evaluacion.getEvaluacionPK();
+        EvaluacionP id = evaluacion.getLlave();
         EntityManager em = null;
         try { // Se comienza la transacción de inserción en la BD.
             em = getEntityManager();
@@ -67,11 +67,11 @@ public class EvaluacionC implements Serializable {
                 // Se cierra la conexión antes de cancelar la inserción.
                 em.close(); throw new NullPointerException("La llave de la evaluación contiene referencias nulas.");
             } // Se asigna el siguiente id de la numeración seriada según el número de entidades en la tabla.
-            evaluacion.setIdEvaluacion(cantidadDeEvaluaciones() + 1);
+            evaluacion.setId(cantidadDeEvaluaciones() + 1);
             // Se agrega la evaluación a la lista de evaluaciones relacionadas con el puesto.
-            puesto.getEvaluacionList().add(evaluacion); em.merge(puesto);
+            puesto.getEvaluaciones().add(evaluacion); em.merge(puesto);
             // Se agrega la evaluación a la lista de evaluaciones relacionadas con el usuario.
-            usuario.getEvaluacionList().add(evaluacion); em.merge(usuario);
+            usuario.getEvaluaciones().add(evaluacion); em.merge(usuario);
             em.persist(evaluacion); // Se inserta la evaluación en la BD.
             em.getTransaction().commit(); // Se confirma la transacción.
         } catch (Exception ex) {
@@ -92,10 +92,10 @@ public class EvaluacionC implements Serializable {
      */
     public void editar(Evaluacion evaluacion) throws EntidadInexistenteException, Exception {
         // Se verifica que la evaluación tenga definida una llave primaria para actualizar.
-        if (evaluacion.getEvaluacionPK() == null) {
+        if (evaluacion.getLlave() == null) {
             throw new NullPointerException("Se debe definir una llave no nula para insertar la evaluación.");
         } // Se guarda la llave primaria como id para usarla más adelante.
-        EvaluacionPK id = evaluacion.getEvaluacionPK();
+        EvaluacionP id = evaluacion.getLlave();
         EntityManager em = null;
         try { // Se verifica que la evaluación con la PK deifinida, exista en la BD.
             Evaluacion original = buscaId(id);
@@ -113,12 +113,12 @@ public class EvaluacionC implements Serializable {
                 // Se cierra la conexión antes de cancelar la inserción.
                 em.close(); throw new NullPointerException("La llave de la evaluación contiene referencias nulas.");
             } // Se actualiza la evaluación de la lista de evaluaciones relacionadas con el puesto.
-            puesto.getEvaluacionList().remove(original);
-            puesto.getEvaluacionList().add(evaluacion);
+            puesto.getEvaluaciones().remove(original);
+            puesto.getEvaluaciones().add(evaluacion);
             em.merge(puesto); // Se actualiza el puesto en la BD.
             // Se actualiza la evaluación de la lista de evaluaciones relacionadas con el usuario.
-            usuario.getEvaluacionList().remove(original);
-            usuario.getEvaluacionList().add(evaluacion);
+            usuario.getEvaluaciones().remove(original);
+            usuario.getEvaluaciones().add(evaluacion);
             em.merge(usuario); // Se actualiza el usuario en la BD.
             em.merge(evaluacion); // Se actualiza la evaluación en la BD.
             em.getTransaction().commit(); // Se confirma la transacción.
@@ -137,7 +137,7 @@ public class EvaluacionC implements Serializable {
      * @param id Es la llave primaria de la evaluación.
      * @throws EntidadInexistenteException Indica que la evaluación no se elimina porque existe en la BD.
      */
-    public void borrar(EvaluacionPK id) throws EntidadInexistenteException {
+    public void borrar(EvaluacionP id) throws EntidadInexistenteException {
         EntityManager em = null;
         try { // Se comienza la transacción en la BD.
             em = getEntityManager();
@@ -145,18 +145,18 @@ public class EvaluacionC implements Serializable {
             Evaluacion evaluacion;
             try { // Se busca la evaluación con la PK definida en la BD.
                 evaluacion = em.getReference(Evaluacion.class, id);
-                evaluacion.getEvaluacionPK();
+                evaluacion.getLlave();
             } catch (EntityNotFoundException enfe) {
                 throw new EntidadInexistenteException("La evaluación con id " + id + " no existe en la BD.", enfe);
             } // Se remueve la relación del puesto con la evaluación. // Se remueve la relación del puesto con la evaluación.
             Puesto puesto = evaluacion.getPuesto();
             if (puesto != null) {
-                puesto.getEvaluacionList().remove(evaluacion);
+                puesto.getEvaluaciones().remove(evaluacion);
                 em.merge(puesto);
             } // Se remueve la relación del usuario con la evaluación.
             Usuario usuario = evaluacion.getUsuario();
             if (usuario != null) {
-                usuario.getEvaluacionList().remove(evaluacion);
+                usuario.getEvaluaciones().remove(evaluacion);
                 em.merge(usuario);
             } // Se remueve la evaluación de la BD.
             em.remove(evaluacion);
@@ -203,7 +203,7 @@ public class EvaluacionC implements Serializable {
      * un nombre de puesto y un nombre de usuario.
      * @return Devuelve la entidad encontrada, o NULL si no se encuentra.
      */
-    public Evaluacion buscaId(EvaluacionPK id) {
+    public Evaluacion buscaId(EvaluacionP id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Evaluacion.class, id);

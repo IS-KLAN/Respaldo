@@ -35,13 +35,13 @@ public class PendienteC implements Serializable {
     public void crear(Pendiente pendiente) throws EntidadExistenteException, Exception {
         EntityManager em = null;
         try {
-            pendiente.setIdUsuario(cantidadDePendientes() + 1);
+            pendiente.setId(cantidadDePendientes() + 1);
             em = getEntityManager();
             em.getTransaction().begin();
             em.persist(pendiente);
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (buscaId(pendiente.getNombreUsuario()) != null) {
+            if (buscaId(pendiente.getNombre()) != null) {
                 throw new EntidadExistenteException("Pendiente " + pendiente + " already exists.", ex);
             }
             throw ex;
@@ -62,7 +62,7 @@ public class PendienteC implements Serializable {
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                String id = pendiente.getNombreUsuario();
+                String id = pendiente.getNombre();
                 if (buscaId(id) == null) {
                     throw new EntidadInexistenteException("No existe pendiente con id " + id);
                 }
@@ -83,7 +83,7 @@ public class PendienteC implements Serializable {
             Pendiente pendiente;
             try {
                 pendiente = em.getReference(Pendiente.class, id);
-                pendiente.getNombreUsuario();
+                pendiente.getNombre();
             } catch (EntityNotFoundException enfe) {
                 throw new EntidadInexistenteException("No existe pendiente with id " + id, enfe);
             }
@@ -132,7 +132,7 @@ public class PendienteC implements Serializable {
     public Pendiente buscaCorreo(String correo) {
         try{
             EntityManager em = getEntityManager();
-            return (Pendiente)(em.createNamedQuery("Pendiente.findByCorreo")
+            return (Pendiente)(em.createNamedQuery("Pendiente.buscaCorreo")
                     .setParameter("correo", correo).getSingleResult());
         }catch(Exception ex){
             System.err.println(ex.getMessage() + "\nError al buscar el usuario con correo: " + correo);

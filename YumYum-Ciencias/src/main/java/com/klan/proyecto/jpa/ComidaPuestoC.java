@@ -14,7 +14,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import com.klan.proyecto.modelo.Comida;
 import com.klan.proyecto.modelo.ComidaPuesto;
-import com.klan.proyecto.modelo.ComidaPuestoPK;
+import com.klan.proyecto.modelo.ComidaPuestoP;
 import com.klan.proyecto.modelo.Puesto;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -36,12 +36,12 @@ public class ComidaPuestoC implements Serializable {
     }
 
     public void crear(ComidaPuesto comidaPuesto) throws EntidadExistenteException, Exception {
-        if (comidaPuesto.getComidaPuestoPK() == null) {
+        if (comidaPuesto.getLlave() == null) {
             throw new NullPointerException("No se encuentra una llave de comidaPuesto definida.");
-        } ComidaPuestoPK pk = comidaPuesto.getComidaPuestoPK();
+        } ComidaPuestoP pk = comidaPuesto.getLlave();
         EntityManager em = null;
         try {
-            comidaPuesto.setIdComidaPuesto(cantidadDeEntidades() + 1);
+            comidaPuesto.setId(cantidadDeEntidades() + 1);
             em = getEntityManager();
             em.getTransaction().begin();            
             Comida comida = em.getReference(Comida.class, pk.getNombreComida());
@@ -52,15 +52,15 @@ public class ComidaPuestoC implements Serializable {
             if (comida == null) {
                 throw new NullPointerException("Llave de referencia inválida de puesto.");
             } else comidaPuesto.setPuesto(puesto);
-            comida.getComidaPuestoList().add(comidaPuesto);
-            puesto.getComidaPuestoList().add(comidaPuesto);
+            comida.getListaRelacionada().add(comidaPuesto);
+            puesto.getComida().add(comidaPuesto);
             em.merge(comida);
             em.merge(puesto);
             em.persist(comidaPuesto);
             em.getTransaction().commit();
             // System.out.println("Relación agregada: " + comida.getNombreComida() + " a " + puesto.getNombrePuesto());
         } catch (Exception ex) {
-            if (buscaId(comidaPuesto.getComidaPuestoPK()) != null) {
+            if (buscaId(comidaPuesto.getLlave()) != null) {
                 throw new EntidadExistenteException("ComidaPuesto " + comidaPuesto + " already exists.", ex);
             }
             throw ex;
@@ -72,47 +72,47 @@ public class ComidaPuestoC implements Serializable {
     }
 
     public void editar(ComidaPuesto comidaPuesto) throws EntidadInexistenteException, Exception {
-        comidaPuesto.getComidaPuestoPK().setNombrePuesto(comidaPuesto.getPuesto().getNombrePuesto());
-        comidaPuesto.getComidaPuestoPK().setNombreComida(comidaPuesto.getComida().getNombreComida());
+        comidaPuesto.getLlave().setNombrePuesto(comidaPuesto.getPuesto().getNombre());
+        comidaPuesto.getLlave().setNombreComida(comidaPuesto.getComida().getNombre());
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            ComidaPuesto persistentComidaPuesto = em.find(ComidaPuesto.class, comidaPuesto.getComidaPuestoPK());
+            ComidaPuesto persistentComidaPuesto = em.find(ComidaPuesto.class, comidaPuesto.getLlave());
             Comida comidaOld = persistentComidaPuesto.getComida();
             Comida comidaNew = comidaPuesto.getComida();
             Puesto puestoOld = persistentComidaPuesto.getPuesto();
             Puesto puestoNew = comidaPuesto.getPuesto();
             if (comidaNew != null) {
-                comidaNew = em.getReference(comidaNew.getClass(), comidaNew.getNombreComida());
+                comidaNew = em.getReference(comidaNew.getClass(), comidaNew.getNombre());
                 comidaPuesto.setComida(comidaNew);
             }
             if (puestoNew != null) {
-                puestoNew = em.getReference(puestoNew.getClass(), puestoNew.getNombrePuesto());
+                puestoNew = em.getReference(puestoNew.getClass(), puestoNew.getNombre());
                 comidaPuesto.setPuesto(puestoNew);
             }
             comidaPuesto = em.merge(comidaPuesto);
             if (comidaOld != null && !comidaOld.equals(comidaNew)) {
-                comidaOld.getComidaPuestoList().remove(comidaPuesto);
+                comidaOld.getListaRelacionada().remove(comidaPuesto);
                 comidaOld = em.merge(comidaOld);
             }
             if (comidaNew != null && !comidaNew.equals(comidaOld)) {
-                comidaNew.getComidaPuestoList().add(comidaPuesto);
+                comidaNew.getListaRelacionada().add(comidaPuesto);
                 comidaNew = em.merge(comidaNew);
             }
             if (puestoOld != null && !puestoOld.equals(puestoNew)) {
-                puestoOld.getComidaPuestoList().remove(comidaPuesto);
+                puestoOld.getComida().remove(comidaPuesto);
                 puestoOld = em.merge(puestoOld);
             }
             if (puestoNew != null && !puestoNew.equals(puestoOld)) {
-                puestoNew.getComidaPuestoList().add(comidaPuesto);
+                puestoNew.getComida().add(comidaPuesto);
                 puestoNew = em.merge(puestoNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                ComidaPuestoPK id = comidaPuesto.getComidaPuestoPK();
+                ComidaPuestoP id = comidaPuesto.getLlave();
                 if (buscaId(id) == null) {
                     throw new EntidadInexistenteException("No existe comidaPuesto con id " + id);
                 }
@@ -125,7 +125,7 @@ public class ComidaPuestoC implements Serializable {
         }
     }
 
-    public void borrar(ComidaPuestoPK id) throws EntidadInexistenteException {
+    public void borrar(ComidaPuestoP id) throws EntidadInexistenteException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -133,18 +133,18 @@ public class ComidaPuestoC implements Serializable {
             ComidaPuesto comidaPuesto;
             try {
                 comidaPuesto = em.getReference(ComidaPuesto.class, id);
-                comidaPuesto.getComidaPuestoPK();
+                comidaPuesto.getLlave();
             } catch (EntityNotFoundException enfe) {
                 throw new EntidadInexistenteException("No existe comidaPuesto with id " + id, enfe);
             }
             Comida comida = comidaPuesto.getComida();
             if (comida != null) {
-                comida.getComidaPuestoList().remove(comidaPuesto);
+                comida.getListaRelacionada().remove(comidaPuesto);
                 comida = em.merge(comida);
             }
             Puesto puesto = comidaPuesto.getPuesto();
             if (puesto != null) {
-                puesto.getComidaPuestoList().remove(comidaPuesto);
+                puesto.getComida().remove(comidaPuesto);
                 puesto = em.merge(puesto);
             }
             em.remove(comidaPuesto);
@@ -185,7 +185,7 @@ public class ComidaPuestoC implements Serializable {
      * @param id Es la llave primaria de la relación buscada.
      * @return Devuelve la entidad encontrada en la BD, o NULL en caso de encontrarla.
      */
-    public ComidaPuesto buscaId(ComidaPuestoPK id) {
+    public ComidaPuesto buscaId(ComidaPuestoP id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(ComidaPuesto.class, id);

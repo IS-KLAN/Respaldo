@@ -37,33 +37,33 @@ public class UsuarioC implements Serializable {
     }
 
     public void crear(Usuario usuario) throws EntidadExistenteException, Exception {
-        if (usuario.getEvaluacionList() == null) {
-            usuario.setEvaluacionList(new ArrayList<Evaluacion>());
+        if (usuario.getEvaluaciones() == null) {
+            usuario.setEvaluaciones(new ArrayList<Evaluacion>());
         }
         EntityManager em = null;
         try {
-            usuario.setIdUsuario(cantidadDeUsuarios() + 1);
+            usuario.setId(cantidadDeUsuarios() + 1);
             em = getEntityManager();
             em.getTransaction().begin();
             List<Evaluacion> attachedEvaluacionList = new ArrayList<Evaluacion>();
-            for (Evaluacion evaluacionListEvaluacionToAttach : usuario.getEvaluacionList()) {
-                evaluacionListEvaluacionToAttach = em.getReference(evaluacionListEvaluacionToAttach.getClass(), evaluacionListEvaluacionToAttach.getEvaluacionPK());
+            for (Evaluacion evaluacionListEvaluacionToAttach : usuario.getEvaluaciones()) {
+                evaluacionListEvaluacionToAttach = em.getReference(evaluacionListEvaluacionToAttach.getClass(), evaluacionListEvaluacionToAttach.getLlave());
                 attachedEvaluacionList.add(evaluacionListEvaluacionToAttach);
             }
-            usuario.setEvaluacionList(attachedEvaluacionList);
+            usuario.setEvaluaciones(attachedEvaluacionList);
             em.persist(usuario);
-            for (Evaluacion evaluacionListEvaluacion : usuario.getEvaluacionList()) {
+            for (Evaluacion evaluacionListEvaluacion : usuario.getEvaluaciones()) {
                 Usuario oldUsuarioOfEvaluacionListEvaluacion = evaluacionListEvaluacion.getUsuario();
                 evaluacionListEvaluacion.setUsuario(usuario);
                 evaluacionListEvaluacion = em.merge(evaluacionListEvaluacion);
                 if (oldUsuarioOfEvaluacionListEvaluacion != null) {
-                    oldUsuarioOfEvaluacionListEvaluacion.getEvaluacionList().remove(evaluacionListEvaluacion);
+                    oldUsuarioOfEvaluacionListEvaluacion.getEvaluaciones().remove(evaluacionListEvaluacion);
                     oldUsuarioOfEvaluacionListEvaluacion = em.merge(oldUsuarioOfEvaluacionListEvaluacion);
                 }
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (buscaId(usuario.getNombreUsuario()) != null) {
+            if (buscaId(usuario.getNombre()) != null) {
                 throw new EntidadExistenteException("Usuario " + usuario + " already exists.", ex);
             }
             throw ex;
@@ -79,9 +79,9 @@ public class UsuarioC implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Usuario persistentUsuario = em.find(Usuario.class, usuario.getNombreUsuario());
-            List<Evaluacion> evaluacionListOld = persistentUsuario.getEvaluacionList();
-            List<Evaluacion> evaluacionListNew = usuario.getEvaluacionList();
+            Usuario persistentUsuario = em.find(Usuario.class, usuario.getNombre());
+            List<Evaluacion> evaluacionListOld = persistentUsuario.getEvaluaciones();
+            List<Evaluacion> evaluacionListNew = usuario.getEvaluaciones();
             List<String> illegalOrphanMessages = null;
             for (Evaluacion evaluacionListOldEvaluacion : evaluacionListOld) {
                 if (!evaluacionListNew.contains(evaluacionListOldEvaluacion)) {
@@ -96,11 +96,11 @@ public class UsuarioC implements Serializable {
             }
             List<Evaluacion> attachedEvaluacionListNew = new ArrayList<Evaluacion>();
             for (Evaluacion evaluacionListNewEvaluacionToAttach : evaluacionListNew) {
-                evaluacionListNewEvaluacionToAttach = em.getReference(evaluacionListNewEvaluacionToAttach.getClass(), evaluacionListNewEvaluacionToAttach.getEvaluacionPK());
+                evaluacionListNewEvaluacionToAttach = em.getReference(evaluacionListNewEvaluacionToAttach.getClass(), evaluacionListNewEvaluacionToAttach.getLlave());
                 attachedEvaluacionListNew.add(evaluacionListNewEvaluacionToAttach);
             }
             evaluacionListNew = attachedEvaluacionListNew;
-            usuario.setEvaluacionList(evaluacionListNew);
+            usuario.setEvaluaciones(evaluacionListNew);
             usuario = em.merge(usuario);
             for (Evaluacion evaluacionListNewEvaluacion : evaluacionListNew) {
                 if (!evaluacionListOld.contains(evaluacionListNewEvaluacion)) {
@@ -108,7 +108,7 @@ public class UsuarioC implements Serializable {
                     evaluacionListNewEvaluacion.setUsuario(usuario);
                     evaluacionListNewEvaluacion = em.merge(evaluacionListNewEvaluacion);
                     if (oldUsuarioOfEvaluacionListNewEvaluacion != null && !oldUsuarioOfEvaluacionListNewEvaluacion.equals(usuario)) {
-                        oldUsuarioOfEvaluacionListNewEvaluacion.getEvaluacionList().remove(evaluacionListNewEvaluacion);
+                        oldUsuarioOfEvaluacionListNewEvaluacion.getEvaluaciones().remove(evaluacionListNewEvaluacion);
                         oldUsuarioOfEvaluacionListNewEvaluacion = em.merge(oldUsuarioOfEvaluacionListNewEvaluacion);
                     }
                 }
@@ -117,7 +117,7 @@ public class UsuarioC implements Serializable {
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                String id = usuario.getNombreUsuario();
+                String id = usuario.getNombre();
                 if (buscaId(id) == null) {
                     throw new EntidadInexistenteException("No existe usuario con id " + id);
                 }
@@ -138,12 +138,12 @@ public class UsuarioC implements Serializable {
             Usuario usuario;
             try {
                 usuario = em.getReference(Usuario.class, id);
-                usuario.getNombreUsuario();
+                usuario.getNombre();
             } catch (EntityNotFoundException enfe) {
                 throw new EntidadInexistenteException("No existe usuario with id " + id, enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<Evaluacion> evaluacionListOrphanCheck = usuario.getEvaluacionList();
+            List<Evaluacion> evaluacionListOrphanCheck = usuario.getEvaluaciones();
             for (Evaluacion evaluacionListOrphanCheckEvaluacion : evaluacionListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
@@ -198,7 +198,7 @@ public class UsuarioC implements Serializable {
     public Usuario buscaCorreo(String correo) {
         try{
             EntityManager em = getEntityManager();
-            return (Usuario)(em.createNamedQuery("Usuario.findByCorreo")
+            return (Usuario)(em.createNamedQuery("Usuario.buscaCorreo")
                     .setParameter("correo", correo).getSingleResult());
         }catch(Exception ex){
             System.err.println(ex.getMessage() + "\nError al buscar el usuario con correo: " + correo);
