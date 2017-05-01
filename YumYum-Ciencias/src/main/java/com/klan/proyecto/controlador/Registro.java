@@ -207,7 +207,7 @@ public class Registro implements Serializable{
     public boolean datosVerificados() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
         UsuarioC uc = new UsuarioC(emf); PendienteC pc = new PendienteC(emf);
-        if(pc.buscaId(nombreUsuario) != null || uc.buscaId(nombreUsuario) != null) {
+        if(pc.buscaNombre(nombreUsuario) != null || uc.buscaNombre(nombreUsuario) != null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
             FacesMessage.SEVERITY_ERROR, "Ese nombre de usuario ya ha sido registrado.", null));
             return false;
@@ -226,7 +226,7 @@ public class Registro implements Serializable{
     public String confirmar() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias");
         PendienteC controlador = new PendienteC(emf);
-        Pendiente confirmado = controlador.buscaId(descifraClave());
+        Pendiente confirmado = controlador.buscaNombre(descifraClave());
         if(confirmado != null) {
             correo = confirmado.getCorreo();
             contraseña = confirmado.getContraseña();

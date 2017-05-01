@@ -57,13 +57,13 @@ public class Evaluador implements Serializable{
         // Se obtienen los datos guardados del puesto.
         if ((puesto = (Puesto)httpServletRequest.getSession().getAttribute("puesto")) != null) {
             // Se obtiene la versión más actual del puesto en la BD.
-            puesto = new PuestoC(emf).buscaId(puesto.getNombre());
+            puesto = new PuestoC(emf).buscaNombre(puesto.getNombre());
             //System.out.println("Nombre de puesto cargado: " + p.getNombrePuesto());
         } else puesto = new Puesto(); // Se inicializa por defecto.
         // Se construye la llave primaria del usuario encontrado.
         EvaluacionP id = new EvaluacionP(puesto.getNombre(), usuario.getNombre());
         // Se busca la evalución existente del usuario en el puesto definido.
-        Evaluacion actual = new EvaluacionC(emf).buscaId(id);
+        Evaluacion actual = new EvaluacionC(emf).buscaEvaluacion(id);
         // Se inicializa la última calificación asignada del usuario.
         calificacion = (actual != null)? actual.getCalificacion() : 0;
         comentario = (actual != null)? actual.getComentario() : "";
@@ -130,7 +130,7 @@ public class Evaluador implements Serializable{
         // Se construye la evaluación actual con su comentario, calificación y llave primaria.
         Evaluacion actual = new Evaluacion(id, comentario, calificacion);
         try{ // Se busca la existencia previa de una evaluación con el mismo usuario en el mismo puesto.
-            Evaluacion encontrada = controlador.buscaId(id);
+            Evaluacion encontrada = controlador.buscaEvaluacion(id);
             if (encontrada != null) {
                 // Si se encuentra, se copia su idEvaluación y se actualiza en la BD.
                 actual.setId(encontrada.getId());
@@ -140,7 +140,7 @@ public class Evaluador implements Serializable{
                 //System.out.println("Se intenta crear la evaluación: " + actual.getIdEvaluacion());
                 controlador.crear(actual);
             } // Se actualiza el contenido del puesto con la evaluación actual en su lista relacionada.
-            puesto = new PuestoC(emf).buscaId(puesto.getNombre());
+            puesto = new PuestoC(emf).buscaNombre(puesto.getNombre());
             httpServletRequest.getSession().setAttribute("puesto", puesto);
         }catch(Exception ex){
             System.err.println(ex.getMessage());

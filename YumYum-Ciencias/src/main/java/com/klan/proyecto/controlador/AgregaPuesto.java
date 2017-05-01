@@ -33,6 +33,7 @@ import java.io.InputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -231,7 +232,8 @@ public class AgregaPuesto implements Serializable {
                 FacesMessage.SEVERITY_INFO, "Puesto agregado con éxito!!!.", null));
                 // Se asegura que el mensaje se muestre después de la redirección.
                 FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-                return "index?faces-redirect=true";
+                ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession().setAttribute("puesto", puesto);
+                return "perfilPuesto?faces-redirect=true";
             } // Si no se guardo bien la rutaImagen, no se agrega el puesto.
         }catch(Exception ex){
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
