@@ -75,7 +75,7 @@ public class EvaluacionC implements Serializable {
             em.persist(evaluacion); // Se inserta la evaluación en la BD.
             em.getTransaction().commit(); // Se confirma la transacción.
         } catch (Exception ex) {
-            if (buscaId(id) != null) {
+            if (buscaEvaluacion(id) != null) {
                 throw new EntidadExistenteException("La evaluación " + evaluacion + " ya existe en la BD.", ex);
             } throw ex;
         } finally {
@@ -98,7 +98,7 @@ public class EvaluacionC implements Serializable {
         EvaluacionP id = evaluacion.getLlave();
         EntityManager em = null;
         try { // Se verifica que la evaluación con la PK deifinida, exista en la BD.
-            Evaluacion original = buscaId(id);
+            Evaluacion original = buscaEvaluacion(id);
             if (original == null) throw new EntidadInexistenteException("La evaluación con id " + id + "no existe.");
             // Se comienza la transacción de actualización en la BD.
             em = getEntityManager();
@@ -203,7 +203,7 @@ public class EvaluacionC implements Serializable {
      * un nombre de puesto y un nombre de usuario.
      * @return Devuelve la entidad encontrada, o NULL si no se encuentra.
      */
-    public Evaluacion buscaId(EvaluacionP id) {
+    public Evaluacion buscaEvaluacion(EvaluacionP id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Evaluacion.class, id);

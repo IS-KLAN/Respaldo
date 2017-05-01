@@ -60,7 +60,7 @@ public class ComidaPuestoC implements Serializable {
             em.getTransaction().commit();
             // System.out.println("Relación agregada: " + comida.getNombreComida() + " a " + puesto.getNombrePuesto());
         } catch (Exception ex) {
-            if (buscaId(comidaPuesto.getLlave()) != null) {
+            if (buscaComidaPuesto(comidaPuesto.getLlave()) != null) {
                 throw new EntidadExistenteException("ComidaPuesto " + comidaPuesto + " already exists.", ex);
             }
             throw ex;
@@ -113,7 +113,7 @@ public class ComidaPuestoC implements Serializable {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 ComidaPuestoP id = comidaPuesto.getLlave();
-                if (buscaId(id) == null) {
+                if (buscaComidaPuesto(id) == null) {
                     throw new EntidadInexistenteException("No existe comidaPuesto con id " + id);
                 }
             }
@@ -185,7 +185,7 @@ public class ComidaPuestoC implements Serializable {
      * @param id Es la llave primaria de la relación buscada.
      * @return Devuelve la entidad encontrada en la BD, o NULL en caso de encontrarla.
      */
-    public ComidaPuesto buscaId(ComidaPuestoP id) {
+    public ComidaPuesto buscaComidaPuesto(ComidaPuestoP id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(ComidaPuesto.class, id);

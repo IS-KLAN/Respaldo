@@ -41,7 +41,7 @@ public class PendienteC implements Serializable {
             em.persist(pendiente);
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (buscaId(pendiente.getNombre()) != null) {
+            if (buscaNombre(pendiente.getNombre()) != null) {
                 throw new EntidadExistenteException("Pendiente " + pendiente + " already exists.", ex);
             }
             throw ex;
@@ -63,7 +63,7 @@ public class PendienteC implements Serializable {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 String id = pendiente.getNombre();
-                if (buscaId(id) == null) {
+                if (buscaNombre(id) == null) {
                     throw new EntidadInexistenteException("No existe pendiente con id " + id);
                 }
             }
@@ -120,10 +120,10 @@ public class PendienteC implements Serializable {
         }
     }
 
-    public Pendiente buscaId(String id) {
+    public Pendiente buscaNombre(String nombre) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Pendiente.class, id);
+            return em.find(Pendiente.class, nombre);
         } finally {
             em.close();
         }

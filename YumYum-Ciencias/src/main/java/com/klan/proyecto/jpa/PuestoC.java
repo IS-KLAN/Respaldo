@@ -82,7 +82,7 @@ public class PuestoC implements Serializable {
             em.getTransaction().commit();
             // System.out.println("Puesto agregado: \nNombre" + puesto.getNombrePuesto());
         } catch (Exception ex) {
-            if (buscaId(puesto.getNombre()) != null) {
+            if (buscaNombre(puesto.getNombre()) != null) {
                 throw new EntidadExistenteException("Puesto " + puesto + " ya existe.", ex);
             }
             throw ex;
@@ -165,7 +165,7 @@ public class PuestoC implements Serializable {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 String id = puesto.getNombre();
-                if (buscaId(id) == null) {
+                if (buscaNombre(id) == null) {
                     throw new EntidadInexistenteException("No existe puesto con id " + id);
                 }
             }
@@ -240,10 +240,10 @@ public class PuestoC implements Serializable {
         }
     }
 
-    public Puesto buscaId(String id) {
+    public Puesto buscaNombre(String nombre) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Puesto.class, id);
+            return em.find(Puesto.class, nombre);
         } finally {
             em.close();
         }

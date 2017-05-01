@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.NamedQueries;
 
 /**
  *
@@ -63,7 +62,7 @@ public class UsuarioC implements Serializable {
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (buscaId(usuario.getNombre()) != null) {
+            if (buscaNombre(usuario.getNombre()) != null) {
                 throw new EntidadExistenteException("Usuario " + usuario + " already exists.", ex);
             }
             throw ex;
@@ -118,7 +117,7 @@ public class UsuarioC implements Serializable {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 String id = usuario.getNombre();
-                if (buscaId(id) == null) {
+                if (buscaNombre(id) == null) {
                     throw new EntidadInexistenteException("No existe usuario con id " + id);
                 }
             }
@@ -186,10 +185,10 @@ public class UsuarioC implements Serializable {
         }
     }
 
-    public Usuario buscaId(String id) {
+    public Usuario buscaNombre(String nombre) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Usuario.class, id);
+            return em.find(Usuario.class, nombre);
         } finally {
             em.close();
         }

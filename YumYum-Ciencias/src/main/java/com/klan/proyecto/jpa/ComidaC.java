@@ -45,7 +45,7 @@ public class ComidaC implements Serializable {
             em.persist(comida);
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (buscaId(comida.getNombre()) != null) {
+            if (buscaNombre(comida.getNombre()) != null) {
                 throw new EntidadExistenteException("Comida " + comida + " ya existe.", ex);
             }
             throw ex;
@@ -100,7 +100,7 @@ public class ComidaC implements Serializable {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 String id = comida.getNombre();
-                if (buscaId(id) == null) {
+                if (buscaNombre(id) == null) {
                     throw new EntidadInexistenteException("No existe comida con id " + id);
                 }
             }
@@ -168,10 +168,10 @@ public class ComidaC implements Serializable {
         }
     }
 
-    public Comida buscaId(String id) {
+    public Comida buscaNombre(String nombre) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Comida.class, id);
+            return em.find(Comida.class, nombre);
         } finally {
             em.close();
         }
