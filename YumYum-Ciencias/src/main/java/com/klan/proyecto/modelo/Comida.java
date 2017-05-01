@@ -29,63 +29,63 @@ import javax.xml.bind.annotation.XmlTransient;
     @UniqueConstraint(columnNames = {"id_comida"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Comida.findAll", query = "SELECT c FROM Comida c")
-    , @NamedQuery(name = "Comida.findByIdComida", query = "SELECT c FROM Comida c WHERE c.idComida = :idComida")
-    , @NamedQuery(name = "Comida.findByNombreComida", query = "SELECT c FROM Comida c WHERE c.nombreComida = :nombreComida")})
+    @NamedQuery(name = "Comida.busca", query = "SELECT c FROM Comida c")
+    , @NamedQuery(name = "Comida.buscaId", query = "SELECT c FROM Comida c WHERE c.id = :id")
+    , @NamedQuery(name = "Comida.buscaNombre", query = "SELECT c FROM Comida c WHERE c.nombre = :nombre")})
 public class Comida implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Basic(optional = false)
     @Column(name = "id_comida", nullable = false)
-    private long idComida;
+    private long id;
     @Id
     @Basic(optional = false)
     @Column(name = "nombre_comida", nullable = false, length = 64)
-    private String nombreComida;
+    private String nombre;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "comida")
-    private List<ComidaPuesto> comidaPuestoList;
+    private List<ComidaPuesto> listaRelacionada;
 
     public Comida() {
     }
 
     public Comida(String nombreComida) {
-        this.nombreComida = nombreComida;
+        this.nombre = nombreComida;
     }
 
     public Comida(String nombreComida, long idComida) {
-        this.nombreComida = nombreComida;
-        this.idComida = idComida;
+        this.nombre = nombreComida;
+        this.id = idComida;
     }
 
-    public long getIdComida() {
-        return idComida;
+    public long getId() {
+        return id;
     }
 
-    public void setIdComida(long idComida) {
-        this.idComida = idComida;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public String getNombreComida() {
-        return nombreComida;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setNombreComida(String nombreComida) {
-        this.nombreComida = nombreComida;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     @XmlTransient
-    public List<ComidaPuesto> getComidaPuestoList() {
-        return comidaPuestoList;
+    public List<ComidaPuesto> getListaRelacionada() {
+        return listaRelacionada;
     }
 
-    public void setComidaPuestoList(List<ComidaPuesto> comidaPuestoList) {
-        this.comidaPuestoList = comidaPuestoList;
+    public void setListaRelacionada(List<ComidaPuesto> listaRelacionada) {
+        this.listaRelacionada = listaRelacionada;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (nombreComida != null ? nombreComida.hashCode() : 0);
+        hash += (nombre != null ? nombre.hashCode() : 0);
         return hash;
     }
 
@@ -96,7 +96,7 @@ public class Comida implements Serializable {
             return false;
         }
         Comida other = (Comida) object;
-        if ((this.nombreComida == null && other.nombreComida != null) || (this.nombreComida != null && !this.nombreComida.equals(other.nombreComida))) {
+        if ((this.nombre == null && other.nombre != null) || (this.nombre != null && !this.nombre.equals(other.nombre))) {
             return false;
         }
         return true;
@@ -104,7 +104,7 @@ public class Comida implements Serializable {
 
     @Override
     public String toString() {
-        return nombreComida;
+        return nombre;
     }
     
 }

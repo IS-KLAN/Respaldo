@@ -30,21 +30,20 @@ import javax.xml.bind.annotation.XmlTransient;
     , @UniqueConstraint(columnNames = {"id_usuario"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u")
-    , @NamedQuery(name = "Usuario.findByIdUsuario", query = "SELECT u FROM Usuario u WHERE u.idUsuario = :idUsuario")
-    , @NamedQuery(name = "Usuario.findByNombreUsuario", query = "SELECT u FROM Usuario u WHERE u.nombreUsuario = :nombreUsuario")
-    , @NamedQuery(name = "Usuario.findByCorreo", query = "SELECT u FROM Usuario u WHERE u.correo = :correo")
-    , @NamedQuery(name = "Usuario.findByContrase\u00f1a", query = "SELECT u FROM Usuario u WHERE u.contrase\u00f1a = :contrase\u00f1a")})
+    @NamedQuery(name = "Usuario.busca", query = "SELECT u FROM Usuario u")
+    , @NamedQuery(name = "Usuario.buscaIdUsuario", query = "SELECT u FROM Usuario u WHERE u.id = :id")
+    , @NamedQuery(name = "Usuario.buscaNombreUsuario", query = "SELECT u FROM Usuario u WHERE u.nombre = :nombre")
+    , @NamedQuery(name = "Usuario.buscaCorreo", query = "SELECT u FROM Usuario u WHERE u.correo = :correo")})
 public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Basic(optional = false)
     @Column(name = "id_usuario", nullable = false)
-    private long idUsuario;
+    private long id;
     @Id
     @Basic(optional = false)
     @Column(name = "nombre_usuario", nullable = false, length = 64)
-    private String nombreUsuario;
+    private String nombre;
     @Basic(optional = false)
     @Column(nullable = false, length = 32)
     private String correo;
@@ -52,43 +51,43 @@ public class Usuario implements Serializable {
     @Column(nullable = false, length = 32)
     private String contraseña;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
-    private List<Evaluacion> evaluacionList;
+    private List<Evaluacion> evaluaciones;
     public static final String dominio = "@ciencias.unam.mx";
 
     public Usuario() {
     }
 
     public Usuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
+        this.nombre = nombreUsuario;
     }
 
     public Usuario(String nombreUsuario, long idUsuario, String correo, String contraseña) {
-        this.nombreUsuario = nombreUsuario;
-        this.idUsuario = idUsuario;
+        this.nombre = nombreUsuario;
+        this.id = idUsuario;
         this.correo = correo;
         this.contraseña = contraseña;
     }
 
     public Usuario(String nombreUsuario, String correo, String contraseña) {
-        this.nombreUsuario = nombreUsuario;
+        this.nombre = nombreUsuario;
         this.correo = correo;
         this.contraseña = contraseña;
     }
 
-    public long getIdUsuario() {
-        return idUsuario;
+    public long getId() {
+        return id;
     }
 
-    public void setIdUsuario(long idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public String getNombreUsuario() {
-        return nombreUsuario;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getCorreo() {
@@ -108,18 +107,18 @@ public class Usuario implements Serializable {
     }
 
     @XmlTransient
-    public List<Evaluacion> getEvaluacionList() {
-        return evaluacionList;
+    public List<Evaluacion> getEvaluaciones() {
+        return evaluaciones;
     }
 
-    public void setEvaluacionList(List<Evaluacion> evaluacionList) {
-        this.evaluacionList = evaluacionList;
+    public void setEvaluaciones(List<Evaluacion> evaluaciones) {
+        this.evaluaciones = evaluaciones;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (nombreUsuario != null ? nombreUsuario.hashCode() : 0);
+        hash += (nombre != null ? nombre.hashCode() : 0);
         return hash;
     }
 
@@ -130,7 +129,7 @@ public class Usuario implements Serializable {
             return false;
         }
         Usuario other = (Usuario) object;
-        if ((this.nombreUsuario == null && other.nombreUsuario != null) || (this.nombreUsuario != null && !this.nombreUsuario.equals(other.nombreUsuario))) {
+        if ((this.nombre == null && other.nombre != null) || (this.nombre != null && !this.nombre.equals(other.nombre))) {
             return false;
         }
         return true;
@@ -138,7 +137,7 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return nombreUsuario;
+        return nombre;
     }
     
 }

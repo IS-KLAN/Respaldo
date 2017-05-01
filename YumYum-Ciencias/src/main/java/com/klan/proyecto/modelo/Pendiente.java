@@ -26,21 +26,20 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @UniqueConstraint(columnNames = {"id_usuario"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Pendiente.findAll", query = "SELECT p FROM Pendiente p")
-    , @NamedQuery(name = "Pendiente.findByIdUsuario", query = "SELECT p FROM Pendiente p WHERE p.idUsuario = :idUsuario")
-    , @NamedQuery(name = "Pendiente.findByNombreUsuario", query = "SELECT p FROM Pendiente p WHERE p.nombreUsuario = :nombreUsuario")
-    , @NamedQuery(name = "Pendiente.findByCorreo", query = "SELECT p FROM Pendiente p WHERE p.correo = :correo")
-    , @NamedQuery(name = "Pendiente.findByContrase\u00f1a", query = "SELECT p FROM Pendiente p WHERE p.contrase\u00f1a = :contrase\u00f1a")})
+    @NamedQuery(name = "Pendiente.busca", query = "SELECT p FROM Pendiente p")
+    , @NamedQuery(name = "Pendiente.buscaId", query = "SELECT p FROM Pendiente p WHERE p.id = :id")
+    , @NamedQuery(name = "Pendiente.buscaNombre", query = "SELECT p FROM Pendiente p WHERE p.nombre = :nombre")
+    , @NamedQuery(name = "Pendiente.buscaCorreo", query = "SELECT p FROM Pendiente p WHERE p.correo = :correo")})
 public class Pendiente implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Basic(optional = false)
     @Column(name = "id_usuario", nullable = false)
-    private long idUsuario;
+    private long id;
     @Id
     @Basic(optional = false)
     @Column(name = "nombre_usuario", nullable = false, length = 64)
-    private String nombreUsuario;
+    private String nombre;
     @Basic(optional = false)
     @Column(nullable = false, length = 32)
     private String correo;
@@ -52,36 +51,36 @@ public class Pendiente implements Serializable {
     }
 
     public Pendiente(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
+        this.nombre = nombreUsuario;
     }
 
     public Pendiente(String nombreUsuario, long idUsuario, String correo, String contraseña) {
-        this.nombreUsuario = nombreUsuario;
-        this.idUsuario = idUsuario;
+        this.nombre = nombreUsuario;
+        this.id = idUsuario;
         this.correo = correo;
         this.contraseña = contraseña;
     }
 
     public Pendiente(String nombreUsuario, String correo, String contraseña) {
-        this.nombreUsuario = nombreUsuario;
+        this.nombre = nombreUsuario;
         this.correo = correo;
         this.contraseña = contraseña;
     }
 
-    public long getIdUsuario() {
-        return idUsuario;
+    public long getId() {
+        return id;
     }
 
-    public void setIdUsuario(long idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public String getNombreUsuario() {
-        return nombreUsuario;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getCorreo() {
@@ -103,7 +102,7 @@ public class Pendiente implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (nombreUsuario != null ? nombreUsuario.hashCode() : 0);
+        hash += (nombre != null ? nombre.hashCode() : 0);
         return hash;
     }
 
@@ -113,7 +112,7 @@ public class Pendiente implements Serializable {
             return false;
         }
         Pendiente other = (Pendiente) object;
-        if ((this.nombreUsuario == null && other.nombreUsuario != null) || (this.nombreUsuario != null && !this.nombreUsuario.equals(other.nombreUsuario))) {
+        if ((this.nombre == null && other.nombre != null) || (this.nombre != null && !this.nombre.equals(other.nombre))) {
             return false;
         }
         return true;
@@ -121,6 +120,6 @@ public class Pendiente implements Serializable {
 
     @Override
     public String toString() {
-        return nombreUsuario;
+        return nombre;
     }  
 }

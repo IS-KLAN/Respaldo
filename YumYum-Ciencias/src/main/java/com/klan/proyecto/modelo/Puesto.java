@@ -30,23 +30,20 @@ import javax.xml.bind.annotation.XmlTransient;
     , @UniqueConstraint(columnNames = {"latitud", "longitud"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Puesto.findAll", query = "SELECT p FROM Puesto p")
-    , @NamedQuery(name = "Puesto.findByIdPuesto", query = "SELECT p FROM Puesto p WHERE p.idPuesto = :idPuesto")
-    , @NamedQuery(name = "Puesto.findByNombrePuesto", query = "SELECT p FROM Puesto p WHERE p.nombrePuesto = :nombrePuesto")
-    , @NamedQuery(name = "Puesto.findByDescripcion", query = "SELECT p FROM Puesto p WHERE p.descripcion = :descripcion")
-    , @NamedQuery(name = "Puesto.findByLatitud", query = "SELECT p FROM Puesto p WHERE p.latitud = :latitud")
-    , @NamedQuery(name = "Puesto.findByLongitud", query = "SELECT p FROM Puesto p WHERE p.longitud = :longitud")
-    , @NamedQuery(name = "Puesto.findByRutaImagen", query = "SELECT p FROM Puesto p WHERE p.rutaImagen = :rutaImagen")})
+    @NamedQuery(name = "Puesto.busca", query = "SELECT p FROM Puesto p")
+    , @NamedQuery(name = "Puesto.buscaId", query = "SELECT p FROM Puesto p WHERE p.id = :id")
+    , @NamedQuery(name = "Puesto.buscaNombre", query = "SELECT p FROM Puesto p WHERE p.nombre = :nombre")
+    , @NamedQuery(name = "Puesto.buscaLugar", query = "SELECT p FROM Puesto p WHERE p.latitud = :latitud AND p.longitud = :longitud")})
 public class Puesto implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Basic(optional = false)
     @Column(name = "id_puesto", nullable = false)
-    private long idPuesto;
+    private long id;
     @Id
     @Basic(optional = false)
     @Column(name = "nombre_puesto", nullable = false, length = 64)
-    private String nombrePuesto;
+    private String nombre;
     @Column(length = 255)
     private String descripcion;
     @Basic(optional = false)
@@ -58,38 +55,38 @@ public class Puesto implements Serializable {
     @Column(length = 255)
     private String rutaImagen;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "puesto")
-    private List<ComidaPuesto> comidaPuestoList;
+    private List<ComidaPuesto> comida;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "puesto")
-    private List<Evaluacion> evaluacionList;
+    private List<Evaluacion> evaluaciones;
 
     public Puesto() {
     }
 
     public Puesto(String nombrePuesto) {
-        this.nombrePuesto = nombrePuesto;
+        this.nombre = nombrePuesto;
     }
 
     public Puesto(String nombrePuesto, long idPuesto, String latitud, String longitud) {
-        this.nombrePuesto = nombrePuesto;
-        this.idPuesto = idPuesto;
+        this.nombre = nombrePuesto;
+        this.id = idPuesto;
         this.latitud = latitud;
         this.longitud = longitud;
     }
 
-    public long getIdPuesto() {
-        return idPuesto;
+    public long getId() {
+        return id;
     }
 
-    public void setIdPuesto(long idPuesto) {
-        this.idPuesto = idPuesto;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public String getNombrePuesto() {
-        return nombrePuesto;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setNombrePuesto(String nombrePuesto) {
-        this.nombrePuesto = nombrePuesto;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getDescripcion() {
@@ -125,27 +122,27 @@ public class Puesto implements Serializable {
     }
 
     @XmlTransient
-    public List<ComidaPuesto> getComidaPuestoList() {
-        return comidaPuestoList;
+    public List<ComidaPuesto> getComida() {
+        return comida;
     }
 
-    public void setComidaPuestoList(List<ComidaPuesto> comidaPuestoList) {
-        this.comidaPuestoList = comidaPuestoList;
+    public void setComida(List<ComidaPuesto> comida) {
+        this.comida = comida;
     }
 
     @XmlTransient
-    public List<Evaluacion> getEvaluacionList() {
-        return evaluacionList;
+    public List<Evaluacion> getEvaluaciones() {
+        return evaluaciones;
     }
 
-    public void setEvaluacionList(List<Evaluacion> evaluacionList) {
-        this.evaluacionList = evaluacionList;
+    public void setEvaluaciones(List<Evaluacion> evaluaciones) {
+        this.evaluaciones = evaluaciones;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (nombrePuesto != null ? nombrePuesto.hashCode() : 0);
+        hash += (nombre != null ? nombre.hashCode() : 0);
         return hash;
     }
 
@@ -156,7 +153,7 @@ public class Puesto implements Serializable {
             return false;
         }
         Puesto other = (Puesto) object;
-        if ((this.nombrePuesto == null && other.nombrePuesto != null) || (this.nombrePuesto != null && !this.nombrePuesto.equals(other.nombrePuesto))) {
+        if ((this.nombre == null && other.nombre != null) || (this.nombre != null && !this.nombre.equals(other.nombre))) {
             return false;
         }
         return true;
@@ -164,7 +161,7 @@ public class Puesto implements Serializable {
 
     @Override
     public String toString() {
-        return nombrePuesto;
+        return nombre;
     }
     
 }

@@ -27,18 +27,18 @@ import javax.xml.bind.annotation.XmlRootElement;
     @UniqueConstraint(columnNames = {"id_comida_puesto"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "ComidaPuesto.findAll", query = "SELECT c FROM ComidaPuesto c")
-    , @NamedQuery(name = "ComidaPuesto.findByIdComidaPuesto", query = "SELECT c FROM ComidaPuesto c WHERE c.idComidaPuesto = :idComidaPuesto")
-    , @NamedQuery(name = "ComidaPuesto.findByNombreComida", query = "SELECT c FROM ComidaPuesto c WHERE c.comidaPuestoPK.nombreComida = :nombreComida")
-    , @NamedQuery(name = "ComidaPuesto.findByNombrePuesto", query = "SELECT c FROM ComidaPuesto c WHERE c.comidaPuestoPK.nombrePuesto = :nombrePuesto")})
+    @NamedQuery(name = "ComidaPuesto.busca", query = "SELECT c FROM ComidaPuesto c")
+    , @NamedQuery(name = "ComidaPuesto.buscaId", query = "SELECT c FROM ComidaPuesto c WHERE c.id = :id")
+    , @NamedQuery(name = "ComidaPuesto.buscaNombreComida", query = "SELECT c FROM ComidaPuesto c WHERE c.llave.nombreComida = :nombreComida")
+    , @NamedQuery(name = "ComidaPuesto.buscaNombrePuesto", query = "SELECT c FROM ComidaPuesto c WHERE c.llave.nombrePuesto = :nombrePuesto")})
 public class ComidaPuesto implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
-    protected ComidaPuestoPK comidaPuestoPK;
+    protected ComidaPuestoP llave;
     @Basic(optional = false)
     @Column(name = "id_comida_puesto", nullable = false)
-    private long idComidaPuesto;
+    private long id;
     @JoinColumn(name = "nombre_comida", referencedColumnName = "nombre_comida", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Comida comida;
@@ -49,33 +49,33 @@ public class ComidaPuesto implements Serializable {
     public ComidaPuesto() {
     }
 
-    public ComidaPuesto(ComidaPuestoPK comidaPuestoPK) {
-        this.comidaPuestoPK = comidaPuestoPK;
+    public ComidaPuesto(ComidaPuestoP comidaPuestoPK) {
+        this.llave = comidaPuestoPK;
     }
 
-    public ComidaPuesto(ComidaPuestoPK comidaPuestoPK, long idComidaPuesto) {
-        this.comidaPuestoPK = comidaPuestoPK;
-        this.idComidaPuesto = idComidaPuesto;
+    public ComidaPuesto(ComidaPuestoP comidaPuestoPK, long idComidaPuesto) {
+        this.llave = comidaPuestoPK;
+        this.id = idComidaPuesto;
     }
 
     public ComidaPuesto(String nombreComida, String nombrePuesto) {
-        this.comidaPuestoPK = new ComidaPuestoPK(nombreComida, nombrePuesto);
+        this.llave = new ComidaPuestoP(nombreComida, nombrePuesto);
     }
 
-    public ComidaPuestoPK getComidaPuestoPK() {
-        return comidaPuestoPK;
+    public ComidaPuestoP getLlave() {
+        return llave;
     }
 
-    public void setComidaPuestoPK(ComidaPuestoPK comidaPuestoPK) {
-        this.comidaPuestoPK = comidaPuestoPK;
+    public void setLlave(ComidaPuestoP llave) {
+        this.llave = llave;
     }
 
-    public long getIdComidaPuesto() {
-        return idComidaPuesto;
+    public long getId() {
+        return id;
     }
 
-    public void setIdComidaPuesto(long idComidaPuesto) {
-        this.idComidaPuesto = idComidaPuesto;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Comida getComida() {
@@ -97,7 +97,7 @@ public class ComidaPuesto implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (comidaPuestoPK != null ? comidaPuestoPK.hashCode() : 0);
+        hash += (llave != null ? llave.hashCode() : 0);
         return hash;
     }
 
@@ -108,7 +108,7 @@ public class ComidaPuesto implements Serializable {
             return false;
         }
         ComidaPuesto other = (ComidaPuesto) object;
-        if ((this.comidaPuestoPK == null && other.comidaPuestoPK != null) || (this.comidaPuestoPK != null && !this.comidaPuestoPK.equals(other.comidaPuestoPK))) {
+        if ((this.llave == null && other.llave != null) || (this.llave != null && !this.llave.equals(other.llave))) {
             return false;
         }
         return true;
@@ -116,7 +116,7 @@ public class ComidaPuesto implements Serializable {
 
     @Override
     public String toString() {
-        return "[ comidaPuestoPK=" + comidaPuestoPK.toString() + " ]";
+        return "[ comidaPuestoPK=" + llave.toString() + " ]";
     }
     
 }

@@ -27,20 +27,20 @@ import javax.xml.bind.annotation.XmlRootElement;
     @UniqueConstraint(columnNames = {"id_evaluacion"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Evaluacion.findAll", query = "SELECT e FROM Evaluacion e")
-    , @NamedQuery(name = "Evaluacion.findByIdEvaluacion", query = "SELECT e FROM Evaluacion e WHERE e.idEvaluacion = :idEvaluacion")
-    , @NamedQuery(name = "Evaluacion.findByComentario", query = "SELECT e FROM Evaluacion e WHERE e.comentario = :comentario")
-    , @NamedQuery(name = "Evaluacion.findByCalificacion", query = "SELECT e FROM Evaluacion e WHERE e.calificacion = :calificacion")
-    , @NamedQuery(name = "Evaluacion.findByNombrePuesto", query = "SELECT e FROM Evaluacion e WHERE e.evaluacionPK.nombrePuesto = :nombrePuesto")
-    , @NamedQuery(name = "Evaluacion.findByNombreUsuario", query = "SELECT e FROM Evaluacion e WHERE e.evaluacionPK.nombreUsuario = :nombreUsuario")})
+    @NamedQuery(name = "Evaluacion.busca", query = "SELECT e FROM Evaluacion e")
+    , @NamedQuery(name = "Evaluacion.buscaId", query = "SELECT e FROM Evaluacion e WHERE e.id = :id")
+    , @NamedQuery(name = "Evaluacion.buscaComentario", query = "SELECT e FROM Evaluacion e WHERE e.comentario = :comentario")
+    , @NamedQuery(name = "Evaluacion.buscaCalificacion", query = "SELECT e FROM Evaluacion e WHERE e.calificacion = :calificacion")
+    , @NamedQuery(name = "Evaluacion.buscaNombrePuesto", query = "SELECT e FROM Evaluacion e WHERE e.llave.nombrePuesto = :nombrePuesto")
+    , @NamedQuery(name = "Evaluacion.buscaNombreUsuario", query = "SELECT e FROM Evaluacion e WHERE e.llave.nombreUsuario = :nombreUsuario")})
 public class Evaluacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
-    protected EvaluacionPK evaluacionPK;
+    protected EvaluacionP llave;
     @Basic(optional = false)
     @Column(name = "id_evaluacion", nullable = false)
-    private long idEvaluacion;
+    private long id;
     @Column(length = 255)
     private String comentario;
     @Basic(optional = false)
@@ -56,34 +56,34 @@ public class Evaluacion implements Serializable {
     public Evaluacion() {
     }
 
-    public Evaluacion(EvaluacionPK evaluacionPK) {
-        this.evaluacionPK = evaluacionPK;
+    public Evaluacion(EvaluacionP evaluacionPK) {
+        this.llave = evaluacionPK;
     }
 
-    public Evaluacion(EvaluacionPK evaluacionPK, String comentario, int calificacion) {
-        this.evaluacionPK = evaluacionPK;
+    public Evaluacion(EvaluacionP evaluacionPK, String comentario, int calificacion) {
+        this.llave = evaluacionPK;
         this.comentario = comentario;
         this.calificacion = calificacion;
     }
 
     public Evaluacion(String nombrePuesto, String nombreUsuario) {
-        this.evaluacionPK = new EvaluacionPK(nombrePuesto, nombreUsuario);
+        this.llave = new EvaluacionP(nombrePuesto, nombreUsuario);
     }
 
-    public EvaluacionPK getEvaluacionPK() {
-        return evaluacionPK;
+    public EvaluacionP getLlave() {
+        return llave;
     }
 
-    public void setEvaluacionPK(EvaluacionPK evaluacionPK) {
-        this.evaluacionPK = evaluacionPK;
+    public void setLlave(EvaluacionP llave) {
+        this.llave = llave;
     }
 
-    public long getIdEvaluacion() {
-        return idEvaluacion;
+    public long getId() {
+        return id;
     }
 
-    public void setIdEvaluacion(long idEvaluacion) {
-        this.idEvaluacion = idEvaluacion;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getComentario() {
@@ -121,7 +121,7 @@ public class Evaluacion implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (evaluacionPK != null ? evaluacionPK.hashCode() : 0);
+        hash += (llave != null ? llave.hashCode() : 0);
         return hash;
     }
 
@@ -132,7 +132,7 @@ public class Evaluacion implements Serializable {
             return false;
         }
         Evaluacion other = (Evaluacion) object;
-        if ((this.evaluacionPK == null && other.evaluacionPK != null) || (this.evaluacionPK != null && !this.evaluacionPK.equals(other.evaluacionPK))) {
+        if ((this.llave == null && other.llave != null) || (this.llave != null && !this.llave.equals(other.llave))) {
             return false;
         }
         return true;
@@ -140,7 +140,7 @@ public class Evaluacion implements Serializable {
 
     @Override
     public String toString() {
-        return "Evaluacion[ evaluacionPK=" + evaluacionPK.toString() + " ]";
+        return "Evaluacion[ evaluacionPK=" + llave.toString() + " ]";
     }
     
 }

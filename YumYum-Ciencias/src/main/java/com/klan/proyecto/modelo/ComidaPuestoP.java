@@ -15,7 +15,7 @@ import javax.persistence.Embeddable;
  * @author patlani
  */
 @Embeddable
-public class ComidaPuestoPK implements Serializable {
+public class ComidaPuestoP implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "nombre_comida", nullable = false, length = 64)
@@ -24,10 +24,10 @@ public class ComidaPuestoPK implements Serializable {
     @Column(name = "nombre_puesto", nullable = false, length = 64)
     private String nombrePuesto;
 
-    public ComidaPuestoPK() {
+    public ComidaPuestoP() {
     }
 
-    public ComidaPuestoPK(String nombreComida, String nombrePuesto) {
+    public ComidaPuestoP(String nombreComida, String nombrePuesto) {
         this.nombreComida = nombreComida;
         this.nombrePuesto = nombrePuesto;
     }
@@ -59,10 +59,10 @@ public class ComidaPuestoPK implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ComidaPuestoPK)) {
+        if (!(object instanceof ComidaPuestoP)) {
             return false;
         }
-        ComidaPuestoPK other = (ComidaPuestoPK) object;
+        ComidaPuestoP other = (ComidaPuestoP) object;
         if ((this.nombreComida == null && other.nombreComida != null) || (this.nombreComida != null && !this.nombreComida.equals(other.nombreComida))) {
             return false;
         }
