@@ -4,9 +4,9 @@
             xmlns:p="http://primefaces.org/ui">
     <!-- Si hay comida se despliega la tabla de evaluaciones. -->
     <h:form rendered="#{contenido.comidaDisponible()}">
-        <p:dataScroller value="#{contenido.puesto.comidaPuestoList}" var="c" chunkSize="15" mode="inline" scrollHeight="350">
+        <p:dataScroller value="#{contenido.puesto.comida}" var="c" chunkSize="15" mode="inline" scrollHeight="350">
             <b:panelGrid columns="1" style="margin-top: 10px">
-                    <b:label severity="primary" tiny-screen="one-fourth" text="#{c.comida.nombreComida}" style="font-size: larger; width: 100%"/>
+                    <b:label severity="primary" tiny-screen="one-fourth" text="#{c.comida.nombre}" style="font-size: larger; width: 100%"/>
             </b:panelGrid>
         </p:dataScroller>
     </h:form>
