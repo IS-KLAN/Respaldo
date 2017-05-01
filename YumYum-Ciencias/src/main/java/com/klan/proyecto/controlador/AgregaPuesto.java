@@ -45,14 +45,11 @@ public class AgregaPuesto implements Serializable {
 
     private MapModel modelo;
     private Marker marcador;
-    private List<Comida> todas;
     private List<String> lista, seleccion;
-    private String nombrePuesto, descripcion, rutaImagen;
-    private String lat, lng;
+    private String nombre, descripcion, rutaImagen, lat, lng;
     private UploadedFile archivo;
     private Double latitud;
     private Double longitud;
-    private int idPuesto;
 
     @PostConstruct
     public void cargar() {
@@ -67,7 +64,7 @@ public class AgregaPuesto implements Serializable {
             modelo.addOverlay(new Marker(new LatLng(latitud, longitud), nombre));
         } seleccion = new ArrayList<>(); // Se inicializan listas de lista y selección
         lista = new ArrayList<>(); 
-        todas = new ComidaC(emf).buscaComidas();
+        List<Comida> todas = new ComidaC(emf).buscaComidas();
         for (Comida c : todas) lista.add(c.getNombre());
     }
 
@@ -83,12 +80,12 @@ public class AgregaPuesto implements Serializable {
         this.seleccion = seleccion;
     }
 
-    public String getNombrePuesto() {
-        return nombrePuesto;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setNombrePuesto(String nombrePuesto) {
-        this.nombrePuesto = nombrePuesto;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getDescripcion() {
@@ -133,15 +130,6 @@ public class AgregaPuesto implements Serializable {
         this.archivo = archivo;
     }
 
-    
-    public boolean datosDefinidos() {
-        return nombrePuesto != null;
-    }
-
-    public boolean seCargaImagen() {
-        return archivo != null && archivo.getFileName().length() > 0;
-    }
-
     public MapModel getModelo() {
         return modelo;
     }
@@ -154,7 +142,7 @@ public class AgregaPuesto implements Serializable {
      * Método que se encarga de avisar al usuario que la ubicación ya ha sido registrada.
      * @param event  Es el evento que se registra al tocar el mapa.
      */
-    public void onMarkerSelect(OverlaySelectEvent event) {
+    public void alMarcarLugar(OverlaySelectEvent event) {
         try{
             marcador = (Marker) event.getOverlay();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
@@ -171,7 +159,7 @@ public class AgregaPuesto implements Serializable {
      */
     public void marcar() {
         try{
-            Marker marker = new Marker(new LatLng(latitud, longitud), nombrePuesto);
+            Marker marker = new Marker(new LatLng(latitud, longitud), nombre);
             modelo.addOverlay(marker);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
             FacesMessage.SEVERITY_INFO, "Ubicación definida.", "Lat:" + latitud + ", Lng:" + longitud));
@@ -189,8 +177,8 @@ public class AgregaPuesto implements Serializable {
     public boolean guardaImagen() {
         final String dir = System.getProperty("user.dir").replace("\\", "/"); // Directorio de ejecución actual.
         final String sub = "/src/main/webapp/resources"; // Directorio especificado para guardar imagenes. 
-        if (seCargaImagen()) { // Sólo si se intenta cargar una rutaImagen.
-            rutaImagen = nombrePuesto + "-" + latitud + ".jpg"; // Se define el nombrePuesto de la rutaImagen.
+        if (archivo != null && archivo.getSize() > 0) { // Sólo si se intenta cargar una rutaImagen.
+            rutaImagen = nombre + "-" + latitud + ".jpg"; // Se define el nombrePuesto de la rutaImagen.
             try { // EL proceso de escritura en archivos puede lanzar excepciones.
                 File f = new File(dir + sub, rutaImagen); // Se define el Directorio y Nombre con extensión del file.
                 FileOutputStream output = new FileOutputStream(f); // Flujo de escritura para guardar la rutaImagen.
@@ -220,19 +208,17 @@ public class AgregaPuesto implements Serializable {
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("YumYum-Ciencias"); //Realiza la conexión a la BD 
             PuestoC pc = new PuestoC(emf); // Se utiliza para consultas a la tabla Puesto.
             if(guardaImagen()) { // Si no ocurrieron errores al tratar de guardar la rutaImagen.
-                Puesto puesto = new Puesto(nombrePuesto, idPuesto, lat, lng); // Se crea el nuevo puesto.
-                if (descripcion != null) puesto.setDescripcion(descripcion); // Se agrega su descripción si se ingresó.
-                if (rutaImagen != null) puesto.setRutaImagen(rutaImagen); // Se define el nombre de la rutaImagen si se cargó.
+                Puesto puesto = new Puesto(nombre, descripcion, lat, lng, rutaImagen); // Se crea el nuevo puesto.
                 pc.crear(puesto); // Se agrega el puesto a la BD.
                 ComidaPuestoC cpc = new ComidaPuestoC(emf); // Para agregar las relaciones de comida.
-                for (String nombreComida : seleccion) { // Se agregan las relaciones y comida nueva del puesto.
-                    cpc.crear(new ComidaPuesto(nombreComida, nombrePuesto)); // Se crea la relación en la tabla comidaPuesto.
+                for (String comida : seleccion) { // Se agregan las relaciones y comida nueva del puesto.
+                    cpc.crear(new ComidaPuesto(comida, nombre)); // Se crea la relación en la tabla comidaPuesto.
                 } // Se avisa al usuario que el puesto ha sido agregado.
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
                 FacesMessage.SEVERITY_INFO, "Puesto agregado con éxito!!!.", null));
                 // Se asegura que el mensaje se muestre después de la redirección.
                 FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-                puesto = new PuestoC(emf).buscaNombre(nombrePuesto); //Se actualiza el puesto.
+                puesto = new PuestoC(emf).buscaNombre(nombre); //Se actualiza el puesto.
                 ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getSession().setAttribute("puesto", puesto);
                 return "perfilPuesto?faces-redirect=true";
             } // Si no se guardo bien la rutaImagen, no se agrega el puesto.
@@ -241,16 +227,5 @@ public class AgregaPuesto implements Serializable {
             FacesMessage.SEVERITY_ERROR, "Error al agregar el puesto.", ex.getMessage()));
             System.err.println("Error al agregar el puesto\n" + ex.getMessage());
         } return "agregaPuesto";
-    }
-    
-    /**
-     * Método que se encarga de limpiar la información ingresada del puesto.
-     */
-    public void limpiar() {
-        marcador = null;
-        nombrePuesto = null;
-        descripcion = null;
-        archivo = null;
-        seleccion = new ArrayList<>();
     }
 }
